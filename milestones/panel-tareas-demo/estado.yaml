@@ -12,7 +12,7 @@ waves_planificadas:
 tareas:
   T1: { estado: COMPLETADA, commit: 2cb9723, worktree: null }   # sin aislamiento por worktree en esta corrida, ver PROCESO.md §7
   T2: { estado: COMPLETADA, commit: b6c7e47, worktree: null }
-  T3: { estado: PENDIENTE, rama: null, worktree: null }
-  T4: { estado: PENDIENTE, rama: null, worktree: null }
-  T5: { estado: PENDIENTE, rama: null, worktree: null }
+  T3: { estado: ESPERANDO_DECISION, agentId: af84211556b282742, worktree: null }
+  T4: { estado: ESPERANDO_DECISION, agentId: ae6367ffdd37dfff3, worktree: null }
+  T5: { estado: COMPLETADA, commit: dff84e6, worktree: null }
 bloqueos_externos: []

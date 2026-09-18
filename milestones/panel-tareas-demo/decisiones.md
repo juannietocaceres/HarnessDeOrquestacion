@@ -19,3 +19,20 @@ originó, lo que se preguntó y lo que se respondió.
   tampoco tuvo preguntas que hacer. Muestra que invertir en una buena
   especificación *antes* de implementar reduce cuántas decisiones llegan al
   batched gate más adelante.
+
+## Wave 3
+
+Las 3 tareas de la wave (T3, T4, T5) llegaron a estado terminal antes de
+abrir el gate — T5 completó directo, T3 y T4 escalaron una decisión real
+cada una. Ambas se presentaron **juntas, en una sola interacción**:
+
+- **T3** — ¿agregar filtro/orden por estado en la lista, o mantenerla
+  simple? → **Respuesta: agregar filtro/orden por estado**, del lado del
+  cliente, sin tocar el contrato de T2.
+- **T4** — ¿validar el título también en el cliente, o confiar solo en la
+  respuesta 400 del servidor? → **Respuesta: confiar solo en el servidor**
+  (sin validación de cliente).
+
+Cada respuesta se ruteó de vuelta a su propio sub-agente (`SendMessage` al
+`agentId` que generó cada `DECISION_NEEDED`), y cada uno retomó su propio
+punto de espera de forma independiente — ninguno vio la decisión del otro.
