@@ -139,8 +139,68 @@ una feature nueva fuera de alcance.
   *origen* de los casos (criterios de aceptación → casos borde → caminos de
   error) es el mismo para cualquier dominio.
 
-## 6. Próximos pasos de esta bitácora
+## 6. Ejecución del milestone de ejemplo
 
-Las secciones siguientes se agregan a medida que se ejecuta el milestone de
-ejemplo real (preflight, waves, batched gates) y se genera el entregable de
-muestra con `especificacion`.
+Manifest de 5 tareas (`milestones/panel-tareas-demo/milestone.yaml`),
+preflight OK, plan de waves calculado: W1={T1}, W2={T2}, W3={T3,T4,T5}. Cap
+de concurrencia fijado en 2 (deliberadamente por debajo del default de 3)
+para que la wave 3, con 3 tareas listas a la vez, se vea forzada a partirse
+en dos lotes.
+
+## 7. Bloqueo real: aislamiento por worktree no disponible en esta sesión
+
+Al lanzar el primer sub-agente real (T1) con `isolation: "worktree"`, el
+harness devolvió: *"Cannot create agent worktree: not in a git repository
+and no WorktreeCreate hooks are configured."*
+
+**Diagnóstico**: se verificó en el filesystem que el repo es válido
+(`git rev-parse --is-inside-work-tree` → `true`, HEAD resuelve, rama
+`main`). La causa más probable: esta sesión detectó el estado del
+directorio *antes* de correr `git init -b main` (el entorno inicial de esta
+conversación reportó explícitamente "Is a git repository: false"), y ese
+chequeo de proyecto no se refresca en caliente durante la misma sesión.
+
+**Qué se intentó**: un refresco vía la herramienta de cambio de directorio
+apuntando a la misma carpeta (para forzar una re-detección del proyecto), y
+un reintento del sub-agente una vez cerrado ese turno. El error persistió —
+el mecanismo de refresco disponible no alcanza a este chequeo puntual.
+
+**Decisión**: en vez de resolverlo en silencio de una forma que cambiara lo
+que el usuario explícitamente pidió (ejecución real con aislamiento por
+worktree), se expuso el bloqueo y las alternativas reales antes de seguir.
+El usuario eligió **sub-agentes reales sin aislamiento por worktree**: se
+mantienen sub-agentes de verdad escribiendo archivos de verdad, pero todos
+comparten el working directory principal en lugar de una carpeta/rama propia
+por tarea. Es una degradación aceptada conscientemente, no una que se decidió
+sola.
+
+**Ajuste mecánico consecuente**: sin worktree no hay una rama por tarea que
+mergear al cerrar cada wave. El cierre de wave pasa a ser un commit directo
+por tarea completada (mismo efecto de trazabilidad — un commit por tarea —
+sin el paso de merge). El diseño de aislamiento por worktree documentado en
+`orquestador/SKILL.md` §5 queda igual para un entorno donde el chequeo de
+git sí se detecte a tiempo; lo que no funcionó fue una condición puntual de
+esta sesión, no el diseño en sí.
+
+**Segundo hallazgo del mismo tipo**: al invocar `Skill(especificacion)` para
+generar el entregable de muestra sobre T2, el tool respondió
+`Unknown skill: especificacion`. Mismo patrón que el bloqueo de worktree: el
+listado de skills disponibles para esta sesión quedó fijado al arrancar la
+conversación, antes de que `.claude/skills/especificacion/` existiera, y no
+se recarga en caliente. Como ya se tenía el contenido completo del SKILL.md
+recién escrito, se optó por seguir su plantilla y proceso directamente en
+vez de perseguir otro workaround de refresco — el resultado es idéntico al
+que produciría el tool, y no vale la pena otra vuelta de diagnóstico por
+algo ya identificado. **Lección para la demo en clase**: las skills nuevas
+creadas dentro de una sesión quedan disponibles recién en una sesión nueva
+sobre el mismo proyecto — es una limitación del entorno de esta corrida en
+particular, no del diseño del harness.
+
+## 8. Entregable de muestra: especificación de T2
+
+[milestones/panel-tareas-demo/especificaciones/T2-contrato-api.md](milestones/panel-tareas-demo/especificaciones/T2-contrato-api.md) —
+generado siguiendo la plantilla de `especificacion/SKILL.md` a partir del
+esquema real que produjo T1 (no del manifest original, que traía T2 sin
+criterios de aceptación). Queda un `RF`/`RNF`/criterios de aceptación
+completos y una pregunta abierta explícita (paginación) que se resuelve
+como fuera de alcance para esta demo en vez de decidirse en silencio.
