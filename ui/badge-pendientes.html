@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indicador de tareas pendientes</title>
+<style>
+  :root {
+    --ink: #1C2333;
+    --ink-2: #262F45;
+    --flap: #EFEAE0;
+    --flap-shade: #E2DCCC;
+    --flap-tint: #FBF8F2;
+    --amber: #E3A542;
+    --muted: #5D6B8C;
+    --muted-on-ink: #A9B4D1;
+    --line: #3A4560;
+    --page-bg: #EEF0F4;
+    --text: #232A3B;
+    --progress: #5B8AC7;
+    --done: #7DAE8B;
+
+    --font-sans: "Neue Haas Grotesk Text", "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Berkeley Mono", "JetBrains Mono", "Cascadia Code", ui-monospace, "SF Mono", Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { font-size: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .stage {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 56px 20px 64px;
+  }
+
+  .page-title {
+    margin: 0 0 28px;
+    font-size: 1.3125rem;
+    line-height: 1.3;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .noscript-box p {
+    margin: 0 0 24px;
+    max-width: 56ch;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--text);
+    background: rgba(227, 165, 66, 0.15);
+    border: 1px solid rgba(227, 165, 66, 0.4);
+    padding: 10px 14px;
+    border-radius: 8px;
+  }
+
+  .toolbar {
+    background: var(--ink);
+    border-radius: 12px;
+    padding: 14px 16px 14px 18px;
+    margin: 0 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 20px 40px -26px rgba(28, 35, 51, 0.6);
+  }
+
+  .app-name {
+    margin: 0;
+    color: #DDE3F2;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .badge-pendientes {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    perspective: 480px;
+  }
+
+  .flap-set {
+    display: flex;
+    gap: 3px;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 5px;
+  }
+
+  .flap {
+    position: relative;
+    width: 34px;
+    height: 46px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: linear-gradient(to bottom, var(--flap-tint) 0%, var(--flap) 49%, var(--flap-shade) 51%, var(--flap) 100%);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+    font-size: 1.625rem;
+    font-weight: 600;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: 50% 50%;
+    user-select: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(28, 35, 51, 0.08);
+  }
+
+  .flap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: rgba(28, 35, 51, 0.35);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .flap {
+      animation: flap-flip 0.46s cubic-bezier(0.3, 0.8, 0.4, 1) both;
+    }
+
+    .flap[data-tile="units"] {
+      animation-delay: 0.09s;
+    }
+  }
+
+  @keyframes flap-flip {
+    from { transform: rotateX(85deg); opacity: 0.3; }
+    to { transform: rotateX(0deg); opacity: 1; }
+  }
+
+  .badge-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.25;
+  }
+
+  .badge-copy .label {
+    color: #EDE9E0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .badge-copy .sub {
+    color: var(--muted-on-ink);
+    font-size: 0.75rem;
+  }
+
+  .intro {
+    max-width: 56ch;
+    margin: 0 0 36px;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .intro code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: rgba(28, 35, 51, 0.07);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+
+  .section-label {
+    margin: 0 0 10px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .sample-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid rgba(28, 35, 51, 0.12);
+  }
+
+  .sample-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 2px;
+    border-bottom: 1px solid rgba(28, 35, 51, 0.12);
+    font-size: 0.875rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex: none;
+    user-select: none;
+  }
+
+  .dot[data-estado="pendiente"] { background: var(--amber); }
+  .dot[data-estado="en_curso"] { background: var(--progress); }
+  .dot[data-estado="hecha"] { background: var(--done); }
+
+  .sample-row .titulo {
+    flex: 1 1 auto;
+    color: var(--text);
+  }
+
+  .sample-row .estado {
+    flex: none;
+    color: var(--muted);
+    font-size: 0.8125rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 480px) {
+    .stage { padding: 40px 16px 48px; }
+    .toolbar { padding: 12px 14px; }
+    .flap { width: 30px; height: 40px; font-size: 1.375rem; }
+    .badge-copy .label { font-size: 0.875rem; }
+  }
+</style>
+</head>
+<body>
+<main class="stage">
+  <h1 class="page-title">Indicador de tareas pendientes</h1>
+
+  <noscript>
+    <div class="noscript-box">
+      <p>Este componente calcula el conteo con JavaScript. Habilitalo en el navegador para ver el indicador actualizado.</p>
+    </div>
+  </noscript>
+
+  <div class="toolbar">
+    <span class="app-name">Panel de tareas</span>
+    <div class="badge-pendientes" role="status" aria-label="Cargando tareas pendientes">
+      <div class="flap-set" aria-hidden="true">
+        <div class="flap" data-tile="tens">–</div>
+        <div class="flap" data-tile="units">–</div>
+      </div>
+      <div class="badge-copy" aria-hidden="true">
+        <span class="label">tareas pendientes</span>
+        <span class="sub">calculando…</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="intro">
+    Este indicador cuenta las tareas con estado <code>pendiente</code> dentro
+    de la lista de datos de ejemplo definida en este mismo archivo. Cada
+    tarea tiene la forma fijada en schema/tareas.md: <code>id</code>,
+    <code>titulo</code>, <code>estado</code> y <code>fecha_creacion</code>.
+  </p>
+
+  <h2 class="section-label">Datos de ejemplo</h2>
+  <ul class="sample-list"></ul>
+</main>
+
+<script>
+(function () {
+  var tareas = [
+    { id: "8f14e45f-ceea-4c9a-8b34-0b1d5e6f7a2c", titulo: "Escribir minuta de la reunión de equipo", estado: "pendiente", fecha_creacion: "2026-09-16T09:15:00Z" },
+    { id: "3c9e2a10-6b4d-4f8e-9a12-7d4c5b6a8e3f", titulo: "Actualizar dependencias del proyecto", estado: "en_curso", fecha_creacion: "2026-09-12T11:40:00Z" },
+    { id: "b52d6f91-1a3c-4e7b-8f60-2c9d4e5a6b7c", titulo: "Revisar pull request de autenticación", estado: "pendiente", fecha_creacion: "2026-09-15T16:05:00Z" },
+    { id: "6a1f3d8c-9e42-4b7a-b3c5-1f2e3d4c5b6a", titulo: "Cargar notas de la clase en el repositorio", estado: "hecha", fecha_creacion: "2026-09-10T08:30:00Z" },
+    { id: "d47c8e2b-5f3a-4d6e-9c81-3a4b5c6d7e8f", titulo: "Responder comentarios de la revisión de diseño", estado: "pendiente", fecha_creacion: "2026-09-16T13:50:00Z" },
+    { id: "2e9b4a7d-3c1f-4e8b-a2d5-6f7c8b9a0d1e", titulo: "Configurar entorno de pruebas", estado: "en_curso", fecha_creacion: "2026-09-11T10:00:00Z" }
+  ];
+
+  var ESTADO_TEXTO = { pendiente: "pendiente", en_curso: "en curso", hecha: "hecha" };
+
+  var pendientes = tareas.filter(function (t) { return t.estado === "pendiente"; }).length;
+  var total = tareas.length;
+  var padded = String(pendientes).padStart(2, "0");
+
+  var badge = document.querySelector(".badge-pendientes");
+  var tens = document.querySelector('.flap[data-tile="tens"]');
+  var units = document.querySelector('.flap[data-tile="units"]');
+  var sub = document.querySelector(".badge-copy .sub");
+
+  tens.textContent = padded.charAt(0);
+  units.textContent = padded.charAt(1);
+  sub.textContent = "de " + total + " en total";
+  badge.setAttribute("aria-label", pendientes + " tareas pendientes de " + total + " en total");
+
+  var list = document.querySelector(".sample-list");
+  var rows = document.createDocumentFragment();
+
+  tareas.forEach(function (t) {
+    var li = document.createElement("li");
+    li.className = "sample-row";
+
+    var dot = document.createElement("span");
+    dot.className = "dot";
+    dot.setAttribute("data-estado", t.estado);
+    dot.setAttribute("aria-hidden", "true");
+
+    var titulo = document.createElement("span");
+    titulo.className = "titulo";
+    titulo.textContent = t.titulo;
+
+    var estado = document.createElement("span");
+    estado.className = "estado";
+    estado.textContent = ESTADO_TEXTO[t.estado] || t.estado;
+
+    li.appendChild(dot);
+    li.appendChild(titulo);
+    li.appendChild(estado);
+    rows.appendChild(li);
+  });
+
+  list.appendChild(rows);
+})();
+</script>
+</body>
+</html>
