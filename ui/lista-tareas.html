@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registro de tareas</title>
+<style>
+  :root {
+    --paper: #edf0e1;
+    --paper-line: #c7cfb4;
+    --paper-line-strong: #8b9878;
+    --paper-line-faint: rgba(139, 152, 120, .14);
+    --margin-rule: #93493c;
+    --ink: #202b1d;
+    --ink-soft: #4a5240;
+    --ink-faint: #7c8468;
+    --stamp-pendiente: #7a4e09;
+    --stamp-pendiente-wash: #f2e4c7;
+    --stamp-curso: #1f3a61;
+    --stamp-curso-wash: #dce3ed;
+    --stamp-hecha: #234a28;
+    --stamp-hecha-wash: #dbeadc;
+    --font-display: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif;
+    --font-body: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background-color: var(--paper);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 27px,
+      var(--paper-line-faint) 27px,
+      var(--paper-line-faint) 28px
+    );
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .register {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 4.5rem;
+  }
+
+  .register__header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.35rem);
+    font-weight: 700;
+    margin: 0 0 .5rem;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  .register__byline {
+    margin: 0 0 2.25rem;
+    max-width: 42ch;
+    color: var(--ink-soft);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .register__controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: .75rem 1.5rem;
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+    border-bottom: 1px solid var(--paper-line-strong);
+    padding-top: .25rem;
+  }
+
+  .tab {
+    margin-bottom: -1px;
+    border: 1px solid var(--paper-line-strong);
+    border-radius: 3px 3px 0 0;
+    background: rgba(139, 152, 120, .12);
+    padding: .5rem .8rem;
+    font: 500 .82rem/1.2 var(--font-body);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  .tab:hover { color: var(--ink); }
+
+  .tab.is-active {
+    background: var(--paper);
+    border-bottom-color: var(--paper);
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .tab__count {
+    margin-left: .35em;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tab.is-active .tab__count { color: var(--ink-soft); }
+
+  .order {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    font-size: .82rem;
+    color: var(--ink-soft);
+    padding-bottom: .55rem;
+  }
+
+  .order__label { color: var(--ink-faint); }
+
+  .order__btn {
+    background: none;
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: .1rem 0;
+    font: 500 .82rem/1.2 var(--font-body);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  .order__btn:hover { color: var(--ink); }
+
+  .order__btn.is-active {
+    color: var(--ink);
+    font-weight: 700;
+    border-bottom-color: var(--ink);
+  }
+
+  .ledger__scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 1.75rem;
+  }
+
+  .ledger {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .ledger thead th {
+    text-align: left;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: .78rem;
+    color: var(--ink-soft);
+    border-bottom: 1.5px solid var(--paper-line-strong);
+    padding: .85rem .6rem .6rem;
+  }
+
+  .ledger tbody td {
+    padding: .95rem .6rem;
+    border-bottom: 1px solid var(--paper-line);
+    vertical-align: top;
+    font-size: .95rem;
+  }
+
+  .ledger tbody tr:last-child td { border-bottom: 1.5px solid var(--paper-line-strong); }
+
+  .ledger thead th.col-num,
+  .ledger tbody td.col-num {
+    text-align: right;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+    border-right: 2px solid var(--margin-rule);
+    padding-right: .75rem;
+  }
+
+  .ledger thead th.col-title,
+  .ledger tbody td.col-title {
+    padding-left: .85rem;
+  }
+
+  .ledger tbody td.col-title {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .ledger tbody td.col-date {
+    color: var(--ink-soft);
+    font-size: .85rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .stamp {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: .78rem;
+    letter-spacing: .01em;
+    padding: .2rem .6rem;
+    border: 1.5px solid currentColor;
+    outline: 1px solid currentColor;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .stamp--pendiente { color: var(--stamp-pendiente); background: var(--stamp-pendiente-wash); transform: rotate(-1.5deg); }
+  .stamp--en_curso { color: var(--stamp-curso); background: var(--stamp-curso-wash); transform: rotate(1deg); }
+  .stamp--hecha { color: var(--stamp-hecha); background: var(--stamp-hecha-wash); transform: rotate(-.8deg); }
+
+  .ledger__empty {
+    margin: 2rem .6rem;
+    color: var(--ink-soft);
+    font-size: .95rem;
+  }
+
+  .tab:focus-visible,
+  .order__btn:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+
+  @media (max-width: 640px) {
+    .register { padding: 2.25rem 1.1rem 3rem; }
+
+    .register__controls { flex-direction: column; align-items: flex-start; }
+    .order { padding-bottom: 0; }
+
+    .ledger { table-layout: auto; }
+
+    .ledger thead th, .ledger tbody td { padding: .6rem .45rem; font-size: .85rem; }
+    .ledger tbody td.col-title { font-size: .92rem; }
+
+    .ledger thead th.col-num, .ledger tbody td.col-num { display: none; }
+  }
+</style>
+</head>
+<body>
+  <main class="register">
+    <header class="register__header">
+      <h1>Registro de tareas</h1>
+      <p class="register__byline">Todas las tareas registradas, de la más reciente a la más antigua.</p>
+    </header>
+
+    <div class="register__controls">
+      <div class="tabs" role="group" aria-label="Filtrar por estado" id="tabs"></div>
+      <div class="order" role="group" aria-label="Ordenar por">
+        <span class="order__label">Ordenar por</span>
+        <button type="button" class="order__btn is-active" data-order="fecha" aria-pressed="true">Fecha</button>
+        <button type="button" class="order__btn" data-order="estado" aria-pressed="false">Estado</button>
+      </div>
+    </div>
+
+    <div class="ledger__scroll">
+      <table class="ledger">
+        <caption class="sr-only">Lista de tareas con su número de registro, título, fecha de creación y estado.</caption>
+        <colgroup>
+          <col style="width:3.25rem">
+          <col>
+          <col style="width:8.5rem">
+          <col style="width:9rem">
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col" class="col-num">N.&#186;</th>
+            <th scope="col" class="col-title">Tarea</th>
+            <th scope="col" class="col-date">Creada</th>
+            <th scope="col" class="col-state">Estado</th>
+          </tr>
+        </thead>
+        <tbody id="ledgerBody"></tbody>
+      </table>
+    </div>
+    <p class="ledger__empty" id="ledgerEmpty" hidden>No hay tareas registradas con este estado.</p>
+    <p class="sr-only" aria-live="polite" id="ledgerStatus"></p>
+  </main>
+
+<script>
+(function () {
+  // Datos de ejemplo con la forma exacta del response de GET /tareas
+  // (ver api/contrato-tareas.md, que a su vez sigue schema/tareas.md).
+  // Las primeras tres filas son el mismo ejemplo documentado en el
+  // contrato; se agregan dos más para poder demostrar filtro y orden
+  // por estado con más de una tarea por estado. Es un componente
+  // estático: no hace fetch a ninguna API real.
+  var TAREAS = [
+    { id: "550e8400-e29b-41d4-a716-446655440000", titulo: "Revisar informe de gastos de septiembre", estado: "pendiente", fecha_creacion: "2026-09-17T14:30:00Z" },
+    { id: "a1c4e8f2-6b3d-4a91-8e7c-5f2d9b6a1c30", titulo: "Responder consultas del formulario de contacto", estado: "pendiente", fecha_creacion: "2026-09-16T11:05:00Z" },
+    { id: "b3f1c2d4-9a3e-4f2b-8c1d-2e5f6a7b8c9d", titulo: "Actualizar dependencias del proyecto", estado: "en_curso", fecha_creacion: "2026-09-15T09:00:00Z" },
+    { id: "d4e7b2a9-3f6c-4d18-9a2e-7c1b4f8e3d65", titulo: "Migrar base de datos de usuarios a staging", estado: "en_curso", fecha_creacion: "2026-09-14T16:20:00Z" },
+    { id: "7c9e6679-7425-40de-944b-e07fc1f90ae7", titulo: "Preparar demo para la clase", estado: "hecha", fecha_creacion: "2026-09-10T18:45:00Z" }
+  ];
+
+  var ESTADOS = ["pendiente", "en_curso", "hecha"];
+  var ESTADO_LABEL = { pendiente: "Pendiente", en_curso: "En curso", hecha: "Hecha" };
+  var ESTADO_ORDEN = { pendiente: 0, en_curso: 1, hecha: 2 };
+
+  var estadoFiltro = "todas";
+  var criterioOrden = "fecha";
+
+  var fechaFormatter = new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "short", year: "numeric" });
+  function formatearFecha(iso) {
+    return fechaFormatter.format(new Date(iso));
+  }
+
+  function contarPorEstado(estado) {
+    return TAREAS.filter(function (t) { return t.estado === estado; }).length;
+  }
+
+  function construirTabs() {
+    var cont = document.getElementById("tabs");
+    var opciones = [{ valor: "todas", etiqueta: "Todas", cuenta: TAREAS.length }].concat(
+      ESTADOS.map(function (e) {
+        return { valor: e, etiqueta: ESTADO_LABEL[e], cuenta: contarPorEstado(e) };
+      })
+    );
+
+    opciones.forEach(function (op) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "tab" + (op.valor === estadoFiltro ? " is-active" : "");
+      btn.dataset.filter = op.valor;
+      btn.setAttribute("aria-pressed", op.valor === estadoFiltro ? "true" : "false");
+      btn.appendChild(document.createTextNode(op.etiqueta + " "));
+
+      var cuenta = document.createElement("span");
+      cuenta.className = "tab__count";
+      cuenta.textContent = op.cuenta;
+      btn.appendChild(cuenta);
+
+      btn.addEventListener("click", function () {
+        estadoFiltro = op.valor;
+        actualizarTabsActivos();
+        render();
+      });
+
+      cont.appendChild(btn);
+    });
+  }
+
+  function actualizarTabsActivos() {
+    document.querySelectorAll(".tab").forEach(function (btn) {
+      var activo = btn.dataset.filter === estadoFiltro;
+      btn.classList.toggle("is-active", activo);
+      btn.setAttribute("aria-pressed", activo ? "true" : "false");
+    });
+  }
+
+  function crearFila(tarea, indice) {
+    var tr = document.createElement("tr");
+
+    var tdNum = document.createElement("td");
+    tdNum.className = "col-num";
+    tdNum.textContent = String(indice + 1).padStart(3, "0");
+    tr.appendChild(tdNum);
+
+    var tdTitulo = document.createElement("td");
+    tdTitulo.className = "col-title";
+    tdTitulo.textContent = tarea.titulo;
+    tr.appendChild(tdTitulo);
+
+    var tdFecha = document.createElement("td");
+    tdFecha.className = "col-date";
+    tdFecha.textContent = formatearFecha(tarea.fecha_creacion);
+    tr.appendChild(tdFecha);
+
+    var tdEstado = document.createElement("td");
+    tdEstado.className = "col-state";
+    var stamp = document.createElement("span");
+    stamp.className = "stamp stamp--" + tarea.estado;
+    stamp.textContent = ESTADO_LABEL[tarea.estado] || tarea.estado;
+    tdEstado.appendChild(stamp);
+    tr.appendChild(tdEstado);
+
+    return tr;
+  }
+
+  function render() {
+    var visibles = estadoFiltro === "todas"
+      ? TAREAS.slice()
+      : TAREAS.filter(function (t) { return t.estado === estadoFiltro; });
+
+    visibles.sort(function (a, b) {
+      if (criterioOrden === "estado") {
+        var diff = ESTADO_ORDEN[a.estado] - ESTADO_ORDEN[b.estado];
+        if (diff !== 0) return diff;
+      }
+      return new Date(b.fecha_creacion) - new Date(a.fecha_creacion);
+    });
+
+    var body = document.getElementById("ledgerBody");
+    body.innerHTML = "";
+
+    var empty = document.getElementById("ledgerEmpty");
+    if (visibles.length === 0) {
+      empty.hidden = false;
+    } else {
+      empty.hidden = true;
+      visibles.forEach(function (t, i) {
+        body.appendChild(crearFila(t, i));
+      });
+    }
+
+    var estadoTexto = estadoFiltro === "todas"
+      ? "todas las tareas"
+      : "tareas en estado " + ESTADO_LABEL[estadoFiltro].toLowerCase();
+    var ordenTexto = criterioOrden === "estado" ? "ordenadas por estado" : "ordenadas por fecha de creación";
+    document.getElementById("ledgerStatus").textContent =
+      "Mostrando " + visibles.length + " de " + estadoTexto + ", " + ordenTexto + ".";
+  }
+
+  document.querySelectorAll(".order__btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      criterioOrden = btn.dataset.order;
+      document.querySelectorAll(".order__btn").forEach(function (b) {
+        var activo = b === btn;
+        b.classList.toggle("is-active", activo);
+        b.setAttribute("aria-pressed", activo ? "true" : "false");
+      });
+      render();
+    });
+  });
+
+  construirTabs();
+  render();
+})();
+</script>
+</body>
+</html>
