@@ -36,3 +36,15 @@ cada una. Ambas se presentaron **juntas, en una sola interacción**:
 Cada respuesta se ruteó de vuelta a su propio sub-agente (`SendMessage` al
 `agentId` que generó cada `DECISION_NEEDED`), y cada uno retomó su propio
 punto de espera de forma independiente — ninguno vio la decisión del otro.
+T3 implementó el filtro/orden en `ui/lista-tareas.html` (commit `ef837a5`);
+T4 implementó el formulario sin validación de cliente en
+`ui/nueva-tarea.html` (commit `5374913`), dejando además un comentario
+explícito en el propio archivo para que nadie "corrija" esa ausencia de
+validación sin mirar esta bitácora.
+
+## Milestone cerrado
+
+Las 5 tareas del milestone "Panel de administración de tareas" están
+`COMPLETADA`. 3 waves, 2 decisiones reales pasaron por el batched gate (de
+5 tareas totales — la mayoría se resolvió sola). Detalle completo en
+[RESUMEN-HARNESS.md](../../RESUMEN-HARNESS.md) §6.

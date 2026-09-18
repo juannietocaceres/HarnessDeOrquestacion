@@ -196,7 +196,7 @@ creadas dentro de una sesión quedan disponibles recién en una sesión nueva
 sobre el mismo proyecto — es una limitación del entorno de esta corrida en
 particular, no del diseño del harness.
 
-## 8. Entregable de muestra: especificación de T2
+## 9. Entregable de muestra: especificación de T2
 
 [milestones/panel-tareas-demo/especificaciones/T2-contrato-api.md](milestones/panel-tareas-demo/especificaciones/T2-contrato-api.md) —
 generado siguiendo la plantilla de `especificacion/SKILL.md` a partir del
@@ -204,3 +204,33 @@ esquema real que produjo T1 (no del manifest original, que traía T2 sin
 criterios de aceptación). Queda un `RF`/`RNF`/criterios de aceptación
 completos y una pregunta abierta explícita (paginación) que se resuelve
 como fuera de alcance para esta demo en vez de decidirse en silencio.
+
+## 10. Cierre del milestone de ejemplo
+
+Las 5 tareas quedaron `COMPLETADA`, cada una en su propio commit
+(`git log --oneline` en la raíz del repo tiene la secuencia completa). Wave
+3 fue la que de verdad mostró el mecanismo: 3 tareas listas a la vez, cap 2
+→ 2 lotes, y 2 de las 3 escalaron una decisión real cada una, presentadas
+juntas en un solo batched gate (detalle en
+[decisiones.md](milestones/panel-tareas-demo/decisiones.md)).
+
+**Lección no anticipada, y por qué queda documentada**: en el primer intento
+(T1), el prompt del sub-agente decía "si te parece razonable agregar algo,
+no lo decidas por tu cuenta" — y el sub-agente interpretó esa frase como "no
+lo agregues", no como "escalalo". Es una interpretación perfectamente
+razonable de una instrucción ambigua, no un error del sub-agente. Se
+corrigió la redacción para T3/T4 ("ni la agregues ni la descartes en
+silencio: DETENÉTE y planteá la decisión") y ambas escalaron correctamente.
+Vale la pena mostrar esto en clase tal cual pasó: el batched gate depende
+por completo de que el prompt de cada tarea deje la ambigüedad genuinamente
+abierta — si el prompt ya la resuelve (aunque sea sin querer), no hay nada
+que escalar, y eso no es una falla del orquestador.
+
+**Segundo hallazgo del mismo tipo**: al ejecutar sub-agentes sin aislamiento
+por worktree (§7) en paralelo dentro de un mismo lote, cada prompt tuvo que
+declarar explícitamente qué archivos NO tocar (los de las otras tareas en
+vuelo), porque sin worktrees separados no hay una barrera técnica que lo
+garantice — solo la instrucción. En los 5 casos se verificó al final del
+turno (cada sub-agente confirmó con `git status`/diff que solo tocó lo
+suyo), pero es una responsabilidad que el aislamiento por worktree hubiera
+resuelto de raíz en vez de dejarla en manos de la instrucción.

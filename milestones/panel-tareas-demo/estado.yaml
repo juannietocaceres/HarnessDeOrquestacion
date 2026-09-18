@@ -1,7 +1,7 @@
 milestone: "Panel de administración de tareas (demo de clase)"
 manifest_snapshot_sha256: ab28a262d324c8d0636a060ae8efd0b463bd7b681f9db9f880b661155dc72d24
 preflight: OK   # ids únicos, deps resuelven internamente, sin ciclos, campos requeridos presentes
-wave_actual: 2   # wave 2 cerrada
+wave_actual: 3   # wave 3 cerrada — milestone completo
 waves_planificadas:
   - wave: 1
     tareas: [T1]
@@ -12,7 +12,7 @@ waves_planificadas:
 tareas:
   T1: { estado: COMPLETADA, commit: 2cb9723, worktree: null }   # sin aislamiento por worktree en esta corrida, ver PROCESO.md §7
   T2: { estado: COMPLETADA, commit: b6c7e47, worktree: null }
-  T3: { estado: ESPERANDO_DECISION, agentId: af84211556b282742, worktree: null }
-  T4: { estado: ESPERANDO_DECISION, agentId: ae6367ffdd37dfff3, worktree: null }
+  T3: { estado: COMPLETADA, commit: ef837a5, worktree: null }   # retomada tras DECISION_NEEDED
+  T4: { estado: COMPLETADA, commit: 5374913, worktree: null }   # retomada tras DECISION_NEEDED
   T5: { estado: COMPLETADA, commit: dff84e6, worktree: null }
 bloqueos_externos: []
