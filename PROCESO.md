@@ -234,3 +234,24 @@ garantice — solo la instrucción. En los 5 casos se verificó al final del
 turno (cada sub-agente confirmó con `git status`/diff que solo tocó lo
 suyo), pero es una responsabilidad que el aislamiento por worktree hubiera
 resuelto de raíz en vez de dejarla en manos de la instrucción.
+
+## 11. Material de presentación
+
+Después de cerrar el milestone, se generó un deck de 10 slides como material
+para presentar en clase, a partir del contenido ya escrito en
+RESUMEN-HARNESS.md (no como un `.md` pegado en un artifact, sino diseñado
+como una pieza aparte: portada → problema → modelo → skills → mecánica del
+orquestador → política de no-respuesta → grafo del ejemplo real → batched
+gate en vivo → resultados → lecciones).
+
+**Un detalle del propio proceso de diseño, que vale la pena mostrar en
+clase**: el primer borrador de las slides usó, sin querer, dos de los
+patrones que la skill `frontend-design` marca explícitamente como clichés
+genéricos de contenido generado por IA — etiquetas tipo "PALABRA — fragmento"
+con guion largo, y metadatos unidos con punto medio ("A · B · C"). Se
+detectaron en una relectura antes de publicar y se corrigieron. También
+apareció un problema real de contraste (un verde-azulado que se lee bien
+sobre fondo oscuro cae por debajo de 4.5:1 sobre fondo claro) — se separaron
+dos variantes del mismo color, una para cada fondo. Ninguno de los dos
+problemas se detecta solo leyendo el código: exige aplicar el propio
+checklist de diseño, no solo invocarlo de nombre.
