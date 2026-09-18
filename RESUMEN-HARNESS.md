@@ -158,4 +158,8 @@ worktree y el registro de skills nuevas dentro de la misma sesión chocaron
 con una limitación puntual del entorno (el proyecto no era un repositorio
 git cuando la sesión arrancó). El diagnóstico completo, lo que se intentó, y
 por qué no invalida el diseño del harness, está documentado en
-[PROCESO.md](PROCESO.md) §7.
+[PROCESO.md](PROCESO.md) §7 — **y se confirmó**: en una sesión de Claude
+Code genuinamente nueva sobre esta misma carpeta (ya repositorio git desde
+su propio arranque), el aislamiento por worktree funcionó sin el error
+original, spawneando un sub-agente en su propia rama y directorio aislados
+(detalle en [PROCESO.md](PROCESO.md) §12).

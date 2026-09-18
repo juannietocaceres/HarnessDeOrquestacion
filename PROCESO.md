@@ -255,3 +255,44 @@ sobre fondo oscuro cae por debajo de 4.5:1 sobre fondo claro) — se separaron
 dos variantes del mismo color, una para cada fondo. Ninguno de los dos
 problemas se detecta solo leyendo el código: exige aplicar el propio
 checklist de diseño, no solo invocarlo de nombre.
+
+**Iteración sobre la accesibilidad del contenido**: tras una primera versión
+del deck, el usuario pidió que fuera "más entendible" para que toda la clase
+se interese y comprenda — no solo los compañeros técnicos. Se reescribieron
+las 10 slides reemplazando jerga interna (`batched gate`, `preflight`,
+`timeout`, `cap de concurrencia`) por lenguaje llano, apoyado en la propia
+metáfora del sistema ("como las olas") en vez de en el nombre técnico. La
+tabla de las 6 skills pasó de una tabla tipo spec a una grilla de tarjetas
+con ícono + una frase en criollo. Esto confirma algo más general del
+proceso: la primera versión de cualquier entregable tiende a asumir
+demasiado conocimiento previo del lector — vale la pena una pasada explícita
+de "¿esto lo entiende alguien que no escribió el sistema?" antes de darlo
+por terminado.
+
+## 12. Validación del aislamiento por worktree (cabo suelto de §7, cerrado)
+
+Para confirmar si el bloqueo de §7 era realmente específico de la sesión
+original (y no un defecto del diseño), se corrió una verificación acotada
+en una sesión de Claude Code genuinamente nueva: `claude -p` en modo no
+interactivo, arrancada como subproceso desde la sesión original, sobre esta
+misma carpeta — ya un repositorio git válido desde su propio arranque, a
+diferencia de la sesión original.
+
+**Resultado: el aislamiento por worktree funciona.** La sesión nueva pudo
+spawnear un sub-agente con `isolation: "worktree"` sin el error "Cannot
+create agent worktree" — se le asignó una rama y un directorio de worktree
+propios (`worktree-agent-<id>`), y el sub-agente escribió su archivo de
+prueba ahí adentro, aislado del resto del repo. Esto confirma la hipótesis
+de §7: el bloqueo fue exclusivamente porque esa sesión detectó "no es un
+repositorio git" en su arranque, antes de que se corriera `git init` — no
+hay ningún problema de diseño en el mecanismo de aislamiento en sí.
+
+**Detalle operativo, también útil para la bitácora**: la limpieza de la
+rama y el worktree de prueba (`git worktree remove`, `git branch -D`) está
+marcada como operación sensible incluso en modo `acceptEdits`, así que la
+sesión de prueba no pudo autolimpiarse en modo no interactivo y quedó
+esperando una aprobación que nunca iba a llegar (no había nadie del otro
+lado). La limpieza se completó manualmente desde la sesión principal. Es
+el mismo patrón que la política de no-respuesta del propio orquestador:
+una operación que un humano debería aprobar no se ejecuta sola solo porque
+sería conveniente que lo hiciera.
