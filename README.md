@@ -14,7 +14,6 @@ Hecho para la Electiva de desarrollo asistido por IA, Septiembre 2026.
 |---|---|
 | **[RESUMEN-HARNESS.md](RESUMEN-HARNESS.md)** | El entregable final: mapa de las 6 skills, el diagrama de flujo completo, y la política de no-respuesta explicada |
 | **[PROCESO.md](PROCESO.md)** | La bitácora completa: cada decisión de diseño no trivial, con el porqué |
-| **[GUION-PRESENTACION.md](GUION-PRESENTACION.md)** | Guion hablado para presentar esto en clase, con tiempos y preguntas probables |
 | **[CLAUDE.md](CLAUDE.md)** | Instrucciones para Claude Code: cómo se invoca cada skill y las convenciones del proyecto |
 
 ## La idea en una imagen
@@ -41,7 +40,6 @@ milestones/<slug>/       # manifest, estado y decisiones de cada milestone corri
 schema/ api/ ui/         # artefactos reales que dejó el milestone de ejemplo
 PROCESO.md               # bitácora de decisiones de diseño
 RESUMEN-HARNESS.md        # entregable final
-GUION-PRESENTACION.md    # guion para presentar en clase
 ```
 
 ## El ejemplo real
