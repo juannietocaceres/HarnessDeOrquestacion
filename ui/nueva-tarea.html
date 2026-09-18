@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nueva tarea — Panel de administración de tareas</title>
+<style>
+  :root {
+    --desk: #C7CBBE;
+    --ticket: #F3EEE1;
+    --ink: #262319;
+    --ink-soft: #5B5644;
+    --stamp: #A63A2C;
+    --stamp-dark: #7E2B20;
+    --approved: #3F5D3A;
+    --line: #B4AC92;
+    --pad: 34px;
+    --radius: 4px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--desk);
+    background-image:
+      radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.28), transparent 45%),
+      radial-gradient(circle at 82% 88%, rgba(0, 0, 0, 0.06), transparent 50%);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+  }
+
+  main { width: 100%; display: flex; justify-content: center; }
+
+  form.ticket {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    background: var(--ticket);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: 6px 6px 0 var(--line);
+    padding: var(--pad);
+  }
+
+  .ticket__letterhead {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    margin: 0 0 4px;
+  }
+
+  .ticket__title {
+    font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  .ticket__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin: 18px 0 0;
+    padding: 0;
+  }
+
+  .ticket__meta div { display: flex; flex-direction: column; gap: 2px; }
+
+  .ticket__meta dt { font-size: 0.68rem; color: var(--ink-soft); margin: 0; }
+
+  .ticket__meta dd {
+    font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85rem;
+    margin: 0;
+    color: var(--ink);
+    word-break: break-all;
+  }
+
+  .ticket__tear {
+    position: relative;
+    border-top: 2px dashed var(--line);
+    margin: 26px calc(-1 * var(--pad));
+  }
+
+  .ticket__tear::before,
+  .ticket__tear::after {
+    content: "";
+    position: absolute;
+    top: -11px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--desk);
+    border: 2px solid var(--line);
+  }
+
+  .ticket__tear::before { left: -11px; }
+  .ticket__tear::after { right: -11px; }
+
+  .field { margin: 0 0 28px; }
+
+  .field label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+
+  .field input {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--ink);
+    background: transparent;
+    font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 1.05rem;
+    color: var(--ink);
+    padding: 6px 2px 10px;
+  }
+
+  .field input::placeholder { color: #9C9683; }
+
+  .field input:focus-visible {
+    outline: 2.5px solid var(--stamp);
+    outline-offset: 3px;
+  }
+
+  .ticket__actions { display: flex; justify-content: flex-end; }
+
+  button {
+    font-family: "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ticket);
+    background: var(--stamp);
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    padding: 12px 22px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  }
+
+  button:hover:not(:disabled) { background: var(--stamp-dark); }
+
+  button:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--ink);
+  }
+
+  button:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 3px; }
+
+  button:disabled { cursor: progress; opacity: 0.7; }
+
+  .ticket__feedback:empty { display: none; }
+
+  .ticket__feedback {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1.5px dashed var(--line);
+  }
+
+  .sello {
+    display: inline-block;
+    font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    padding: 6px 14px;
+    border: 3px solid currentColor;
+    border-radius: 3px 8px 4px 9px;
+    transform: rotate(-3deg);
+    background: transparent;
+    animation: sello-in 220ms ease-out;
+  }
+
+  .sello--ok { color: var(--approved); }
+  .sello--error { color: var(--stamp); }
+
+  .feedback__detalle {
+    margin: 14px 0 0;
+    font-size: 0.9rem;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  .ticket__feedback.is-unavailable .feedback__detalle {
+    margin-top: 0;
+    color: var(--ink-soft);
+  }
+
+  @keyframes sello-in {
+    from { opacity: 0; transform: rotate(-3deg) scale(1.5); }
+    to { opacity: 1; transform: rotate(-3deg) scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sello { animation: none; }
+    button { transition: none; }
+  }
+
+  .noscript-notice {
+    max-width: 440px;
+    margin: 0 auto 16px;
+    padding: 14px 18px;
+    background: #F6E3C8;
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 420px) {
+    :root { --pad: 22px; }
+    .ticket__title { font-size: 1.5rem; }
+    .ticket__actions { justify-content: stretch; }
+    .ticket__actions button { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<noscript>
+  <p class="noscript-notice">Este formulario necesita JavaScript habilitado para enviar la tarea a <code>POST /tareas</code>.</p>
+</noscript>
+<main>
+  <!--
+    Validación: este formulario confía únicamente en la respuesta del
+    servidor (POST /tareas → 400 si el título es inválido, según
+    api/contrato-tareas.md). No hay validación de cliente a propósito: fue
+    una decisión explícita del batched gate de la wave (tarea T4, ver
+    milestones/panel-tareas-demo/decisiones.md) para no duplicar en dos
+    lugares la regla de negocio del contrato. No agregues `required`,
+    `maxlength`/`pattern`, ni chequeos en JS antes del envío sin revisar esa
+    decisión primero.
+  -->
+  <form class="ticket" id="form-nueva-tarea" novalidate autocomplete="off">
+    <p class="ticket__letterhead">Panel de administración de tareas</p>
+    <h1 class="ticket__title">Nueva tarea</h1>
+
+    <dl class="ticket__meta">
+      <div>
+        <dt>N.º</dt>
+        <dd id="meta-id">—</dd>
+      </div>
+      <div>
+        <dt>Fecha</dt>
+        <dd id="meta-fecha">—</dd>
+      </div>
+      <div>
+        <dt>Estado</dt>
+        <dd id="meta-estado">—</dd>
+      </div>
+    </dl>
+
+    <div class="ticket__tear" aria-hidden="true"></div>
+
+    <div class="field">
+      <label for="titulo">Título de la tarea</label>
+      <input type="text" id="titulo" name="titulo" placeholder="Revisar informe de gastos de septiembre">
+    </div>
+
+    <div class="ticket__actions">
+      <button type="submit" id="btn-submit">
+        <span class="btn-label">Registrar tarea</span>
+      </button>
+    </div>
+
+    <div class="ticket__feedback" id="feedback" role="status" aria-live="polite"></div>
+  </form>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var form = document.getElementById('form-nueva-tarea');
+  var input = document.getElementById('titulo');
+  var button = document.getElementById('btn-submit');
+  var buttonLabel = button.querySelector('.btn-label');
+  var feedback = document.getElementById('feedback');
+  var metaId = document.getElementById('meta-id');
+  var metaFecha = document.getElementById('meta-fecha');
+  var metaEstado = document.getElementById('meta-estado');
+
+  var ETIQUETA_INICIAL = buttonLabel.textContent;
+
+  function formatearFecha(iso) {
+    var fecha = new Date(iso);
+    if (isNaN(fecha.getTime())) return iso;
+    try {
+      return fecha.toLocaleString('es-AR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      return iso;
+    }
+  }
+
+  function limpiarFeedback() {
+    feedback.innerHTML = '';
+    feedback.className = 'ticket__feedback';
+  }
+
+  function crearSello(texto, variante) {
+    var sello = document.createElement('div');
+    sello.className = 'sello sello--' + variante;
+    sello.textContent = texto;
+    return sello;
+  }
+
+  function crearDetalle(texto) {
+    var p = document.createElement('p');
+    p.className = 'feedback__detalle';
+    p.textContent = texto;
+    return p;
+  }
+
+  function mostrarExito(tarea) {
+    limpiarFeedback();
+    feedback.classList.add('is-ok');
+    feedback.appendChild(crearSello('REGISTRADA', 'ok'));
+    feedback.appendChild(crearDetalle(
+      'Queda "' + tarea.estado + '" desde el ' + formatearFecha(tarea.fecha_creacion) + '.'
+    ));
+
+    metaId.textContent = tarea.id || '—';
+    metaFecha.textContent = tarea.fecha_creacion ? formatearFecha(tarea.fecha_creacion) : '—';
+    metaEstado.textContent = tarea.estado || '—';
+  }
+
+  function mostrarRechazo(mensaje) {
+    limpiarFeedback();
+    feedback.classList.add('is-error');
+    feedback.appendChild(crearSello('RECHAZADA', 'error'));
+    feedback.appendChild(crearDetalle(mensaje || 'El servidor rechazó la tarea.'));
+  }
+
+  function mostrarErrorInesperado() {
+    limpiarFeedback();
+    feedback.classList.add('is-unavailable');
+    feedback.appendChild(crearDetalle(
+      'No se pudo registrar la tarea. Revisá que el servidor esté disponible e intentá de nuevo.'
+    ));
+  }
+
+  function fijarCargando(cargando) {
+    button.disabled = cargando;
+    buttonLabel.textContent = cargando ? 'Registrando…' : ETIQUETA_INICIAL;
+  }
+
+  form.addEventListener('submit', async function (evento) {
+    evento.preventDefault();
+    limpiarFeedback();
+    fijarCargando(true);
+
+    // Sin chequeos previos: se envía tal cual lo haya escrito la persona,
+    // aunque esté vacío o sea demasiado largo. El servidor es la única
+    // fuente de verdad (ver comentario junto al <form>).
+    var payload = { titulo: input.value };
+
+    try {
+      var respuesta = await fetch('/tareas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      var cuerpo = null;
+      try {
+        cuerpo = await respuesta.json();
+      } catch (errorParseo) {
+        cuerpo = null;
+      }
+
+      if (respuesta.ok && cuerpo) {
+        mostrarExito(cuerpo);
+        form.reset();
+        input.focus();
+      } else if (respuesta.status === 400 && cuerpo) {
+        mostrarRechazo(cuerpo.mensaje);
+      } else {
+        mostrarErrorInesperado();
+      }
+    } catch (errorRed) {
+      mostrarErrorInesperado();
+    } finally {
+      fijarCargando(false);
+    }
+  });
+})();
+</script>
+</body>
+</html>
