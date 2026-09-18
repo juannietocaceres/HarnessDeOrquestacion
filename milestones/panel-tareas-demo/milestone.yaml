@@ -1,0 +1,58 @@
+milestone: "Panel de administración de tareas (demo de clase)"
+cap_concurrencia: 2   # deliberadamente menor al default (3), para forzar que la wave 3 (3 tareas listas) se parta en 2 lotes y se vea el cap en acción
+tareas:
+  - id: T1
+    titulo: "Modelo de datos de tareas"
+    tipo: backend
+    depende_de: []
+    descripcion: >
+      Definir el esquema de datos de una tarea del panel (campos, tipos,
+      validaciones) y dejarlo documentado en schema/tareas.md, con al menos
+      un ejemplo en JSON.
+    criterios_aceptacion:
+      - "El esquema define al menos: id, titulo, estado, fecha_creacion."
+      - "estado es un enum con estos valores exactos: pendiente, en_curso, hecha."
+      - "Incluye al menos un ejemplo de objeto válido en JSON."
+
+  - id: T2
+    titulo: "Contrato de API: crear y listar tareas"
+    tipo: backend
+    depende_de: [T1]
+    descripcion: >
+      Documentar el contrato REST para crear y listar tareas del panel,
+      basado en el esquema que resulte de T1.
+    criterios_aceptacion: []   # deliberadamente vacío: dispara /especificacion antes de implementar (ver §8 de orquestador/SKILL.md)
+
+  - id: T3
+    titulo: "Componente UI: lista de tareas"
+    tipo: frontend
+    depende_de: [T2]
+    descripcion: >
+      Construir un componente estático (HTML/CSS/JS sin build step) que
+      renderiza una lista de tareas de ejemplo usando la forma de datos del
+      contrato de T2, en ui/lista-tareas.html.
+    criterios_aceptacion:
+      - "Renderiza al menos 3 tareas de ejemplo con su estado visualmente distinguible."
+      - "Sigue los principios de la skill frontend-design (elección deliberada de tipografía/color, no defaults genéricos)."
+
+  - id: T4
+    titulo: "Componente UI: formulario de nueva tarea"
+    tipo: frontend
+    depende_de: [T2]
+    descripcion: >
+      Construir un componente estático (HTML/CSS/JS sin build step) con un
+      formulario para crear una tarea, acorde al payload de POST /tareas
+      definido en T2, en ui/nueva-tarea.html.
+    criterios_aceptacion:
+      - "El formulario incluye los campos requeridos por el contrato de T2."
+      - "Sigue los principios de la skill frontend-design."
+
+  - id: T5
+    titulo: "Indicador de tareas pendientes"
+    tipo: frontend
+    depende_de: [T2]
+    descripcion: >
+      Construir un componente pequeño (badge/contador) que muestra cuántas
+      tareas están pendientes, en ui/badge-pendientes.html.
+    criterios_aceptacion:
+      - "Muestra un número y una etiqueta clara del estado 'pendientes'."
