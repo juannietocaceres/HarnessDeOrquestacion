@@ -296,3 +296,70 @@ lado). La limpieza se completó manualmente desde la sesión principal. Es
 el mismo patrón que la política de no-respuesta del propio orquestador:
 una operación que un humano debería aprobar no se ejecuta sola solo porque
 sería conveniente que lo hiciera.
+
+## 13. Publicar el repo en GitHub: lo que costó y por qué
+
+Esta sección documenta un tramo del proceso que no tiene que ver con
+diseñar el harness, sino con algo igual de real: llevar el trabajo desde
+"funciona en la sesión de Claude Code" hasta "está publicado en una cuenta
+de verdad". Vale la pena explicarlo con detalle porque es exactamente el
+tipo de fricción que no aparece cuando uno solo mira el resultado final.
+
+**Faltaba el README.** Hasta este punto el repo tenía CLAUDE.md,
+PROCESO.md, RESUMEN-HARNESS.md y GUION-PRESENTACION.md — documentación real,
+pero ninguno cumple el rol de "portada". GitHub renderiza automáticamente
+`README.md` en la página principal del repositorio: es lo primero (y a
+veces lo único) que ve alguien que entra al link sin contexto previo — un
+compañero de clase, el profesor. Sin él, esa persona se encuentra con un
+listado de archivos sin ninguna explicación de qué está mirando. Se agregó
+`README.md` como la puerta de entrada: qué es el proyecto en dos líneas,
+una tabla que dirige a cada documento según lo que se busque, y un diagrama
+simplificado del flujo (la versión detallada queda en RESUMEN-HARNESS.md,
+para no duplicar contenido).
+
+**No había forma de crear el repositorio en GitHub por comandos.** Se
+intentó `gh` (la CLI oficial de GitHub) para crear el repositorio
+directamente, y no está instalada en esta máquina — ni en Git Bash ni en
+PowerShell. Tampoco había un token de acceso configurado como variable de
+entorno. Ante esto, se decidió NO pedirle al usuario que pegue un token de
+acceso personal en el chat para que Claude lo use: es exactamente el tipo
+de credencial sensible que no corresponde manejar así. La alternativa
+simple y segura fue que el usuario mismo creara el repositorio vacío desde
+la web de GitHub (dos clics, ahí ya está logueado) y le pasara a Claude el
+nombre para configurar el resto.
+
+**El `git push` tampoco pudo correr solo.** Una vez creado el repositorio
+remoto, hacer `git push` requiere que el usuario se autentique — GitHub ya
+no acepta usuario/contraseña simple, así que Git usa un gestor de
+credenciales que abre una ventana del navegador para loguearse la primera
+vez. El problema: tanto la terminal Bash como la de PowerShell que usa
+Claude corren en **modo no interactivo** (sin una consola real donde ese
+diálogo se pueda mostrar) — se probaron las dos, y las dos fallaron con el
+mismo tipo de error ("no se puede preguntar, no hay terminal"). Tampoco
+había una llave SSH configurada como atajo. La solución fue simple una vez
+diagnosticado el problema: el usuario corrió `git push` desde su propia
+terminal (con sesión interactiva de verdad), donde el login por navegador
+funciona sin inconvenientes.
+
+**GitHub Desktop apuntó, por confusión, a un repositorio distinto.** El
+usuario probó subirlo con GitHub Desktop en vez de la terminal, y esa app
+creó (o abrió) una carpeta local nueva y vacía con el mismo nombre del
+repositorio remoto, en una ubicación distinta a la carpeta real del
+proyecto. Al arrastrar la carpeta del proyecto adentro de esa carpeta
+nueva, GitHub Desktop vio una sola carpeta sin trackear (`Harness/`) en un
+repositorio sin ningún commit — en vez de los 12 commits reales con toda la
+historia documentada. Comitear ahí habría creado una estructura anidada
+(`Harness/CLAUDE.md` en vez de `CLAUDE.md` en la raíz) y, peor, habría
+perdido todo el historial de commits que documenta el proceso tarea por
+tarea. La solución: en GitHub Desktop, usar *File → Add Local Repository*
+para apuntar directamente a la carpeta real del proyecto (la que ya tenía
+todo el historial y el remoto configurado), en vez de dejar que la app
+creara una nueva.
+
+**Por qué se documenta esto con tanto detalle**: ninguno de estos tres
+problemas es un error de diseño del harness — son fricciones reales del
+mundo de "herramienta de IA corriendo en un entorno automatizado" contra
+"cuenta personal de GitHub, con sus propios mecanismos de seguridad". Es
+información útil para la presentación: muestra que ni el trabajo de una IA
+asistiendo en desarrollo es "un botón mágico" — hay pasos que, por diseño
+de seguridad, tienen que pasar por una persona.
