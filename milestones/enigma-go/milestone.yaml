@@ -1,0 +1,147 @@
+milestone: "Enigma Go — MVP (fases 0–3 del plan)"
+cap_concurrencia: 3
+# Plan fuente completo: milestones/enigma-go/plan.md (secciones citadas como §N).
+# Todo el código vive en la carpeta enigma-go/ en la raíz del repo.
+# Fases 4 (IA/Supabase) y 5 (pulido/APK) son opcionales según §13 y quedan fuera de este milestone.
+tareas:
+  - id: T1
+    titulo: "Proyecto base Expo + TypeScript"
+    tipo: mobile
+    depende_de: []
+    descripcion: >
+      Fase 0 del plan. Crear enigma-go/ con Expo (plantilla blank-typescript),
+      instalar las dependencias listadas en la fase 0 del plan, configurar
+      expo-router (app/index.tsx como pantalla inicial placeholder), ESLint y
+      Jest (preset jest-expo). Crear la estructura de carpetas de §4
+      (src/engine, src/engine/templates, src/store, src/components, src/lib,
+      __tests__) con archivos placeholder mínimos donde haga falta.
+      Scripts npm: start, test, lint, typecheck (tsc --noEmit).
+    criterios_aceptacion:
+      - "enigma-go/package.json con todas las dependencias de la fase 0."
+      - "npm test pasa con al menos un test trivial."
+      - "npm run typecheck pasa sin errores."
+      - "npx expo export --platform android (o equivalente) compila el bundle sin errores."
+      - "node_modules no se commitea (.gitignore de la raíz ya lo excluye)."
+
+  - id: T2
+    titulo: "Motor: tipos Zod, RNG, escalado y puntuación"
+    tipo: mobile
+    depende_de: [T1]
+    descripcion: >
+      Implementar src/engine/types.ts (esquemas Zod de §7 + tipos inferidos
+      exportados), src/lib/rng.ts (mulberry32 con semilla, helpers pick/
+      shuffle/int), src/engine/scaling.ts (reglas de §6 como funciones puras:
+      totalClues, suspectCount, redHerrings, rounds, suggestType según §5) y
+      src/engine/scoring.ts (reglas de §10). Tests unitarios para todo, con
+      scaling probado para todas las combinaciones jugadores(1..12) × tiempo
+      (15,30,45,60,90) × tipo.
+    criterios_aceptacion:
+      - "Esquemas Zod para GameConfig, Suspect, Clue y Case exactamente como §7."
+      - "scaling.ts cumple las fórmulas de §6 y tiene tests exhaustivos."
+      - "Misma semilla en rng.ts produce la misma secuencia (test)."
+      - "scoring.ts cumple §10 con tests (acierto, bonus tiempo, penalización pista extra, bonus culpable en asesinato_roles)."
+      - "npm test y npm run typecheck en verde."
+
+  - id: T3
+    titulo: "Plantillas JSON de casos"
+    tipo: data
+    depende_de: [T1]
+    descripcion: >
+      Crear en src/engine/templates/ los JSON de plantillas en español, tono
+      familiar sin violencia gráfica: al menos 4 escenarios (mansión, colegio,
+      oficina, parque; cada uno con título(s), setting, intro, víctima u
+      objeto robado, y lugares para esconder QR), al menos 15 personajes
+      (nombre + rol), al menos 10 móviles, coartadas, y al menos 30 pistas
+      parametrizables con marcadores {suspect}, {object}, {place} etc.
+      Las pistas deben estar clasificadas por función: "eliminadora" (descarta
+      a {suspect}), "acusadora" (apunta a {suspect} = culpable) y "falsa"
+      (red herring, sugiere algo engañoso sin eliminar al culpable).
+      Incluir src/engine/templates/index.ts que importa los JSON, los valida
+      con Zod (esquemas propios de plantilla, definidos en ese mismo archivo)
+      y los exporta tipados, más un test que verifica cantidades mínimas y
+      que todo marcador usado es uno de los soportados.
+    criterios_aceptacion:
+      - ">= 4 escenarios, >= 15 personajes, >= 10 móviles, >= 30 pistas parametrizables."
+      - "Cada pista declara su función (eliminadora / acusadora / falsa) y los marcadores que usa."
+      - "index.ts valida y exporta las plantillas tipadas; test de cantidades y marcadores en verde."
+      - "npm test y npm run typecheck en verde."
+
+  - id: T4
+    titulo: "Generador de casos + validador de solución"
+    tipo: mobile
+    depende_de: [T2, T3]
+    descripcion: >
+      Implementar src/engine/generator.ts (generateCase(config): elige
+      escenario, crea sospechosos según scaling, elige culpable, construye
+      pistas no falsas que eliminan a todos los inocentes y al menos una que
+      apunta al culpable, agrega red herrings, rellena marcadores; en
+      asesinato_roles asigna un sospechoso por jugador con secretBrief; en
+      modo exterior/mixto rellena qrPayload "enigmago:{caseId}:{clueId}" y
+      hidingHint) y src/engine/validator.ts con las 6 reglas de §8.
+      El generador reintenta con otra semilla derivada hasta 10 veces y si
+      falla lanza un error claro. Casos deterministas por semilla (caseId
+      y createdAt incluidos: createdAt inyectable para tests).
+    criterios_aceptacion:
+      - "validator.ts implementa las 6 reglas de §8 con un test negativo por regla."
+      - "Test que genera 500 casos con configuraciones aleatorias válidas: el 100% pasa validator y el esquema Zod de Case."
+      - "La misma semilla + config produce el mismo caso (test)."
+      - "En modo exterior/mixto cada pista que se escanea tiene qrPayload con el formato de §7 y hidingHint."
+      - "npm test y npm run typecheck en verde."
+
+  - id: T5
+    titulo: "UI y flujo modo app (detective y asesinato_roles)"
+    tipo: frontend
+    depende_de: [T4]
+    descripcion: >
+      Fase 2. Store Zustand (src/store/gameStore.ts) con persistencia en
+      AsyncStorage de la partida en curso y del historial. Pantallas de §9:
+      inicio (Nueva partida / Historial / Continuar si hay partida en curso),
+      setup (stepper 1–12, chips de tiempo, modo App/Afuera/Mixto,
+      dificultad, tipo sugerido editable), players (nombres), briefing
+      (incluye "pasa el celular a {jugador}" → tocar para ver rol → ocultar
+      en asesinato_roles), play (temporizador, pistas desbloqueadas cada
+      minutes/totalClues min o manualmente con penalización, lista de
+      sospechosos con notas; al llegar a 0 fuerza acusación), accuse,
+      result (resuelto / escapó, explicación, ranking con scoring.ts) y
+      history. Estética "noir" (blanco y negro, tipografía manuscrita para
+      pistas) siguiendo frontend-design. En esta tarea los modos exterior/
+      mixto pueden redirigir a un placeholder de escaneo; T6 los completa.
+    criterios_aceptacion:
+      - "Flujo completo configurar → jugar → acusar → revelar → ranking para detective y asesinato_roles."
+      - "Test de integración (testing-library) que recorre una partida de cada tipo con 1, 4 y 8 jugadores (según los rangos válidos de §5) sin errores."
+      - "La partida en curso se persiste y se retoma al reabrir (test del store con AsyncStorage mock)."
+      - "npm test, npm run typecheck y el export del bundle en verde."
+
+  - id: T6
+    titulo: "Modo exterior y mixto (QR)"
+    tipo: frontend
+    depende_de: [T5]
+    descripcion: >
+      Fase 3. Pantalla print/[id].tsx con cuadrícula de QR numerados
+      (react-native-qrcode-svg) + hidingHint, exportable a PDF con expo-print
+      y compartible con expo-sharing. Pantalla game/[id]/scan.tsx con
+      expo-camera: valida que el payload sea del caso actual, desbloquea la
+      pista, avisa si está fuera de orden y rechaza con mensaje claro QR de
+      otro caso o ajenos. En busqueda las pistas se desbloquean solo por QR;
+      en mixto algunas en la app y otras por QR (la regla de reparto
+      documentada). Lógica de parseo/validación de payload como función pura
+      con tests.
+    criterios_aceptacion:
+      - "Función pura de validación de payload con tests: caso correcto, otro caso, formato inválido, pista ya desbloqueada, fuera de orden."
+      - "Pantalla de impresión genera HTML con QR para expo-print y lo comparte."
+      - "En busqueda, play no desbloquea pistas salvo por escaneo; en mixto se respeta el reparto."
+      - "npm test, npm run typecheck y el export del bundle en verde."
+
+  - id: T7
+    titulo: "README de Enigma Go"
+    tipo: docs
+    depende_de: [T6]
+    descripcion: >
+      enigma-go/README.md: cómo instalar y correr (Expo Go), cómo correr
+      tests, cómo jugar cada modo/tipo, arquitectura del motor, y sección de
+      capturas (capturas reales si se pueden generar con la versión web /
+      expo export; si no, placeholders indicados). Confirmar que no hay API
+      keys en el repo.
+    criterios_aceptacion:
+      - "README con instalación, tests, cómo jugar cada modo y arquitectura."
+      - "Sin API keys ni secretos en el repositorio."

@@ -1,2 +1,11 @@
 # Estado interno de la sesión de Claude Code, no es contenido del proyecto
 .claude/scheduled_tasks.lock
+
+# Enigma Go (Expo)
+node_modules/
+.expo/
+dist/
+web-build/
+*.tsbuildinfo
+.env
+.env.*
