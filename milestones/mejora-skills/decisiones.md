@@ -78,3 +78,11 @@ declara `verificacion_manual`, así que no hay checklist manual de la wave.
   `modelo` y `verificacion_manual` "requieren M7"; quedó desactualizado.
   Sin `verificacion_manual` en la wave. Desde este cierre se aplica
   `optimizador-tokens` en modo `empaquetar` (`contexto-compacto.md`).
+
+## Wave 4 (M8)
+
+- **M8**: sin decisiones. Docs a 21 skills (10 propias + `frontend-design` +
+  10 de Emil), PROCESO §14, 4 skills previas pasadas a "tú", textos de
+  triage-proyecto actualizados, cita §8 → §9 en panel-tareas-demo. Pasada
+  de `verificador-datos` sobre los cuatro documentos: 0 ❌ (4 ⚠️ históricos
+  sin registro en el repo, sin cambio). Sin `verificacion_manual` en la wave.
