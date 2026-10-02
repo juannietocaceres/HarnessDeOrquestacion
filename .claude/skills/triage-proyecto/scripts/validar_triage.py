@@ -15,8 +15,7 @@ Comprueba:
   3. Si `estado` es `listo_para_orquestar`: que el archivo `manifest` exista,
      pase el preflight (preflight_manifest.py) y que todo `tipo` del manifest
      esté en `tipos_requeridos`.
-Avisos (no fallan): tipos de `tipos_requeridos` sin ninguna tarea, tipos que
-requieren M7.
+Avisos (no fallan): tipos de `tipos_requeridos` sin ninguna tarea.
 
 Código de salida: 0 = válido, 1 = inválido, 2 = no se pudo leer.
 """
@@ -126,9 +125,6 @@ def validar_triage(datos, raiz: Path, forzar_minimo: bool = False) -> dict:
     for s in datos["skills_requeridas"]:
         if not (dir_skills / s / "SKILL.md").is_file():
             errores.append(f"skills_requeridas: '{s}' no existe en {dir_skills.as_posix()}")
-    for t in datos["tipos_requeridos"]:
-        if t in pm.TIPOS_M7:
-            avisos.append(f"tipos_requeridos: '{t}' requiere M7 (aún no está en orquestador §1)")
 
     if datos["estado"] == "listo_para_orquestar":
         ruta_manifest = raiz / datos["manifest"]

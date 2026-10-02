@@ -5,7 +5,7 @@ description: Convierte una idea o requerimiento en lenguaje natural en un docume
 
 # Especificación
 
-Convertís una idea informal en un documento corto, verificable y sin relleno.
+Conviertes una idea informal en un documento corto, verificable y sin relleno.
 El objetivo no es "escribir mucho": es dejar por escrito las decisiones que,
 si no se toman ahora, se van a tomar por accidente durante la implementación.
 
@@ -14,19 +14,19 @@ si no se toman ahora, se van a tomar por accidente durante la implementación.
 Si la tarea ya trae criterios de aceptación claros y no hay ambigüedad real
 (p. ej. viene de un manifest de `orquestador` con `criterios_aceptacion`
 completos), no generes una especificación nueva — sería ceremonia sin valor.
-Usala cuando falta ese punto de apoyo.
+Úsala cuando falta ese punto de apoyo.
 
 ## Proceso
 
-1. **Entendé el pedido real.** Si el requerimiento es ambiguo en algo que
+1. **Entiende el pedido real.** Si el requerimiento es ambiguo en algo que
    cambia el resultado (alcance, audiencia, comportamiento ante error), no
-   asumas en silencio: dejalo como pregunta abierta explícita en el
+   asumas en silencio: déjalo como pregunta abierta explícita en el
    documento (sección "Preguntas abiertas"), no lo resuelvas adivinando.
-2. **Identificá el problema antes que la solución.** Un objetivo se escribe
+2. **Identifica el problema antes que la solución.** Un objetivo se escribe
    en términos del problema que resuelve, no de la implementación ("permitir
    que un usuario recupere su cuenta sin soporte humano", no "agregar un
    botón de reset password").
-3. **Trazá el alcance con un borde explícito.** Qué incluye y qué
+3. **Traza el alcance con un borde explícito.** Qué incluye y qué
    deliberadamente no, en la misma sección — el "no incluye" evita que el
    alcance crezca solo durante la implementación.
 4. **Los criterios de aceptación son el contrato.** Cada uno debe ser

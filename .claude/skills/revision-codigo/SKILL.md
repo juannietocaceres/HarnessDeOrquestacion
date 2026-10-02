@@ -5,9 +5,9 @@ description: Checklist y proceso para revisar código antes de cerrar una tarea 
 
 # Revisión de código
 
-Revisás el diff de una tarea ya "terminada" antes de que cuente como
-COMPLETADA. El objetivo es separar lo que se puede corregir solo (hacelo y
-seguí) de lo que requiere una decisión humana (no lo decidas solo: repórtalo
+Revisas el diff de una tarea ya "terminada" antes de que cuente como
+COMPLETADA. El objetivo es separar lo que se puede corregir solo (hazlo y
+sigue) de lo que requiere una decisión humana (no lo decidas solo: repórtalo
 como un `DECISION_NEEDED` si estás corriendo dentro de una wave del
 orquestador, o como un hallazgo bloqueante si es revisión suelta).
 
@@ -44,17 +44,17 @@ orquestador, o como un hallazgo bloqueante si es revisión suelta).
 ## Cómo se resuelve cada hallazgo
 
 - **Corregible sin ambigüedad** (nombre confuso, comentario innecesario,
-  falta un `null` check obvio): corregilo vos mismo y seguí — no hace falta
+  falta un `null` check obvio): corrígelo tú mismo y sigue — no hace falta
   interrumpir a nadie por esto.
 - **Bloqueante con trade-offs reales** (una elección de seguridad con
   impacto en UX, un caso borde donde no está claro cuál es el comportamiento
   correcto, algo que cambia el contrato de la tarea): no lo resuelvas
-  adivinando. Si estás dentro de una tarea orquestada, devolvé un
+  adivinando. Si estás dentro de una tarea orquestada, devuelve un
   `DECISION_NEEDED` (ver SKILL.md de `orquestador`, §6) en vez de mergear
   igual.
 
 ## Cuándo se ejecuta
 
 Siempre como el último paso antes de reportar una tarea como terminada —
-nunca después de mergear. Si encontrás algo bloqueante ya con el merge
+nunca después de mergear. Si encuentras algo bloqueante ya con el merge
 hecho, es tarde: por eso va antes.

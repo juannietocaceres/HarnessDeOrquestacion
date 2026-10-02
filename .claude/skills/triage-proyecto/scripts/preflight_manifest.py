@@ -14,8 +14,8 @@ Reglas (orquestador/SKILL.md §1 y §4):
   - Campos opcionales por tarea: `verificacion_manual` (si está, lista de
     textos no vacíos) y `modelo` (si está, texto no vacío: alias como
     sonnet/opus/haiku/fable o un ID completo).
-Avisos (no fallan): `tipo` fuera de la lista vigente, `presentacion` /
-`contenido` (requieren M7), `criterios_aceptacion` vacío (disparará
+Avisos (no fallan): `tipo` fuera de la lista vigente (que ya incluye
+`presentacion` y `contenido`), `criterios_aceptacion` vacío (disparará
 `especificacion`), tareas bloqueadas por una dependencia externa.
 
 Salida: errores, avisos y el plan de waves. Código 0 = pasa, 1 = falla,
@@ -33,8 +33,8 @@ import re
 import sys
 from pathlib import Path
 
-TIPOS_VIGENTES = {"backend", "frontend", "data", "cli", "mobile", "docs", "testing", "otro"}
-TIPOS_M7 = {"presentacion", "contenido"}
+TIPOS_VIGENTES = {"backend", "frontend", "data", "cli", "mobile", "docs", "testing",
+                  "presentacion", "contenido", "otro"}
 
 
 # --------------------------------------------------------------------------
@@ -288,9 +288,7 @@ def preflight(manifest) -> dict:
             ids.append(str(t["id"]))
         tipo = t.get("tipo")
         if isinstance(tipo, str) and tipo:
-            if tipo in TIPOS_M7:
-                avisos.append(f"tarea {etiqueta}: tipo `{tipo}` requiere M7 (aún no está en orquestador §1)")
-            elif tipo not in TIPOS_VIGENTES:
+            if tipo not in TIPOS_VIGENTES:
                 avisos.append(f"tarea {etiqueta}: tipo `{tipo}` no está en la lista de orquestador §1")
         if "verificacion_manual" in t:
             vm = t["verificacion_manual"]
