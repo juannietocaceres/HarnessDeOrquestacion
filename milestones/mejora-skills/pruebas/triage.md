@@ -111,6 +111,29 @@ plan completo tiene tres capas: app, backend Supabase e IA) con
 
 No hizo falta preguntar nada: el plan ya define plataforma, stack y alcance.
 
+**`verificacion_manual`** (campo opcional por tarea, adoptado en el gate de
+la wave 2 de `mejora-skills`; M7 lo integra en el orquestador): las
+aceptaciones del plan que exigen dispositivo real van en este campo, **no**
+en `criterios_aceptacion`, porque ningún sub-agente puede cumplirlas. La
+tarea cierra con sus criterios automáticos. Al cierre de cada wave, sus
+verificaciones manuales se listan como checklist informativo para que las
+haga una persona, y ese checklist no bloquea la wave siguiente. En este
+manifest:
+
+```yaml
+  - id: T1   # wave 1
+    verificacion_manual:
+      - "npx expo start abre la app en Expo Go."
+  - id: T6   # wave 5
+    verificacion_manual:
+      - "Se imprime una hoja de QR, se escanea con la cámara real y se desbloquean las pistas correctas."
+      - "Un QR de otro caso es rechazado con un mensaje claro."
+```
+
+Cada una tiene en `criterios_aceptacion` un equivalente automático:
+`npx expo export` en T1 y la función pura de validación de payload con tests
+en T6.
+
 ```
 Validación de milestones/mejora-skills/pruebas/triage/sobre-detallado/triage.json (esquema con validador mínimo)
   preflight del manifest: PASA (6 waves)
@@ -134,7 +157,7 @@ dónde quedó):
 |---|---|
 | F0: create-expo-app blank-typescript, dependencias, expo-router, ESLint, Jest | T1 descripción + criterio "package.json incluye todas las dependencias de la fase 0" |
 | F0 aceptación: `npm test` corre | T1 "npm test corre y pasa con al menos un test" |
-| F0 aceptación: `npx expo start` abre en Expo Go | T1 "verificación manual posterior" + `riesgos` (un sub-agente no puede abrir Expo Go); criterio proxy: `npx expo export` |
+| F0 aceptación: `npx expo start` abre en Expo Go | T1 `verificacion_manual` (texto literal; un sub-agente no puede abrir Expo Go). Criterio automático equivalente: `npx expo export` |
 | §4 estructura del proyecto | T1 criterio de estructura de carpetas |
 | F1: types.ts con Zod (§7) | T2 criterio 1 |
 | F1: rng.ts mulberry32 | T2 criterio 3 |
@@ -152,8 +175,8 @@ dónde quedó):
 | F3: impresión con QR + escondites, PDF | T6 criterio 2 |
 | F3: escáner valida caso, desbloquea, avisa fuera de orden | T6 criterio 1 |
 | F3: modo mixto | T6 criterio 3 |
-| F3 aceptación: QR de otro caso rechazado con mensaje claro | T6 criterio 1 |
-| F3 aceptación: imprimir y escanear con cámara real | T6 "verificación manual posterior" + `riesgos` |
+| F3 aceptación: QR de otro caso rechazado con mensaje claro | T6 criterio 1 (función pura) + T6 `verificacion_manual` (con la cámara real) |
+| F3 aceptación: imprimir y escanear con cámara real | T6 `verificacion_manual` (texto literal) |
 | §13: `npm test` en verde con el test de 500 casos | T7 criterio 2 |
 | §13: README con cómo correr, cómo jugar cada modo y capturas | T7 criterio 1 |
 | §13: sin API keys | T7 criterio 3 |
@@ -177,7 +200,8 @@ casos en T7).
 
 **Veredicto: PASA.** Pasa el preflight y no se pierde ninguna tarea ni
 criterio del plan dentro del alcance. Las dos aceptaciones que exigen
-dispositivo real quedan trazadas como verificación manual, no descartadas.
+dispositivo real no se descartan: quedan literales en `verificacion_manual` y
+el preflight valida el campo (lista de textos no vacíos).
 
 ## 3. Proyecto imposible
 
@@ -265,7 +289,7 @@ porque la prosa lo pide.
 
 Casos válidos e inválidos de cada script (skill `testing`): ciclo,
 dependencia sin resolver, dependencia externa declarada, id duplicado,
-campo vacío, JSON fuera de esquema (enum, más de 3 preguntas, propiedad
+campo vacío, campos opcionales `verificacion_manual` (lista de textos no vacíos) y `modelo` (texto no vacío) válidos e inválidos, JSON fuera de esquema (enum, más de 3 preguntas, propiedad
 extra, slug), reglas condicionales del esquema, skill inexistente,
 coherencia de tipos con el manifest, comparación equivalente/distinta y
 lector YAML mínimo frente a PyYAML en los 3 manifests reales del repo.
@@ -281,7 +305,10 @@ test_id_duplicado_y_campo_vacio_fallan (test_scripts.PruebasPreflight.test_id_du
 test_lector_minimo_igual_a_pyyaml_en_manifests_reales (test_scripts.PruebasPreflight.test_lector_minimo_igual_a_pyyaml_en_manifests_reales) ... ok
 test_lector_minimo_subconjunto (test_scripts.PruebasPreflight.test_lector_minimo_subconjunto) ... ok
 test_manifest_valido_calcula_waves (test_scripts.PruebasPreflight.test_manifest_valido_calcula_waves) ... ok
+test_modelo_invalido_falla (test_scripts.PruebasPreflight.test_modelo_invalido_falla) ... ok
 test_tipo_m7_es_aviso (test_scripts.PruebasPreflight.test_tipo_m7_es_aviso) ... ok
+test_verificacion_manual_invalida_falla (test_scripts.PruebasPreflight.test_verificacion_manual_invalida_falla) ... ok
+test_verificacion_manual_y_modelo_validos (test_scripts.PruebasPreflight.test_verificacion_manual_y_modelo_validos) ... ok
 test_aclaracion_sin_preguntas_falla (test_scripts.PruebasValidarTriage.test_aclaracion_sin_preguntas_falla) ... ok
 test_alta_sin_particion_falla (test_scripts.PruebasValidarTriage.test_alta_sin_particion_falla) ... ok
 test_enum_fuera_de_esquema (test_scripts.PruebasValidarTriage.test_enum_fuera_de_esquema) ... ok
@@ -294,7 +321,7 @@ test_skill_inexistente_falla (test_scripts.PruebasValidarTriage.test_skill_inexi
 test_triage_aclaracion_valido (test_scripts.PruebasValidarTriage.test_triage_aclaracion_valido) ... ok
 
 ----------------------------------------------------------------------
-Ran 20 tests in 0.050s
+Ran 23 tests in 0.055s
 
 OK
 ```

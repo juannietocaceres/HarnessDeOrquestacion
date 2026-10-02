@@ -20,14 +20,14 @@ tareas:
       expo-router (app/index.tsx placeholder), ESLint y Jest (preset
       jest-expo). Crear la estructura de carpetas de §4. Scripts npm: start,
       test, lint, typecheck (tsc --noEmit).
-      Verificación manual posterior (no la puede hacer un sub-agente):
-      npx expo start abre la app en Expo Go.
     criterios_aceptacion:
       - "enigma-go/package.json incluye todas las dependencias de la fase 0."
       - "npm test corre y pasa con al menos un test."
       - "npm run typecheck y npm run lint pasan sin errores."
       - "npx expo export --platform android compila el bundle sin errores."
       - "La estructura de carpetas de §4 existe (app/, src/engine/templates/, src/store/, src/components/, src/lib/, __tests__/)."
+    verificacion_manual:   # aceptación de la fase 0 que exige dispositivo; el criterio automático equivalente es el export
+      - "npx expo start abre la app en Expo Go."
 
   - id: T2
     titulo: "Motor: tipos Zod, RNG con semilla, escalado y puntuación"
@@ -119,14 +119,14 @@ tareas:
       mixto, unas en la app y otras por QR, con la regla de reparto
       documentada. El parseo y la validación del payload son una función
       pura.
-      Verificación manual posterior (no la puede hacer un sub-agente): se
-      imprime una hoja de QR, se escanea con la cámara real y se desbloquean
-      las pistas correctas.
     criterios_aceptacion:
       - "Función pura de validación de payload con tests: caso correcto, QR de otro caso (rechazado con mensaje claro), formato inválido, pista ya desbloqueada y fuera de orden."
       - "La pantalla de impresión genera el HTML con los QR para expo-print y lo comparte con expo-sharing."
       - "En busqueda la pantalla de juego no desbloquea pistas salvo por escaneo; en mixto se respeta el reparto documentado (tests)."
       - "npm test, npm run typecheck y el export del bundle en verde."
+    verificacion_manual:   # aceptación de la fase 3 que exige cámara e impresora reales
+      - "Se imprime una hoja de QR, se escanea con la cámara real y se desbloquean las pistas correctas."
+      - "Un QR de otro caso es rechazado con un mensaje claro."
 
   - id: T7
     titulo: "README y cierre del MVP"

@@ -70,6 +70,23 @@ class PruebasPreflight(unittest.TestCase):
         self.assertEqual(r["errores"], [])
         self.assertTrue(any("M7" in a for a in r["avisos"]))
 
+    def test_verificacion_manual_y_modelo_validos(self):
+        r = pm.preflight(manifest(tarea("T1", verificacion_manual=["Abrir en un teléfono real"], modelo="sonnet"),
+                                  tarea("T2", ["T1"], modelo="claude-opus-5-5", verificacion_manual=[])))
+        self.assertEqual(r["errores"], [])
+
+    def test_verificacion_manual_invalida_falla(self):
+        for valor in ("probar en el móvil", ["ok", ""], ["ok", 3], None):
+            with self.subTest(valor=valor):
+                r = pm.preflight(manifest(tarea("T1", verificacion_manual=valor)))
+                self.assertTrue(any("verificacion_manual" in e for e in r["errores"]), r["errores"])
+
+    def test_modelo_invalido_falla(self):
+        for valor in ("", "  ", 5, None, ["sonnet"]):
+            with self.subTest(valor=valor):
+                r = pm.preflight(manifest(tarea("T1", modelo=valor)))
+                self.assertTrue(any("modelo" in e for e in r["errores"]), r["errores"])
+
     def test_lector_minimo_igual_a_pyyaml_en_manifests_reales(self):
         try:
             import yaml  # type: ignore

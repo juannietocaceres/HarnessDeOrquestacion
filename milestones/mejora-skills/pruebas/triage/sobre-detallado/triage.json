@@ -7,7 +7,7 @@
     "El plan es completo (plataforma, stack, alcance y criterios por fase): no hace falta preguntar.",
     "Se toma §13 como alcance de este milestone: fases 0–3 obligatorias; 4 y 5 son opcionales y pasan a milestones propios.",
     "El estilo noir es de la fase 5 en el plan: queda en el milestone de pulido, no en T5.",
-    "Las verificaciones en dispositivo real (Expo Go, cámara, impresora) quedan como verificación manual posterior en la descripción de T1 y T6, no como criterio, porque ningún sub-agente puede cumplirlas.",
+    "Las verificaciones en dispositivo real (Expo Go, cámara, impresora) van en verificacion_manual de T1 y T6, con un equivalente automático en criterios_aceptacion, porque ningún sub-agente puede cumplirlas.",
     "optimizador-prompts (no interactivo): descripciones ordenadas citando §N del plan y rutas de §4; criterios copiados del plan sin cambiar su alcance."
   ],
   "clasificacion": {
@@ -39,7 +39,7 @@
     "GPS y geocercas"
   ],
   "riesgos": [
-    "Las aceptaciones de las fases 0 y 3 que exigen dispositivo real (Expo Go, cámara, impresión) no las puede cerrar un sub-agente: hay que verificarlas a mano al cerrar el milestone.",
+    "Las aceptaciones de las fases 0 y 3 que exigen dispositivo real están en verificacion_manual: aparecen en el checklist del cierre de las waves de T1 y T6, que no bloquea la wave siguiente, así que si nadie las hace quedan sin comprobar.",
     "El test de 500 casos puede ser lento o inestable si el generador reintenta mucho; conviene fijar semillas en el test.",
     "T5 y T6 tocan las mismas pantallas (play, flujo de partida): van en waves distintas para evitar conflictos de merge."
   ],

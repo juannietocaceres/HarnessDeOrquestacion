@@ -11,6 +11,9 @@ Reglas (orquestador/SKILL.md §1 y §4):
   - Todo `depende_de` resuelve a otro `id` del manifest o está listado en
     `fuera_de_alcance_si_depende_de` de esa tarea (dependencia externa).
   - El grafo de dependencias internas no tiene ciclos.
+  - Campos opcionales por tarea: `verificacion_manual` (si está, lista de
+    textos no vacíos) y `modelo` (si está, texto no vacío: alias como
+    sonnet/opus/haiku/fable o un ID completo).
 Avisos (no fallan): `tipo` fuera de la lista vigente, `presentacion` /
 `contenido` (requieren M7), `criterios_aceptacion` vacío (disparará
 `especificacion`), tareas bloqueadas por una dependencia externa.
@@ -289,6 +292,12 @@ def preflight(manifest) -> dict:
                 avisos.append(f"tarea {etiqueta}: tipo `{tipo}` requiere M7 (aún no está en orquestador §1)")
             elif tipo not in TIPOS_VIGENTES:
                 avisos.append(f"tarea {etiqueta}: tipo `{tipo}` no está en la lista de orquestador §1")
+        if "verificacion_manual" in t:
+            vm = t["verificacion_manual"]
+            if not isinstance(vm, list) or any(not isinstance(v, str) or not v.strip() for v in vm):
+                errores.append(f"tarea {etiqueta}: `verificacion_manual` debe ser una lista de textos no vacíos")
+        if "modelo" in t and (not isinstance(t["modelo"], str) or not t["modelo"].strip()):
+            errores.append(f"tarea {etiqueta}: `modelo` debe ser un texto no vacío (alias o ID completo)")
         crit = t.get("criterios_aceptacion")
         if crit is not None and not isinstance(crit, list):
             errores.append(f"tarea {etiqueta}: `criterios_aceptacion` debe ser una lista")

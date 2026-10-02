@@ -95,7 +95,11 @@ implica no exponer la API key en el cliente.
 
 Cada tarea lleva los campos de `orquestador` §1: `id`, `titulo`, `tipo`,
 `depende_de`, `descripcion`, `criterios_aceptacion` y, si hace falta,
-`fuera_de_alcance_si_depende_de`.
+`fuera_de_alcance_si_depende_de`, `verificacion_manual` y `modelo`. Los dos
+últimos son campos opcionales que se adoptaron en el gate de la wave 2 de
+`mejora-skills`; M7 los integra en `orquestador` §1. Hasta entonces el
+orquestador no los usa todavía, pero su preflight los acepta porque no
+rechaza campos extra.
 
 - **ids** `T1`, `T2`… en orden topológico (una tarea nunca depende de un id
   mayor). Si el usuario ya trae ids, consérvalos.
@@ -117,10 +121,29 @@ Cada tarea lleva los campos de `orquestador` §1: `id`, `titulo`, `tipo`,
   tarea **no** tiene criterios claros, deja la lista vacía **a propósito**:
   el orquestador disparará `especificacion` antes de implementarla. No
   inventes criterios para rellenar.
-- Las verificaciones que solo puede hacer una persona (probar en un
-  dispositivo real, una cámara, una impresora) no van como criterio, porque
-  ningún sub-agente puede cumplirlas: van en la `descripcion` como
-  "verificación manual posterior" y en `riesgos`.
+- **`verificacion_manual`** (opcional, lista de textos literales): una
+  comprobación va aquí, y **no** en `criterios_aceptacion`, cuando solo la
+  puede hacer una persona, porque un sub-agente no tiene cómo ejecutarla ni
+  observarla. Ejemplos: abrir la app en un teléfono real o en Expo Go,
+  escanear con la cámara, imprimir, oír un sonido, instalar un APK, revisar
+  algo con un usuario real. La tarea cierra con sus criterios automáticos.
+  Al cierre de **cada wave**, sus `verificacion_manual` se listan como un
+  checklist informativo para que lo haga una persona; ese checklist **no
+  bloquea** la wave siguiente. Reglas:
+  - Si existe un equivalente automático razonable (p. ej. `npx expo export`
+    en lugar de "abre en Expo Go", o una función pura con tests en lugar de
+    "escanear un QR real"), pon ese equivalente en `criterios_aceptacion` y
+    deja la comprobación humana original en `verificacion_manual`.
+  - Si un criterio del usuario se puede verificar con un comando, un test o
+    un archivo, va en `criterios_aceptacion`, aunque sea más cómodo
+    probarlo a mano.
+  - Copia el texto del plan lo más literal posible. No lo dupliques en la
+    `descripcion`.
+- **`modelo`** (opcional: alias `sonnet` / `opus` / `haiku` / `fable` o un
+  ID completo): ponlo **solo si hay una razón clara**, y anota la razón como
+  comentario YAML. Por ejemplo: el usuario lo pidió, o la tarea es mecánica
+  y voluminosa (`haiku`), o exige razonamiento difícil (`opus`). Si falta,
+  la tarea hereda el modelo de la sesión. Ante la duda, no lo pongas.
 - `skills_requeridas`: lee la carpeta `.claude/skills/` (no uses una lista
   fija) y lista las que la tabla de `orquestador` §8 activará según los
   tipos y lo que tocan las tareas (p. ej. `especificacion` si hay tareas sin
@@ -157,7 +180,9 @@ python .claude/skills/triage-proyecto/scripts/validar_triage.py milestones/<slug
 
 - `preflight_manifest.py` aplica las reglas de `orquestador` §4 (ids únicos,
   campos requeridos no vacíos, dependencias resueltas o declaradas como
-  externas, sin ciclos) y muestra el plan de waves.
+  externas, sin ciclos), comprueba que `verificacion_manual` sea una lista
+  de textos no vacíos y `modelo` un texto no vacío, y muestra el plan de
+  waves.
 - `validar_triage.py` valida el esquema (con `jsonschema` si está instalado;
   si no, con un validador mínimo incluido), que cada skill de
   `skills_requeridas` exista y, si el estado es `listo_para_orquestar`, que
@@ -167,7 +192,8 @@ python .claude/skills/triage-proyecto/scripts/validar_triage.py milestones/<slug
 Si algo falla, **corrige y vuelve a validar**; nunca entregues un borrador
 que no pasa. Si el input era un plan detallado, comprueba además a mano que
 cada fase, casilla y criterio del plan dentro del alcance quedó en alguna
-tarea (y lo que quedó fuera, en `fuera_de_alcance`).
+tarea, en `criterios_aceptacion` o en `verificacion_manual`. Lo que quedó
+fuera del alcance va en `fuera_de_alcance`.
 
 Los scripts solo usan la biblioteca estándar de Python (PyYAML y
 `jsonschema` se aprovechan si están instalados). Sus pruebas:
