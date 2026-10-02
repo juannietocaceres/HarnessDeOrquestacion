@@ -1,0 +1,27 @@
+milestone: "Ampliación de skills del harness"
+manifest_snapshot_sha256: 0836eaf7dc2e0f249fcf4f4522ee38704570d88a4e5758bc219bfabfff17f06a
+preflight: OK   # ids únicos, deps internas resueltas, sin ciclos, campos requeridos presentes
+wave_actual: 1
+waves_planificadas:
+  - wave: 1
+    tareas: [M1, M2, M3, M4]   # cap 3 -> lote 1: M1,M2,M3; luego M4
+  - wave: 2
+    tareas: [M5, M6]
+  - wave: 3
+    tareas: [M7]
+  - wave: 4
+    tareas: [M8]
+  - wave: 5
+    tareas: [M9]
+tareas:
+  M1: { estado: EN_CURSO, commit: null, worktree: null }
+  M2: { estado: EN_CURSO, commit: null, worktree: null }
+  M3: { estado: EN_CURSO, commit: null, worktree: null }
+  M4: { estado: PENDIENTE, commit: null, worktree: null }
+  M5: { estado: PENDIENTE, commit: null, worktree: null }
+  M6: { estado: PENDIENTE, commit: null, worktree: null }
+  M7: { estado: PENDIENTE, commit: null, worktree: null }
+  M8: { estado: PENDIENTE, commit: null, worktree: null }
+  M9: { estado: PENDIENTE, commit: null, worktree: null }
+decisiones_pendientes: []
+bloqueos_externos: []

@@ -1,0 +1,96 @@
+milestone: "Ampliación de skills del harness"
+cap_concurrencia: 3
+tareas:
+  - id: M1
+    titulo: "Skill presentaciones-visuales"
+    tipo: docs
+    depende_de: []
+    descripcion: >
+      Adaptar insumos-plan-mejora/presentaciones-visuales.SKILL.md a
+      .claude/skills/presentaciones-visuales/ según PLAN-MEJORA-SKILLS.md §4 M1.
+    criterios_aceptacion:
+      - "Existe .claude/skills/presentaciones-visuales/SKILL.md con frontmatter válido"
+      - "Incluye checklist obligatorio de contraste, clichés y lenguaje llano"
+      - "Precedencia con frontend-design escrita explícitamente"
+      - "presentaciones/harness-clase.html generado desde RESUMEN-HARNESS.md, navegable por teclado e imprimible"
+  - id: M2
+    titulo: "Skill optimizador-prompts"
+    tipo: docs
+    depende_de: []
+    descripcion: >
+      Adaptar insumos-plan-mejora/optimizador-prompts.SKILL.md según §4 M2,
+      incluyendo PLANTILLA-SUBAGENTE.md.
+    criterios_aceptacion:
+      - "Existe la sección 'Sub-agente del harness' y PLANTILLA-SUBAGENTE.md"
+      - "Modo no interactivo documentado"
+      - "Frontera con optimizador-tokens escrita"
+      - "Prueba con una tarea de enigma-go: criterios de aceptación aparecen literales"
+  - id: M3
+    titulo: "Skill verificador-datos"
+    tipo: docs
+    depende_de: []
+    descripcion: >
+      Adaptar insumos-plan-mejora/verificador-datos.SKILL.md según §4 M3.
+    criterios_aceptacion:
+      - "Salida a milestones/<slug>/verificaciones/ cuando corre en un milestone"
+      - "Regla de DECISION_NEEDED para afirmaciones incorrectas no corregibles"
+      - "Prueba sobre RESUMEN-HARNESS.md comprobando contra el repo"
+  - id: M4
+    titulo: "Vendorizar suite de Emil Kowalski"
+    tipo: otro
+    depende_de: []
+    descripcion: >
+      Copiar byte a byte 12 skills de github.com/emilkowalski/skills según §4 M4,
+      con LICENSE.txt y docs/vendor/emilkowalski-skills.md.
+    criterios_aceptacion:
+      - "diff -r contra upstream limpio (salvo LICENSE.txt)"
+      - "Hash del commit usado registrado en docs/vendor/emilkowalski-skills.md"
+      - "Referencias cruzadas entre skills resuelven a carpetas existentes"
+  - id: M5
+    titulo: "Skill triage-proyecto"
+    tipo: docs
+    depende_de: [M2]
+    descripcion: >
+      Crear .claude/skills/triage-proyecto/ y schema/triage.schema.json según §4 M5.
+    criterios_aceptacion:
+      - "Las 4 pruebas de estrés documentadas en milestones/mejora-skills/pruebas/triage.md"
+      - "Ningún manifest generado falla el preflight del orquestador"
+      - "La skill no escribe código de producto"
+  - id: M6
+    titulo: "Skill optimizador-tokens"
+    tipo: docs
+    depende_de: [M2]
+    descripcion: >
+      Crear .claude/skills/optimizador-tokens/ con modos capsula y empaquetar,
+      scripts/medir_tokens.py y scripts/verificar_entidades.py, según §4 M6.
+    criterios_aceptacion:
+      - "Scripts corren con Python estándar"
+      - "verificar_entidades.py falla si falta una entidad protegida"
+      - "Prueba de retención sobre T2 de panel-tareas-demo documentada en pruebas/tokens.md"
+  - id: M7
+    titulo: "Integrar skills nuevas en el orquestador"
+    tipo: docs
+    depende_de: [M1, M2, M3, M4, M5, M6]
+    descripcion: >
+      Aplicar los cambios de §4 M7 a .claude/skills/orquestador/SKILL.md.
+    criterios_aceptacion:
+      - "Manifests existentes siguen pasando preflight"
+      - "La tabla §8 solo nombra skills existentes"
+  - id: M8
+    titulo: "Actualizar documentación del harness"
+    tipo: docs
+    depende_de: [M7]
+    descripcion: >
+      Actualizar CLAUDE.md, RESUMEN-HARNESS.md, README.md y PROCESO.md (§14) según §4 M8.
+    criterios_aceptacion:
+      - "Conteo de skills correcto en los cuatro archivos"
+      - "verificador-datos corrido sobre los cuatro archivos sin afirmaciones incorrectas"
+  - id: M9
+    titulo: "Validación de punta a punta"
+    tipo: testing
+    depende_de: [M8]
+    descripcion: >
+      Correr el escenario de §4 M9 de forma real y documentarlo.
+    criterios_aceptacion:
+      - "milestones/e2e-skills/ con manifest, estado, decisiones y artefactos"
+      - "Cada skill nueva aparece usada al menos una vez en la corrida"
