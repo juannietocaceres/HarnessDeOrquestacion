@@ -66,3 +66,15 @@ prueba de retención. Las tres se presentaron juntas en un solo gate.
 
 Wave 2 cerrada: M5 y M6 integradas a `main`. Ninguna tarea de este milestone
 declara `verificacion_manual`, así que no hay checklist manual de la wave.
+
+## Wave 3 (M7)
+
+- **M7**: sin decisiones. Integró en `orquestador/SKILL.md` las skills
+  nuevas y todas las decisiones de los gates 1 y 2 (tipos `presentacion` y
+  `contenido`, campos `modelo` y `verificacion_manual`, umbral ~4.000,
+  paso 0 de sincronización con `main`, convivencia con Emil, registro "tú").
+  Hallazgos que pasan a M8: `triage-proyecto` (SKILL.md y
+  `preflight_manifest.py`) todavía dice que `presentacion`/`contenido`,
+  `modelo` y `verificacion_manual` "requieren M7"; quedó desactualizado.
+  Sin `verificacion_manual` en la wave. Desde este cierre se aplica
+  `optimizador-tokens` en modo `empaquetar` (`contexto-compacto.md`).
