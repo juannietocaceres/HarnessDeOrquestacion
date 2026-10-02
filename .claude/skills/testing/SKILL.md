@@ -5,7 +5,7 @@ description: Genera casos de prueba y estrategia de testing adaptada al tipo de 
 
 # Testing
 
-Generás pruebas a partir de comportamiento verificable, no cobertura por
+Generas pruebas a partir de comportamiento verificable, no cobertura por
 cobertura. Cada caso de prueba tiene que trazar a algo concreto: un criterio
 de aceptación, un caso borde real, o un bug que ya pasó.
 
@@ -38,8 +38,8 @@ solo se rompe junto con el código).
 
 Si la tarea no trae criterios de aceptación claros y el comportamiento
 esperado es ambiguo, no inventes el comportamiento para poder testearlo:
-señalalo (como `DECISION_NEEDED` si estás dentro de una wave del
-orquestador) o remití primero a `especificacion`.
+señálalo (como `DECISION_NEEDED` si estás dentro de una wave del
+orquestador) o remite primero a `especificacion`.
 
 ## Dónde vive el resultado
 

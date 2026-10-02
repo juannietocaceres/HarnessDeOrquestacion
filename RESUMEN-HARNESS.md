@@ -6,25 +6,40 @@ está diseñada como está. Para el *por qué* de cada decisión de diseño, ver
 [PROCESO.md](PROCESO.md). Para un ejemplo real ejecutado con este mismo
 harness, ver la sección 6 más abajo.
 
-## 1. Las 6 skills, qué producen y cuándo se usan
+## 1. Las 21 skills, qué producen y cuándo se usan
+
+`.claude/skills/` tiene 21 carpetas: **10 propias** del harness (las 10
+primeras filas de la tabla), **1 vendorizada de Anthropic**
+(`frontend-design`) y **10 vendorizadas de Emil Kowalski** (agrupadas en la
+última fila).
 
 | Skill | Qué produce | Cuándo se dispara |
 |---|---|---|
-| [`orquestador`](.claude/skills/orquestador/SKILL.md) | Ejecuta un milestone completo: preflight → waves → batched gate → integración | Punto de entrada del sistema. Se invoca con un manifest de tareas de cualquier tipo de proyecto |
+| [`triage-proyecto`](.claude/skills/triage-proyecto/SKILL.md) | `triage.json` (clasificación, requisitos, riesgos) y `milestone.yaml` borrador que pasa el preflight, sin código | Puerta de entrada: el usuario trae una idea, un plan en prosa o un pedido sin manifest |
+| [`orquestador`](.claude/skills/orquestador/SKILL.md) | Ejecuta un milestone completo: preflight → waves → batched gate → integración | Se invoca con un manifest de tareas de cualquier tipo de proyecto (el de `triage-proyecto` o uno escrito a mano) |
 | [`especificacion`](.claude/skills/especificacion/SKILL.md) | Documento de especificación técnica (objetivos, alcance, RF/RNF, criterios de aceptación) | Antes de implementar una tarea sin criterios de aceptación claros o con enunciado ambiguo |
-| [`frontend-design`](.claude/skills/frontend-design/SKILL.md) | Dirección de diseño visual deliberada (paleta, tipografía, layout específicos del brief) | Al construir o rediseñar cualquier UI. Copiada sin modificar de `anthropics/claude-code` |
+| [`optimizador-prompts`](.claude/skills/optimizador-prompts/SKILL.md) | Prompt claro y estructurado; incluye `PLANTILLA-SUBAGENTE.md`, el formato del prompt autocontenido de cada sub-agente | Siempre que el orquestador arma el prompt de una tarea, o suelta para ordenar una instrucción a una IA |
+| [`optimizador-tokens`](.claude/skills/optimizador-tokens/SKILL.md) | Cápsula de contexto (modo `capsula`) o `contexto-compacto.md` (modo `empaquetar`), con el ahorro medido por script | Cápsula: contexto de referencia > ~4.000 tokens estimados. Empaquetar: al cerrar cada wave |
 | [`revision-codigo`](.claude/skills/revision-codigo/SKILL.md) | Checklist de corrección, seguridad básica, legibilidad, convenciones y alcance | Autorrevisión de cada tarea, siempre antes de integrarla — nunca después |
-| [`documentacion`](.claude/skills/documentacion/SKILL.md) | README, docs técnicas de decisiones, o comentarios inline | Al cerrar una tarea con funcionalidad visible, o al cerrar el milestone |
 | [`testing`](.claude/skills/testing/SKILL.md) | Casos de prueba y estrategia, adaptados al tipo de proyecto | Al implementar cualquier lógica con comportamiento verificable |
+| [`documentacion`](.claude/skills/documentacion/SKILL.md) | README, docs técnicas de decisiones, o comentarios inline | Al cerrar una tarea con funcionalidad visible, o al cerrar el milestone |
+| [`verificador-datos`](.claude/skills/verificador-datos/SKILL.md) | Informe que clasifica cada afirmación (correcta, a matizar, no verificable, exagerada, incorrecta, opinión) con correcciones | Al cerrar tareas `docs`, `presentacion` o `contenido` con afirmaciones verificables, y al cerrar el milestone |
+| [`presentaciones-visuales`](.claude/skills/presentaciones-visuales/SKILL.md) | Deck HTML autocontenido en `presentaciones/<slug>.html`, navegable por teclado y exportable a PDF | Tareas `tipo: presentacion`, o suelta para crear o mejorar slides |
+| [`frontend-design`](.claude/skills/frontend-design/SKILL.md) | Dirección de diseño visual deliberada (paleta, tipografía, layout específicos del brief) | Al construir o rediseñar cualquier UI. Copiada sin modificar de `anthropics/claude-code` |
+| Suite Emil Kowalski (10): `emil-design-eng`, `animate`, `animate-expo`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `mobile-native`, `pick-ui-library`, `prototype`, `animation-vocabulary` | Pulido de UI, animación web y Expo, revisión y auditoría de motion | Tareas que tocan UI o animaciones: 5 tienen fila propia en `orquestador` §8; las otras 5 se nombran solo si la tarea pide ese trabajo. `review-animations`, `pick-ui-library` y `prototype` no se disparan solas. Copiadas sin cambios del commit `d16ebe6`; registro en [docs/vendor/emilkowalski-skills.md](docs/vendor/emilkowalski-skills.md) |
 
 `orquestador` es quien decide **cuándo**, dentro de una wave, se activa cada
 skill de apoyo — el mapeo completo por tipo de proyecto está en su propio
 SKILL.md, §8. Las demás skills también funcionan sueltas, fuera de una wave.
+El porqué de la ampliación de 6 a 21 skills (milestone `mejora-skills`) está
+en [PROCESO.md](PROCESO.md) §14.
 
 ## 2. Flujo completo: milestone → waves → batched gate
 
 ```mermaid
 flowchart TD
+    U(["Idea, plan en prosa o<br/>pedido sin manifest"]) --> T0["triage-proyecto:<br/>triage.json + milestone.yaml borrador<br/>(máx. 3 preguntas si faltan datos)"]
+    T0 --> A
     A["Milestone: manifest de tareas<br/>(YAML, con dependencias)"] --> B[Preflight]
     B -->|manifest inválido o mutado| B1["Reportar error exacto<br/>y esperar corrección"]
     B1 --> B
@@ -33,7 +48,8 @@ flowchart TD
     C --> D["Mostrar plan de waves<br/>(informativo, no es un gate)"]
     D --> E(["Wave N"])
     E --> F["Partir tareas listas de la wave<br/>en lotes de tamaño ≤ cap"]
-    F --> G["Lanzar lote: 1 sub-agente por tarea,<br/>aislado por git worktree, en paralelo"]
+    F --> F2["Armar el prompt de cada tarea:<br/>optimizador-prompts (plantilla) +<br/>optimizador-tokens (cápsula si el contexto<br/>supera ~4.000 tokens)"]
+    F2 --> G["Lanzar lote: 1 sub-agente por tarea,<br/>aislado por git worktree, en paralelo"]
     G --> H{"Cada tarea<br/>termina su turno"}
     H -->|Completó| I["Autorrevisión (revision-codigo)<br/>lista para integrar"]
     H -->|Encontró algo real<br/>que decidir| J["DECISION_NEEDED<br/>queda pausada"]
@@ -48,9 +64,10 @@ flowchart TD
     O --> P["Cada tarea retoma su propio<br/>punto de espera, de forma independiente"]
     P --> Q["Integrar: mergear/commitear<br/>cada tarea completada a main"]
     L -->|No, ninguna tarea<br/>pidió nada| Q
-    Q --> R{"¿Quedan waves<br/>por correr?"}
+    Q --> Q2["Cierre de wave: checklist de verificacion_manual<br/>(informativo, no bloquea) + optimizador-tokens<br/>(empaquetar) regenera contexto-compacto.md"]
+    Q2 --> R{"¿Quedan waves<br/>por correr?"}
     R -->|Sí| E
-    R -->|No| S(["Reporte final del milestone"])
+    R -->|No| S(["Cierre del milestone: verificador-datos<br/>sobre los docs tocados + reporte final"])
 ```
 
 ## 3. La política de no-respuesta, y por qué existe
@@ -69,9 +86,9 @@ Por qué es una regla dura y no una preferencia:
   y sin pensar, exactamente lo que el gate está diseñado para evitar.
 - **Las decisiones que llegan al gate son, por construcción, las que
   importan.** `revision-codigo` y las propias tareas ya resuelven solas todo
-  lo que tiene una respuesta obvia (ver el ejemplo real en la sección 6: dos
-  de las cinco tareas del milestone de ejemplo no generaron ninguna
-  decisión). Lo que llega al gate es, precisamente, lo que un sub-agente ya
+  lo que tiene una respuesta obvia (ver el ejemplo real en la sección 6: tres
+  de las cinco tareas del milestone de ejemplo —T1, T2 y T5— no generaron
+  ninguna decisión). Lo que llega al gate es, precisamente, lo que un sub-agente ya
   determinó que **no** debía decidir solo. Adivinar ahí tiene el costo más
   alto posible.
 - **Un default silencioso es una decisión de producto disfrazada de
@@ -155,8 +172,9 @@ propio commit de git, trazable a la tarea que lo generó.
 
 **Nota honesta sobre esta corrida en particular**: el aislamiento por
 worktree y el registro de skills nuevas dentro de la misma sesión chocaron
-con una limitación puntual del entorno (el proyecto no era un repositorio
-git cuando la sesión arrancó). El diagnóstico completo, lo que se intentó, y
+con una limitación puntual del entorno (la sesión fijó su detección del
+entorno al arrancar, cuando el proyecto todavía no era repositorio git y
+las skills nuevas no existían). El diagnóstico completo, lo que se intentó, y
 por qué no invalida el diseño del harness, está documentado en
 [PROCESO.md](PROCESO.md) §7 — **y se confirmó**: en una sesión de Claude
 Code genuinamente nueva sobre esta misma carpeta (ya repositorio git desde

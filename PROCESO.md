@@ -363,3 +363,148 @@ mundo de "herramienta de IA corriendo en un entorno automatizado" contra
 información útil para la presentación: muestra que ni el trabajo de una IA
 asistiendo en desarrollo es "un botón mágico" — hay pasos que, por diseño
 de seguridad, tienen que pasar por una persona.
+
+## 14. Ampliación de skills
+
+El harness pasó de 6 a 21 skills con el milestone
+[`mejora-skills`](milestones/mejora-skills/) (plan completo en
+[PLAN-MEJORA-SKILLS.md](PLAN-MEJORA-SKILLS.md): 9 tareas, M1–M9, en 5
+waves), corrido con el mismo orquestador que describe este documento. Hoy
+`.claude/skills/` tiene **10 skills propias** (las 5 originales más
+`triage-proyecto`, `optimizador-prompts`, `optimizador-tokens`,
+`verificador-datos` y `presentaciones-visuales`), **1 vendorizada de
+Anthropic** (`frontend-design`) y **10 vendorizadas de Emil Kowalski**. La
+bitácora de cada gate está en
+[milestones/mejora-skills/decisiones.md](milestones/mejora-skills/decisiones.md);
+aquí queda el porqué.
+
+**Por qué `triage-proyecto` escribe un `milestone.yaml` y no un JSON
+libre.** El insumo original proponía una "skill filtro" que devolvía solo
+JSON: un catálogo de agentes y un `orchestration_plan` como lista de
+textos. Pero el harness ya tenía un consumidor con formato propio: el
+orquestador lee `milestone.yaml` y lo valida en el preflight. Un JSON libre
+habría obligado a una traducción intermedia que nadie valida, justo en el
+punto donde una idea ambigua se convierte en tareas. Por eso la salida
+final del triage es el manifest de siempre (con `depende_de` y
+`criterios_aceptacion`), y `triage.json` queda solo para la clasificación
+(dominio, complejidad, requisitos, riesgos). El borrador pasa por el mismo
+preflight que un manifest escrito a mano
+(`triage-proyecto/scripts/preflight_manifest.py` aplica las reglas de
+`orquestador` §4): el triage no se salta ninguna validación. Y, a
+diferencia de las otras skills nuevas cuando corren dentro del orquestador,
+**sí** puede preguntar al usuario (máximo 3 preguntas de opción múltiple),
+porque corre en la puerta de entrada, antes de que exista cualquier
+sub-agente o gate.
+
+**Por qué las métricas de tokens las mide un script.** Un modelo no sabe
+contar con exactitud los tokens de su propio texto, y un porcentaje de
+ahorro estimado a ojo no se puede auditar. `optimizador-tokens` delega toda
+cifra en scripts con Python estándar: `medir_tokens.py` (caracteres / 4,
+marcado como `metodo: estimado`; con `--api` y solo si existe
+`ANTHROPIC_API_KEY`, usa el conteo oficial) y `verificar_entidades.py`, que
+comprueba que ninguna ruta, ID de tarea, hash o literal protegido se perdió
+al comprimir. Si falta una entidad, el script sale con código distinto de 0
+y la cápsula se corrige antes de usarse.
+
+**Por qué Emil se vendoriza con hash fijo, y solo 10 skills.** Se copió
+`emilkowalski/skills` byte a byte desde el commit
+`d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128`, con el `LICENSE` (MIT) dentro
+de cada carpeta y verificación con `diff -r`, el mismo estándar que se usó
+con `frontend-design` (§5). Se descartó `npx skills@latest add`: es más
+rápido, pero no deja claro qué versión quedó instalada ni dónde; con un hash
+fijo la copia es reproducible y actualizarla es repetir el procedimiento y
+mirar el `diff`. De las 13 skills upstream se copiaron 10 porque cada
+`description` visible ocupa contexto en **todas** las sesiones: el registro
+([docs/vendor/emilkowalski-skills.md](docs/vendor/emilkowalski-skills.md))
+mide ~807 tokens por sesión para las 10 copiadas, y dejar fuera las otras
+tres ahorra ~340.
+
+**Decisiones de los gates** (tal cual están en `decisiones.md`):
+
+- Wave 1 (M1–M4), un solo gate con cuatro decisiones y una pregunta de
+  seguimiento:
+  - M4 §7.1 `write-swift` → **dejarla fuera.**
+  - M4 §7.2 skills de uso raro → **"solo algunas"**, sin decir cuáles. El
+    orquestador no eligió por su cuenta: volvió a preguntar →
+    **vendorizar solo `animation-vocabulary`** (fuera `ask-sonner` y
+    `apple-design`).
+  - M1/M2/M3 registro del español → **español neutro con "tú".**
+  - M4 contradicción de stagger → **Emil, acotado**: stagger solo dentro de
+    un grupo de elementos relacionados (lista, grilla), nunca cascada
+    decorativa de secciones enteras.
+- Wave 2 (M5, M6), un solo gate con tres decisiones:
+  - M6 §7.3 campo `modelo:` → **adoptarlo ya** (se pasa como `model` al
+    tool `Agent`).
+  - M6 §7.4 umbral de compresión → **subir a ~4.000 tokens estimados.**
+  - M5 criterios que un sub-agente no puede verificar → **campo propio**
+    `verificacion_manual:`; precisión posterior del usuario: se listan al
+    cierre de **cada wave** como checklist informativo que **no bloquea**.
+- Wave 3 (M7) cerró sin decisiones.
+
+**Contradicciones encontradas entre skills**, y cómo quedaron:
+
+1. **Stagger: `frontend-design` ↔ Emil.** `frontend-design` trata las
+   entradas escalonadas de cada sección como señal de diseño genérico;
+   `animate` y `emil-design-eng` piden stagger cuando todo aparece a la
+   vez. Se resolvió en el gate de la wave 1 (ver arriba) y la regla vive en
+   `orquestador` §8 y en el registro de vendor. El hover en tarjetas era un
+   choque solo aparente y se resuelve con la misma regla.
+2. **"Initial Response" de Emil ↔ sub-agentes.** Las skills de Emil abren
+   con un bloque que, si se invocan sin una pregunta concreta, manda a
+   responder solo un saludo y esperar. Dentro de un sub-agente, que no
+   puede conversar con el usuario, eso dejaría la tarea sin hacer. Como las skills vendorizadas no se editan, la regla
+   la pone el orquestador (§8): la tarea del prompt cuenta como pregunta
+   específica y el saludo se ignora.
+3. **Registro mezclado: voseo ↔ "tú".** Las 4 skills de apoyo originales
+   (y M1, M2) estaban escritas con voseo; M3 con "tú"; el orquestador
+   mezclaba ambos. La regla del plan ("unificar con el resto del harness")
+   no alcanzaba para decidir, así que se llevó al gate. Con la respuesta,
+   cada tarea reescribió lo suyo; M8 pasó a "tú" `especificacion`,
+   `revision-codigo`, `testing` y `documentacion` sin cambiar ninguna regla.
+4. **Criterios que un sub-agente no puede verificar.** Ni el orquestador ni
+   `especificacion` decían qué hacer con criterios como "abre en Expo Go" o
+   "escanea con la cámara real": un sub-agente no los puede comprobar y
+   tampoco debería inventar que pasaron. Lo destapó el reporte de M5 (el
+   plan de `enigma-go`, una app Expo, trae criterios así); se resolvió con
+   `verificacion_manual`.
+
+**Resultados de las pruebas** (en
+[milestones/mejora-skills/pruebas/](milestones/mejora-skills/pruebas/)):
+
+- `optimizador-prompts`: los 5 criterios de aceptación de la tarea de
+  prueba quedaron literales y en orden en el prompt generado; un control
+  negativo con un criterio parafraseado sí lo detecta.
+- `triage-proyecto`: las tres pruebas de estrés (usuario vago, usuario
+  sobre-detallado, proyecto imposible) y la de regresión pasan; los 4
+  `milestone.yaml` generados pasan el preflight.
+- `optimizador-tokens`, retención sobre T2 de `panel-tareas-demo`: la
+  cápsula bajó el contexto de 2.210 a 1.024 tokens (−54 %) y el prompt de
+  2.735 a 1.549 (−43 %); los contratos producidos con contexto completo y
+  con cápsula dieron **13/13** en los mismos checks. El ahorro total del
+  sub-agente fue de solo ~5 % (48.127 → 45.594 tokens), porque la mayor
+  parte de su gasto es contexto fijo y su propia salida. Con esos datos
+  sobre la mesa, el gate subió el umbral de ~2.000 a ~4.000.
+- `contexto-compacto.md` del cierre de la wave 3 (modo `empaquetar`): 1.516
+  → 766 tokens estimados (−49 %), con las 85 entidades revisadas
+  preservadas.
+- `orquestador` (M7): los tres manifests reales siguen pasando el preflight
+  y todas las skills que nombra la tabla de §8 existen.
+
+**Hallazgo: los worktrees arrancan desde un commit viejo.** Los worktrees
+que crea `isolation: "worktree"` en esta corrida no nacieron desde la punta
+de `main`, sino desde `46fa018` (un commit del 18 de septiembre, anterior a
+todo el milestone): lo registró la prueba de M7 (`46fa018 → e6de756` al
+sincronizar) y volvió a pasar en el worktree de M8. Sin corregirlo, un
+sub-agente de la wave 2 no vería lo que integró la wave 1, que es justo la
+premisa del modelo de waves. La mitigación es un **paso 0** obligatorio en
+la plantilla de prompt (`optimizador-prompts/PLANTILLA-SUBAGENTE.md`) y en
+`orquestador` §5: antes de nada, `git merge --ff-only main` y comprobar que
+existen los archivos que integró la wave anterior; si falla, el sub-agente
+devuelve `DECISION_NEEDED` en vez de trabajar sobre una base vieja.
+
+**Pendiente, fuera de alcance**: M4 propuso un `.gitattributes` para fijar
+los finales de línea de las skills vendorizadas. Con `core.autocrlf=true`
+el working tree tiene CRLF y upstream LF, así que un `diff -r` directo
+marca todas las líneas como distintas aunque el contenido sea idéntico (hay
+que usar `--strip-trailing-cr` o comparar hashes de blob). Queda anotado,
+no se aplicó.

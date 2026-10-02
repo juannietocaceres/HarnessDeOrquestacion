@@ -10,9 +10,9 @@ Hecho para la Electiva de desarrollo asistido por IA, Septiembre 2026.
 
 ## Por dónde empezar
 
-| Documento | Qué encontrás ahí |
+| Documento | Qué encuentras ahí |
 |---|---|
-| **[RESUMEN-HARNESS.md](RESUMEN-HARNESS.md)** | El entregable final: mapa de las 6 skills, el diagrama de flujo completo, y la política de no-respuesta explicada |
+| **[RESUMEN-HARNESS.md](RESUMEN-HARNESS.md)** | El entregable final: mapa de las 21 skills (10 propias y 11 vendorizadas), el diagrama de flujo completo, y la política de no-respuesta explicada |
 | **[PROCESO.md](PROCESO.md)** | La bitácora completa: cada decisión de diseño no trivial, con el porqué |
 | **[CLAUDE.md](CLAUDE.md)** | Instrucciones para Claude Code: cómo se invoca cada skill y las convenciones del proyecto |
 
@@ -20,6 +20,8 @@ Hecho para la Electiva de desarrollo asistido por IA, Septiembre 2026.
 
 ```mermaid
 flowchart LR
+    I[Idea sin manifest] --> T[triage-proyecto]
+    T --> A
     A[Milestone: tareas + dependencias] --> B[Preflight]
     B --> C[Wave 1..N en paralelo, con cap]
     C --> D{¿Alguna tarea<br/>pidió una decisión?}
@@ -29,14 +31,20 @@ flowchart LR
     F --> C
 ```
 
-Diagrama completo, con el detalle de cada paso, en
+Si todavía no hay manifest, la puerta de entrada es la skill
+`triage-proyecto`: convierte una idea ambigua (o un plan en prosa) en un
+`milestone.yaml` borrador que pasa el preflight, y a partir de ahí lo
+ejecuta el orquestador. Diagrama completo, con el detalle de cada paso, en
 [RESUMEN-HARNESS.md](RESUMEN-HARNESS.md).
 
 ## Estructura del repo
 
 ```
-.claude/skills/          # las 6 skills del harness (orquestador + 5 de apoyo)
+.claude/skills/          # 21 skills: 10 propias (orquestador, triage-proyecto y 8 de apoyo)
+                         # + frontend-design (Anthropic) + 10 de Emil Kowalski
+docs/vendor/             # origen y hash de las skills vendorizadas de Emil Kowalski
 milestones/<slug>/       # manifest, estado y decisiones de cada milestone corrido
+presentaciones/          # decks HTML generados con presentaciones-visuales
 schema/ api/ ui/         # artefactos reales que dejó el milestone de ejemplo
 PROCESO.md               # bitácora de decisiones de diseño
 RESUMEN-HARNESS.md        # entregable final

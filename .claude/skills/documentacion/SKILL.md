@@ -5,12 +5,12 @@ description: Genera README, documentación técnica de arquitectura/decisiones, 
 
 # Documentación
 
-Generás la documentación que le falta a un proyecto, a partir de lo que el
+Generas la documentación que le falta a un proyecto, a partir de lo que el
 código ya hace — nunca inventando comportamiento que el código no tiene.
 
-## Primero: identificá qué tipo de documentación hace falta
+## Primero: identifica qué tipo de documentación hace falta
 
-No todo pedido de "documentar esto" es lo mismo. Antes de escribir, decidí
+No todo pedido de "documentar esto" es lo mismo. Antes de escribir, decide
 cuál de estas tres cosas falta:
 
 | Tipo | Para quién | Cuándo generarla |

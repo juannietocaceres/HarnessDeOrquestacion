@@ -97,17 +97,18 @@ Cada tarea lleva los campos de `orquestador` §1: `id`, `titulo`, `tipo`,
 `depende_de`, `descripcion`, `criterios_aceptacion` y, si hace falta,
 `fuera_de_alcance_si_depende_de`, `verificacion_manual` y `modelo`. Los dos
 últimos son campos opcionales que se adoptaron en el gate de la wave 2 de
-`mejora-skills`; M7 los integra en `orquestador` §1. Hasta entonces el
-orquestador no los usa todavía, pero su preflight los acepta porque no
-rechaza campos extra.
+`mejora-skills` y que `orquestador` §1 ya define (el orquestador pasa
+`modelo` como `model` al tool `Agent` y lista las `verificacion_manual` al
+cierre de cada wave).
 
 - **ids** `T1`, `T2`… en orden topológico (una tarea nunca depende de un id
   mayor). Si el usuario ya trae ids, consérvalos.
 - **`tipo`**: el que más se parezca al trabajo, de la lista vigente de
   `orquestador` §1: `backend` | `frontend` | `data` | `cli` | `mobile` |
-  `docs` | `testing` | `otro`. Los tipos `presentacion` y `contenido` se
-  pueden usar, pero **requieren M7** (la integración que los añade a
-  `orquestador` §1); hasta entonces el preflight los acepta con un aviso.
+  `docs` | `testing` | `presentacion` | `contenido` | `otro`. Usa
+  `presentacion` cuando el entregable es un deck o material para exponer, y
+  `contenido` para textos para publicar (posts, artículos, guiones) cuyo
+  valor está en lo que afirman.
 - **`depende_de`**: solo dependencias reales (necesita el resultado de otra
   tarea). Lo que no depende entre sí debe poder correr en la misma wave.
   Una dependencia fuera del proyecto (una API de terceros por contratar,

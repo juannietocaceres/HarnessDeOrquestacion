@@ -65,10 +65,17 @@ class PruebasPreflight(unittest.TestCase):
         self.assertEqual(r["errores"], [])
         self.assertTrue(any("especificacion" in a for a in r["avisos"]))
 
-    def test_tipo_m7_es_aviso(self):
-        r = pm.preflight(manifest(tarea("T1", tipo="presentacion")))
+    def test_tipos_presentacion_y_contenido_son_vigentes(self):
+        for tipo in ("presentacion", "contenido"):
+            with self.subTest(tipo=tipo):
+                r = pm.preflight(manifest(tarea("T1", tipo=tipo)))
+                self.assertEqual(r["errores"], [])
+                self.assertFalse(any("tipo" in a for a in r["avisos"]), r["avisos"])
+
+    def test_tipo_desconocido_es_aviso(self):
+        r = pm.preflight(manifest(tarea("T1", tipo="inventado")))
         self.assertEqual(r["errores"], [])
-        self.assertTrue(any("M7" in a for a in r["avisos"]))
+        self.assertTrue(any("inventado" in a for a in r["avisos"]))
 
     def test_verificacion_manual_y_modelo_validos(self):
         r = pm.preflight(manifest(tarea("T1", verificacion_manual=["Abrir en un teléfono real"], modelo="sonnet"),

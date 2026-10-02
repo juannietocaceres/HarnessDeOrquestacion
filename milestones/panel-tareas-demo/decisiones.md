@@ -15,7 +15,7 @@ originó, lo que se preguntó y lo que se respondió.
 ## Wave 2
 
 - **T2**: sin decisiones. La especificación generada con `especificacion`
-  (§8 de PROCESO.md) dejó el contrato sin ambigüedad real — la wave 2
+  (§9 de PROCESO.md) dejó el contrato sin ambigüedad real — la wave 2
   tampoco tuvo preguntas que hacer. Muestra que invertir en una buena
   especificación *antes* de implementar reduce cuántas decisiones llegan al
   batched gate más adelante.
