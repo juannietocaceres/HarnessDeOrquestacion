@@ -1,7 +1,7 @@
 milestone: "Enigma Go — MVP (fases 0–3 del plan)"
 manifest_snapshot_sha256: 9a4500b91181dd1866549cbe7cfd4edf75ecdaac738c4a0d494ffdd69788bab1
 preflight: OK   # ids únicos, deps internas resuelven, sin ciclos, campos requeridos presentes
-wave_actual: 1
+wave_actual: 1   # PAUSADO por pedido del usuario: solo necesita la presentación, no la implementación
 waves_planificadas:
   - wave: 1
     tareas: [T1]
@@ -16,7 +16,7 @@ waves_planificadas:
   - wave: 6
     tareas: [T7]
 tareas:
-  T1: { estado: EN_CURSO, rama: null, commit: null }
+  T1: { estado: COMPLETADA, rama: worktree-agent-a21d2a89aa8d83f44, commit: e2c6dda }   # sin mergear a main (milestone pausado)
   T2: { estado: PENDIENTE, rama: null, commit: null }
   T3: { estado: PENDIENTE, rama: null, commit: null }
   T4: { estado: PENDIENTE, rama: null, commit: null }
