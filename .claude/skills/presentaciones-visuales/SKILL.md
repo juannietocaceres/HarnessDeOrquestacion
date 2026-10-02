@@ -5,7 +5,7 @@ description: Convierte una idea, documento, esquema, transcripción o deck exist
 
 # Presentaciones visuales
 
-Armás presentaciones HTML de un solo archivo, con una narrativa clara y una
+Armas presentaciones HTML de un solo archivo, con una narrativa clara y una
 legibilidad que aguante una sala con proyector, una videollamada o un PDF
 impreso. Esta skill se ocupa de **qué se cuenta y en qué orden**, de la
 **estructura de cada slide** y de las **reglas de legibilidad**; la
@@ -35,8 +35,10 @@ Contradicciones ya resueltas (no las reabras en cada deck):
   deck es una secuencia. Los marcadores numerados *dentro* de una slide
   (01 / 02 / 03) solo si el contenido es un proceso o una línea de tiempo.
 - **Movimiento**: como máximo un momento de animación orquestado por slide,
-  y solo cuando ayuda a seguir la idea. Nada de entradas en cascada para
-  cada elemento ni efectos al pasar el mouse sobre cada bloque.
+  y solo cuando ayuda a seguir la idea. Un escalonado (stagger) se permite
+  solo dentro de un grupo de elementos relacionados (por ejemplo, los pasos
+  de un proceso que aparecen uno tras otro); nunca una cascada decorativa de
+  secciones o bloques, ni efectos al pasar el mouse sobre cada bloque.
 - **Tarjetas y degradés**: está bien una grilla de tarjetas si la jerarquía
   se nota (no todas iguales, con el mismo radio y la misma sombra). Fondo
   liso por defecto; un degradé solo si representa algo del tema.
@@ -44,12 +46,12 @@ Contradicciones ya resueltas (no las reabras en cada deck):
 ## Modo de trabajo: interactivo o dentro de un sub-agente
 
 - **Sesión con el usuario**: si falta información crítica (público,
-  objetivo, duración), preguntá antes de generar. Si no es crítica, asumí
-  lo razonable y seguí.
-- **Dentro de un sub-agente del orquestador**: no preguntes nunca. Asumí lo
-  razonable, listá los supuestos al principio del "Resumen de enfoque" y
-  seguí. Si un supuesto es de alto impacto (cambia el público, el mensaje
-  central o algo que el usuario va a mostrar en público), terminá el turno
+  objetivo, duración), pregunta antes de generar. Si no es crítica, asume
+  lo razonable y sigue.
+- **Dentro de un sub-agente del orquestador**: no preguntes nunca. Asume lo
+  razonable, lista los supuestos al principio del "Resumen de enfoque" y
+  sigue. Si un supuesto es de alto impacto (cambia el público, el mensaje
+  central o algo que el usuario va a mostrar en público), termina el turno
   devolviendo un `DECISION_NEEDED` con el formato de `orquestador/SKILL.md`
   §6, sin entregar el deck a medias.
 - Lo mismo aplica cuando `frontend-design` pide "confirmar con el cliente"
@@ -61,7 +63,7 @@ Contradicciones ya resueltas (no las reabras en cada deck):
 
 ### 1. Analizá el input
 
-Leé el contenido o la idea. Extraé:
+Lee el contenido o la idea. Extrae:
 - **Tema y objetivo** de la presentación
 - **Público** (si se puede inferir)
 - **Cantidad aproximada de slides**
@@ -71,9 +73,9 @@ Leé el contenido o la idea. Extraé:
   `GUION-PRESENTACION.md`), las notas del presentador salen de ahí, y la
   estructura de slides debería coincidir con la del guion.
 
-Ante información faltante, seguí "Modo de trabajo" (arriba).
+Ante información faltante, sigue "Modo de trabajo" (arriba).
 
-### 2. Definí la estructura narrativa
+### 2. Define la estructura narrativa
 
 Toda presentación tiene un arco claro:
 
@@ -85,10 +87,10 @@ Toda presentación tiene un arco claro:
 | Ejemplos o datos | Prueba, evidencia, caso real |
 | Cierre / conclusión | Resumen o llamada a la acción |
 
-Adaptá este esquema al tipo de presentación: un pitch no es lo mismo que
+Adapta este esquema al tipo de presentación: un pitch no es lo mismo que
 una capacitación.
 
-### 3. Elegí un estilo visual
+### 3. Elige un estilo visual
 
 El estilo de partida sale de esta tabla; la paleta y la tipografía
 concretas las define `frontend-design` (su plan de tokens y su lista de
@@ -119,7 +121,7 @@ para que el deck se siga leyendo bien sin conexión.
 - Nada de texto desbordado: todo entra en un lienzo de 1280×720
 
 **Variedad de layouts.** No repitas el mismo layout en todas las slides.
-Combiná, según lo que pida el contenido:
+Combina, según lo que pida el contenido:
 - Slide centrada con título grande + frase
 - Dos columnas (concepto + explicación)
 - Bloques o tarjetas con jerarquía visible
@@ -142,7 +144,7 @@ Combiná, según lo que pida el contenido:
 - Imágenes externas (no hay garantía de que carguen)
 - Estilo infantil, salvo pedido expreso
 
-### 5. Generá el HTML y escribilo a disco
+### 5. Genera el HTML y escríbelo a disco
 
 La salida es **un único archivo HTML autocontenido** en
 `presentaciones/<slug>.html` (crear la carpeta si no existe). El HTML no se
@@ -201,7 +203,8 @@ Si el deck es para video o pantalla:
 - Elementos grandes, tipografía al tamaño máximo cómodo
 - Fondo liso (degradé solo si significa algo, ver "Precedencia")
 - Máximo 3 puntos por slide
-- Un único momento de animación por slide, siempre respetando
+- Un único momento de animación por slide (puede ser un escalonado dentro
+  de un grupo relacionado, ver "Precedencia"), siempre respetando
   `prefers-reduced-motion`
 
 ### 7. Presentaciones para reunión o clase
@@ -226,7 +229,7 @@ del harness (ver `PROCESO.md` §11).
    aparece sobre fondo claro y sobre fondo oscuro, se definen dos variantes
    del mismo color, una por fondo. Para calcularlo:
    `python .claude/skills/presentaciones-visuales/scripts/contraste.py "#texto" "#fondo" ...`
-2. **Clichés.** Buscá y eliminá los patrones que lista `frontend-design`,
+2. **Clichés.** Busca y elimina los patrones que lista `frontend-design`,
    en especial:
    - etiquetas tipo "PALABRA — fragmento" con guion largo;
    - metadatos unidos con punto medio ("A · B · C");
@@ -236,18 +239,18 @@ del harness (ver `PROCESO.md` §11).
    - grilla de tarjetas idénticas con la misma sombra gris.
    Una búsqueda de texto de ` · `, ` — ` y `text-transform: uppercase` en
    el HTML ayuda, pero no reemplaza mirar cada slide.
-3. **Lenguaje llano.** Releé cada slide preguntando "¿esto lo entiende
-   alguien que no escribió el sistema?". Reemplazá la jerga interna por la
+3. **Lenguaje llano.** Relee cada slide preguntando "¿esto lo entiende
+   alguien que no escribió el sistema?". Reemplaza la jerga interna por la
    metáfora del propio tema (por ejemplo, "tandas, como las olas" en vez
    de "waves con cap de concurrencia").
-4. **Datos.** Si el deck cita cifras o afirmaciones verificables, invocá
+4. **Datos.** Si el deck cita cifras o afirmaciones verificables, invoca
    `verificador-datos` antes de entregar. Si esa skill no está disponible,
-   verificá a mano cada cifra contra su fuente (el repo, el documento de
-   origen) y no inventes ninguna: si falta un dato, decilo.
+   verifica a mano cada cifra contra su fuente (el repo, el documento de
+   origen) y no inventes ninguna: si falta un dato, dilo.
 5. **Desborde e impresión.** Ningún texto se sale de su slide a 1280×720,
    y la vista de impresión da exactamente una slide por página. Si el
    entorno permite capturas (por ejemplo, Chrome headless con
-   `--window-size=1280,720`), mirá cada slide; si no, decí explícitamente
+   `--window-size=1280,720`), mira cada slide; si no, di explícitamente
    que no se verificó.
 
 ---
@@ -257,7 +260,7 @@ del harness (ver `PROCESO.md` §11).
 El HTML queda en disco; en el chat va solo esto:
 
 **Resumen de enfoque:**
-> Objetivo, público asumido, estilo visual elegido y por qué. Si corrés
+> Objetivo, público asumido, estilo visual elegido y por qué. Si corres
 > dentro de un sub-agente, también la lista de supuestos.
 
 **Estructura de slides:**
@@ -274,21 +277,21 @@ El HTML queda en disco; en el chat va solo esto:
 
 ## Casos especiales
 
-**Si el usuario trae un documento o transcripción larga:** extraé las ideas
-principales; no intentes meter todo el texto en las slides. Resumí,
-priorizá, jerarquizá.
+**Si el usuario trae un documento o transcripción larga:** extrae las ideas
+principales; no intentes meter todo el texto en las slides. Resume,
+prioriza, jerarquiza.
 
-**Si el usuario trae un PowerPoint o esquema:** respetá la estructura y los
-mensajes clave, pero mejorá el diseño y la jerarquía visual.
+**Si el usuario trae un PowerPoint o esquema:** respeta la estructura y los
+mensajes clave, pero mejora el diseño y la jerarquía visual.
 
-**Si el usuario no da estilo:** elegí el más adecuado al tema, explicalo
-brevemente en el resumen de enfoque y usalo de forma coherente.
+**Si el usuario no da estilo:** elige el más adecuado al tema, explícalo
+brevemente en el resumen de enfoque y úsalo de forma coherente.
 
 **Si el usuario da una guía de marca:** colores, fuentes y tono de la marca
 van por encima de cualquier otra preferencia de diseño, incluida
 `frontend-design`. El checklist de contraste sigue aplicando: si un color
-de marca no llega a 4.5:1 sobre un fondo, usalo solo en texto grande o
-como color de fondo, y decilo en las recomendaciones.
+de marca no llega a 4.5:1 sobre un fondo, úsalo solo en texto grande o
+como color de fondo, y dilo en las recomendaciones.
 
-**Si el contenido necesita datos o fuentes que no tenés:** indicá
+**Si el contenido necesita datos o fuentes que no tienes:** indica
 claramente qué datos faltan. No inventes cifras.
