@@ -1,0 +1,82 @@
+milestone: "Backend, despliegue y trabajo académico"
+cap_concurrencia: 3
+tareas:
+  - id: N1
+    titulo: "Skill backend-datos"
+    tipo: docs
+    depende_de: []
+    descripcion: >
+      Crear .claude/skills/backend-datos/ con SKILL.md, PLANTILLA-MODELO-DATOS.md
+      y PLANTILLA-CONTRATO-API.md según PLAN-MEJORA-SKILLS-2.md §4 N1. Respetar
+      el contrato .env.example de §3.3.
+    criterios_aceptacion:
+      - "Existen SKILL.md y las dos plantillas con frontmatter válido"
+      - "Regresión contra schema/tareas.md y api/contrato-tareas.md documentada"
+      - "Prueba 'app Expo con login y favoritos' con modelo, contrato, RLS y .env.example, sin auth a mano"
+      - "Pruebas en milestones/mejora-skills-2/pruebas/backend-datos.md"
+  - id: N2
+    titulo: "Skill despliegue"
+    tipo: docs
+    depende_de: []
+    descripcion: >
+      Crear .claude/skills/despliegue/ con SKILL.md y CHECKLIST-PUBLICAR.md según
+      §4 N2. Lee .env.example (contrato §3.3). Publicar nunca es automático.
+    criterios_aceptacion:
+      - "Existen SKILL.md y CHECKLIST-PUBLICAR.md"
+      - "Despliegue de landing/enigma-go/ a GitHub Pages preparado (workflow, rutas, 404)"
+      - "Ningún límite de plan ni precio escrito como dato fijo"
+      - "Prueba en milestones/mejora-skills-2/pruebas/despliegue.md"
+    verificacion_manual:
+      - "Activar GitHub Pages en la configuración del repositorio si la publicación se aprueba"
+  - id: N3
+    titulo: "Skill trabajo-academico"
+    tipo: docs
+    depende_de: []
+    descripcion: >
+      Crear .claude/skills/trabajo-academico/ con SKILL.md, ESTRUCTURAS.md y
+      CHECKLIST-APA7.md según §4 N3. Revisar la licencia de las skills docx y pdf
+      de anthropics/skills y reportarla para la decisión §7.4.
+    criterios_aceptacion:
+      - "Existen SKILL.md, ESTRUCTURAS.md y CHECKLIST-APA7.md"
+      - "Esqueleto de anteproyecto de prueba con objetivos según §4 N3 punto 4"
+      - "Al menos 5 referencias verificadas con DOI o URL comprobada"
+      - "verificador-datos sobre las referencias: 0 incorrectas, 0 inventadas"
+      - "Prueba en milestones/mejora-skills-2/pruebas/trabajo-academico.md"
+    verificacion_manual:
+      - "Revisar que el esqueleto del anteproyecto tenga sentido para el tema y el programa"
+  - id: N4
+    titulo: "Integrar en orquestador y triage-proyecto"
+    tipo: docs
+    depende_de: [N1, N2, N3]
+    descripcion: >
+      Aplicar §4 N4: tipos devops y academico, campo norma_citacion, filas nuevas
+      en orquestador §8, actualización de preflight_manifest.py, triage.schema.json,
+      triage-proyecto/SKILL.md y tests.
+    criterios_aceptacion:
+      - "Los 4 manifests existentes pasan preflight_manifest.py"
+      - "test_scripts.py de triage-proyecto y optimizador-tokens pasan"
+      - "La tabla §8 solo nombra skills existentes"
+  - id: N5
+    titulo: "Actualizar documentación"
+    tipo: docs
+    depende_de: [N4]
+    modelo: sonnet
+    descripcion: >
+      Actualizar CLAUDE.md, README.md, RESUMEN-HARNESS.md y escribir PROCESO.md §15
+      según §4 N5.
+    criterios_aceptacion:
+      - "Conteo de 24 skills correcto en los cuatro archivos"
+      - "verificador-datos sobre los cuatro archivos sin afirmaciones incorrectas"
+  - id: N6
+    titulo: "Validación de punta a punta"
+    tipo: testing
+    depende_de: [N5]
+    descripcion: >
+      Correr el escenario de §4 N6 de forma real en la sesión principal y
+      documentarlo en milestones/e2e-skills-2/.
+    criterios_aceptacion:
+      - "milestones/e2e-skills-2/ con triage, manifest, estado, decisiones y artefactos"
+      - "backend-datos, despliegue y trabajo-academico usadas al menos una vez"
+      - "La publicación pasó por el batched gate con el comando exacto"
+    verificacion_manual:
+      - "Abrir la web publicada (si se aprobó publicar) desde el celular y probar la inscripción"

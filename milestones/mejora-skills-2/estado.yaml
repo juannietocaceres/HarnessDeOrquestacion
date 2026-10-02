@@ -1,0 +1,22 @@
+milestone: "Backend, despliegue y trabajo académico"
+manifest_snapshot_sha256: c0033708263034488363dcfec31e79f95aec72abdddfb700009056a11cf4ce79
+preflight: OK   # ids únicos, deps internas resueltas, sin ciclos, campos requeridos presentes
+wave_actual: 1
+waves_planificadas:
+  - wave: 1
+    tareas: [N1, N2, N3]
+  - wave: 2
+    tareas: [N4]
+  - wave: 3
+    tareas: [N5]
+  - wave: 4
+    tareas: [N6]   # corre en la sesión principal (triage + gate al usuario)
+tareas:
+  N1: { estado: EN_CURSO, rama: null, commit: null }
+  N2: { estado: EN_CURSO, rama: null, commit: null }
+  N3: { estado: EN_CURSO, rama: null, commit: null }
+  N4: { estado: PENDIENTE, rama: null, commit: null }
+  N5: { estado: PENDIENTE, rama: null, commit: null }
+  N6: { estado: PENDIENTE, rama: null, commit: null }
+decisiones_pendientes: []
+bloqueos_externos: []
