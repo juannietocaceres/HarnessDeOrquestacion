@@ -1,0 +1,12 @@
+{
+  "original": "milestones/mejora-skills/pruebas/tokens/prompt-completo.md",
+  "final": "milestones/mejora-skills/pruebas/tokens/prompt-capsula.md",
+  "caracteres_original": 10941,
+  "caracteres_final": 6196,
+  "metricas": {
+    "tokens_original": 2735,
+    "tokens_final": 1549,
+    "ahorro": "43%",
+    "metodo": "estimado"
+  }
+}

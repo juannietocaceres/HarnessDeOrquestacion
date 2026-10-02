@@ -1,0 +1,40 @@
+== milestones/mejora-skills/pruebas/tokens/resultados/contrato-completo.md
+  OK    C1 POST con request y response JSON (201, objeto completo)
+  OK    C2 GET con response JSON array (200)
+  OK    C3 error 400 con payload JSON que identifica titulo
+  OK    C4 explícito: id, estado, fecha_creacion los asigna el servidor, nunca el cliente
+  OK    F1 todos los bloques json parsean
+  OK    F2 toda tarea de ejemplo tiene exactamente los 4 campos de T1
+  OK    F3 ids de ejemplo son UUID v4
+  OK    F4 estado inicial pendiente al crear
+  OK    F5 fechas ISO 8601 UTC con Z
+  OK    F6 menciona UUID v4 e ISO 8601 / UTC
+  OK    F7 enum exacto pendiente/en_curso/hecha
+  OK    F8 límite de 200 caracteres de titulo (de T1)
+  OK    F9 fuera de alcance: PATCH/PUT/DELETE, autenticación, paginación
+== milestones/mejora-skills/pruebas/tokens/resultados/contrato-capsula.md
+  OK    C1 POST con request y response JSON (201, objeto completo)
+  OK    C2 GET con response JSON array (200)
+  OK    C3 error 400 con payload JSON que identifica titulo
+  OK    C4 explícito: id, estado, fecha_creacion los asigna el servidor, nunca el cliente
+  OK    F1 todos los bloques json parsean
+  OK    F2 toda tarea de ejemplo tiene exactamente los 4 campos de T1
+  OK    F3 ids de ejemplo son UUID v4
+  OK    F4 estado inicial pendiente al crear
+  OK    F5 fechas ISO 8601 UTC con Z
+  OK    F6 menciona UUID v4 e ISO 8601 / UTC
+  OK    F7 enum exacto pendiente/en_curso/hecha
+  OK    F8 límite de 200 caracteres de titulo (de T1)
+  OK    F9 fuera de alcance: PATCH/PUT/DELETE, autenticación, paginación
+{
+  "milestones/mejora-skills/pruebas/tokens/resultados/contrato-completo.md": {
+    "ok": 13,
+    "total": 13,
+    "fallas": []
+  },
+  "milestones/mejora-skills/pruebas/tokens/resultados/contrato-capsula.md": {
+    "ok": 13,
+    "total": 13,
+    "fallas": []
+  }
+}

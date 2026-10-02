@@ -1,0 +1,12 @@
+{
+  "original": "milestones/mejora-skills/pruebas/tokens/contexto-completo.md",
+  "final": "milestones/mejora-skills/pruebas/tokens/capsula-suave.md",
+  "caracteres_original": 8843,
+  "caracteres_final": 4098,
+  "metricas": {
+    "tokens_original": 2210,
+    "tokens_final": 1024,
+    "ahorro": "54%",
+    "metodo": "estimado"
+  }
+}

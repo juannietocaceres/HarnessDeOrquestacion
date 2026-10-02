@@ -1,0 +1,15 @@
+{
+  "original": "milestones/mejora-skills/pruebas/tokens/contexto-completo.md",
+  "capsula": "milestones/mejora-skills/pruebas/tokens/capsula-suave.md",
+  "entidades_revisadas": 40,
+  "por_categoria": {
+    "ruta": 10,
+    "id_tarea": 8,
+    "uuid": 3,
+    "literal": 19
+  },
+  "faltantes": {},
+  "ignoradas": [],
+  "credencial_en_capsula": false,
+  "entidades_preservadas": true
+}

@@ -1,0 +1,207 @@
+{
+  "modo": "descriptions",
+  "carpeta": ".claude/skills",
+  "excluidas": [
+    "optimizador-tokens"
+  ],
+  "skills": [
+    {
+      "skill": "animate",
+      "origen": "emil",
+      "caracteres": 481,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 11779,
+      "tokens": 120
+    },
+    {
+      "skill": "animate-expo",
+      "origen": "emil",
+      "caracteres": 537,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 17785,
+      "tokens": 134
+    },
+    {
+      "skill": "animation-vocabulary",
+      "origen": "emil",
+      "caracteres": 446,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 13181,
+      "tokens": 111
+    },
+    {
+      "skill": "documentacion",
+      "origen": "propia",
+      "caracteres": 230,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 2741,
+      "tokens": 57
+    },
+    {
+      "skill": "emil-design-eng",
+      "origen": "emil",
+      "caracteres": 172,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 27029,
+      "tokens": 43
+    },
+    {
+      "skill": "especificacion",
+      "origen": "propia",
+      "caracteres": 318,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 2999,
+      "tokens": 79
+    },
+    {
+      "skill": "find-animation-opportunities",
+      "origen": "emil",
+      "caracteres": 388,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 9710,
+      "tokens": 97
+    },
+    {
+      "skill": "frontend-design",
+      "origen": "vendorizada-otra",
+      "caracteres": 221,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 9363,
+      "tokens": 55
+    },
+    {
+      "skill": "improve-animations",
+      "origen": "emil",
+      "caracteres": 467,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 8147,
+      "tokens": 116
+    },
+    {
+      "skill": "mobile-native",
+      "origen": "emil",
+      "caracteres": 753,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 16787,
+      "tokens": 188
+    },
+    {
+      "skill": "optimizador-prompts",
+      "origen": "propia",
+      "caracteres": 348,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 9470,
+      "tokens": 87
+    },
+    {
+      "skill": "orquestador",
+      "origen": "propia",
+      "caracteres": 384,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 11682,
+      "tokens": 96
+    },
+    {
+      "skill": "pick-ui-library",
+      "origen": "emil",
+      "caracteres": 276,
+      "disable_model_invocation": true,
+      "en_contexto": false,
+      "caracteres_skill_md": 4760,
+      "tokens": 69
+    },
+    {
+      "skill": "presentaciones-visuales",
+      "origen": "propia",
+      "caracteres": 381,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 12814,
+      "tokens": 95
+    },
+    {
+      "skill": "prototype",
+      "origen": "emil",
+      "caracteres": 253,
+      "disable_model_invocation": true,
+      "en_contexto": false,
+      "caracteres_skill_md": 7774,
+      "tokens": 63
+    },
+    {
+      "skill": "review-animations",
+      "origen": "emil",
+      "caracteres": 178,
+      "disable_model_invocation": true,
+      "en_contexto": false,
+      "caracteres_skill_md": 8339,
+      "tokens": 44
+    },
+    {
+      "skill": "revision-codigo",
+      "origen": "propia",
+      "caracteres": 291,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 2703,
+      "tokens": 72
+    },
+    {
+      "skill": "testing",
+      "origen": "propia",
+      "caracteres": 194,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 2981,
+      "tokens": 48
+    },
+    {
+      "skill": "verificador-datos",
+      "origen": "propia",
+      "caracteres": 427,
+      "disable_model_invocation": false,
+      "en_contexto": true,
+      "caracteres_skill_md": 11961,
+      "tokens": 106
+    }
+  ],
+  "resumen": {
+    "total": {
+      "skills": 19,
+      "en_contexto": 16,
+      "caracteres_en_contexto": 6038,
+      "tokens_en_contexto": 1504
+    },
+    "emil": {
+      "skills": 10,
+      "en_contexto": 7,
+      "caracteres_en_contexto": 3244,
+      "tokens_en_contexto": 809
+    },
+    "propia": {
+      "skills": 8,
+      "en_contexto": 8,
+      "caracteres_en_contexto": 2573,
+      "tokens_en_contexto": 640
+    },
+    "vendorizada-otra": {
+      "skills": 1,
+      "en_contexto": 1,
+      "caracteres_en_contexto": 221,
+      "tokens_en_contexto": 55
+    }
+  },
+  "metodo": "estimado"
+}
