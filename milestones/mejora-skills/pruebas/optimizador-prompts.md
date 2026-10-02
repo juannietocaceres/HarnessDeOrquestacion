@@ -42,7 +42,7 @@ ya están integradas en `main`; tipo `mobile` con lógica verificable activa
 ## Output (prompt generado)
 
 ```text
-Sos un sub-agente del harness de orquestación (estás en tu propio git worktree, en una rama propia). No ves la conversación del orquestador: este prompt es todo tu contexto.
+Eres un sub-agente del harness de orquestación (estás en tu propio git worktree, en una rama propia). No ves la conversación del orquestador: este prompt es todo tu contexto.
 
 [TAREA] T4 — "Generador de casos + validador de solución" — tipo: mobile (milestone `enigma-go`)
 
@@ -76,18 +76,18 @@ Implementar dos módulos del motor en enigma-go/:
 - revision-codigo: autorrevisión antes de reportar (lee .claude/skills/revision-codigo/SKILL.md).
 
 [RESTRICCIONES]
-- Trabajás solo en tu worktree. Toca solo: enigma-go/src/engine/generator.ts, enigma-go/src/engine/validator.ts y sus tests en enigma-go/__tests__/. Nada más.
+- Trabajas solo en tu worktree. Toca solo: enigma-go/src/engine/generator.ts, enigma-go/src/engine/validator.ts y sus tests en enigma-go/__tests__/. Nada más.
 - No modifiques otros worktrees ni el checkout principal.
-- No cambies types.ts, rng.ts, scaling.ts ni las plantillas; si necesitás un cambio ahí, es una decisión (ver protocolo).
+- No cambies types.ts, rng.ts, scaling.ts ni las plantillas; si necesitas un cambio ahí, es una decisión (ver protocolo).
 
 [PROTOCOLO DE DECISIÓN]
-Nunca le preguntes al usuario. Si encontrás una ambigüedad real de alto impacto que no podés resolver con lo que tenés, detenete y terminá tu turno devolviendo exactamente:
+Nunca le preguntes al usuario. Si encuentras una ambigüedad real de alto impacto que no puedes resolver con lo que tienes, detente y termina tu turno devolviendo exactamente:
 DECISION_NEEDED
 tarea: T4
 pregunta: "..."
 opciones: ["A", "B"]
 contexto: "..."
-No commitees trabajo a medias que dependa de la respuesta; quedás pausado y se te reanuda con la respuesta. Para todo lo demás, asumí lo razonable y listá los supuestos en tu reporte.
+No commitees trabajo a medias que dependa de la respuesta; quedas pausado y se te reanuda con la respuesta. Para todo lo demás, asume lo razonable y lista los supuestos en tu reporte.
 
 [ENTREGA]
 - Un solo commit en tu rama, mensaje en español que empiece por "T4: ...".

@@ -5,7 +5,7 @@ description: Convierte ideas desordenadas, notas o instrucciones incompletas en 
 
 # Optimizador de prompts
 
-Convertís ideas caóticas, notas rápidas o instrucciones incompletas en
+Conviertes ideas caóticas, notas rápidas o instrucciones incompletas en
 prompts precisos y listos para usar. El foco es la **claridad**: que la IA
 que recibe el prompt entienda qué se quiere, con qué límites y cómo se sabe
 que terminó bien.
@@ -31,13 +31,13 @@ objetivos ni restricciones.
 ## Modo de ejecución: interactivo o no interactivo
 
 - **Interactivo** (invocada suelta por el usuario): si falta información
-  imprescindible, podés preguntar (máximo 2–3 preguntas, en "Dudas
+  imprescindible, puedes preguntar (máximo 2–3 preguntas, en "Dudas
   opcionales").
 - **No interactivo** (corre dentro del orquestador o de un sub-agente del
-  harness): **no hagas preguntas**. Asumí lo razonable, seguí, y listá los
+  harness): **no hagas preguntas**. Asume lo razonable, sigue, y lista los
   supuestos en la sección "Supuestos" de la respuesta. Si un supuesto es de
   alto impacto (cambiaría el objetivo, el alcance o los criterios de la
-  tarea), no lo asumas: devolvé un bloque `DECISION_NEEDED` con el formato de
+  tarea), no lo asumas: devuelve un bloque `DECISION_NEEDED` con el formato de
   `orquestador` §6 para que entre al batched gate de la wave.
 
 Ante la duda sobre en qué modo estás: si el pedido llega desde un prompt del
@@ -45,9 +45,9 @@ orquestador o de un sub-agente (no del usuario en el chat), es no interactivo.
 
 ## Proceso
 
-### 1. Detectá la herramienta objetivo
+### 1. Detecta la herramienta objetivo
 
-Antes de generar el prompt, identificá **para qué herramienta o modelo** se
+Antes de generar el prompt, identifica **para qué herramienta o modelo** se
 va a usar:
 
 - Claude, ChatGPT, Gemini (conversacionales/texto)
@@ -58,12 +58,12 @@ va a usar:
 - Sora, Kling, Runway (video)
 - n8n, Make, Zapier (automatizaciones)
 
-Si no queda claro: en modo interactivo, preguntá; en modo no interactivo,
-elegí la más probable y anotala como supuesto.
+Si no queda claro: en modo interactivo, pregunta; en modo no interactivo,
+elige la más probable y anótala como supuesto.
 
-### 2. Extraé los componentes del prompt
+### 2. Extrae los componentes del prompt
 
-Del input, identificá:
+Del input, identifica:
 
 1. **Objetivo real**: qué se quiere conseguir.
 2. **Contexto relevante**: rol, situación, datos de partida.
@@ -74,12 +74,12 @@ Del input, identificá:
 7. **Cosas a evitar**: errores frecuentes, restricciones, exclusiones.
 8. **Verificación final**: si aplica, instrucción de autocomprobación.
 
-Si falta algo imprescindible, aplicá la regla del modo de ejecución (arriba).
-Si no es crítico, asumí lo razonable y seguí.
+Si falta algo imprescindible, aplica la regla del modo de ejecución (arriba).
+Si no es crítico, asume lo razonable y sigue.
 
-### 3. Construí el prompt final
+### 3. Construye el prompt final
 
-Estructura general (adaptala según la herramienta y la complejidad):
+Estructura general (adáptala según la herramienta y la complejidad):
 
 ```
 [CONTEXTO Y ROL]
@@ -151,43 +151,43 @@ Reglas específicas de este destino:
 
 ### Claude / ChatGPT / Gemini (texto y conversacional)
 
-- Priorizá contexto claro, pasos definidos y formato de salida explícito.
-- Agregá instrucción de rol si el caso lo requiere.
-- Si es un sistema de prompts, separá el system prompt del user message.
+- Prioriza contexto claro, pasos definidos y formato de salida explícito.
+- Agrega instrucción de rol si el caso lo requiere.
+- Si es un sistema de prompts, separa el system prompt del user message.
 
 ### Claude Code / herramientas de programación
 
-- Incluí: objetivo del código, lenguaje/framework, estructura del proyecto si
+- Incluye: objetivo del código, lenguaje/framework, estructura del proyecto si
   se conoce.
-- Agregá restricciones técnicas, comportamiento esperado, archivos afectados.
-- Definí criterios de validación y casos límite.
-- Especificá si debe explicar el código o solo entregarlo.
+- Agrega restricciones técnicas, comportamiento esperado, archivos afectados.
+- Define criterios de validación y casos límite.
+- Especifica si debe explicar el código o solo entregarlo.
 
 ### Midjourney / Flux / Stable Diffusion / herramientas de imagen
 
 - Estructura: sujeto principal → composición → estilo visual → iluminación →
   encuadre → relación de aspecto → ambiente.
-- Agregá elementos obligatorios y lista de elementos a evitar (negative
+- Agrega elementos obligatorios y lista de elementos a evitar (negative
   prompts si aplica).
-- Adaptá el formato a la herramienta (Midjourney usa `--ar`, `--style`; SD
+- Adapta el formato a la herramienta (Midjourney usa `--ar`, `--style`; SD
   usa `negative prompt:`).
 
 ### Sora / Kling / Runway / herramientas de video
 
-- Incluí: escena de apertura, movimiento de cámara, acción principal,
+- Incluye: escena de apertura, movimiento de cámara, acción principal,
   progresión visual.
-- Agregá estilo, duración aproximada, ambiente sonoro si aplica.
-- Especificá continuidad visual si es parte de una secuencia.
+- Agrega estilo, duración aproximada, ambiente sonoro si aplica.
+- Especifica continuidad visual si es parte de una secuencia.
 
 ### n8n / Make / Zapier / automatizaciones
 
-- Incluí: trigger, inputs, pasos del flujo en orden, herramientas conectadas,
+- Incluye: trigger, inputs, pasos del flujo en orden, herramientas conectadas,
   output esperado.
-- Agregá casos límite, manejo de errores y qué debe pasar si falla un paso.
+- Agrega casos límite, manejo de errores y qué debe pasar si falla un paso.
 
 ## Formato de respuesta
 
-Devolvé **siempre** en este orden:
+Devuelve **siempre** en este orden:
 
 ---
 

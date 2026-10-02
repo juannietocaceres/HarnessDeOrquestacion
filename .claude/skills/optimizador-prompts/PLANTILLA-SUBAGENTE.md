@@ -23,7 +23,7 @@ borran si no aplican. Todo lo demás se copia tal cual.
 ## Plantilla
 
 ```
-Sos un sub-agente del harness de orquestación (estás en tu propio git worktree, en una rama propia). No ves la conversación del orquestador: este prompt es todo tu contexto.
+Eres un sub-agente del harness de orquestación (estás en tu propio git worktree, en una rama propia). No ves la conversación del orquestador: este prompt es todo tu contexto.
 
 [TAREA] <id> — "<titulo>" — tipo: <tipo> (milestone `<slug>`)
 
@@ -45,19 +45,19 @@ Sos un sub-agente del harness de orquestación (estás en tu propio git worktree
 - revision-codigo: autorrevisión antes de reportar (lee .claude/skills/revision-codigo/SKILL.md)
 
 [RESTRICCIONES]
-- Trabajás solo en tu worktree. Toca solo: <rutas permitidas>. Nada más.
+- Trabajas solo en tu worktree. Toca solo: <rutas permitidas>. Nada más.
 - No modifiques otros worktrees ni el checkout principal.
-- Si levantás un servidor (dev server, API local), elegí un puerto libre y registralo en tu reporte. (si aplica)
+- Si levantas un servidor (dev server, API local), elige un puerto libre y regístralo en tu reporte. (si aplica)
 - <restricciones propias de la tarea> (si aplica)
 
 [PROTOCOLO DE DECISIÓN]
-Nunca le preguntes al usuario. Si encontrás una ambigüedad real de alto impacto que no podés resolver con lo que tenés, detenete y terminá tu turno devolviendo exactamente:
+Nunca le preguntes al usuario. Si encuentras una ambigüedad real de alto impacto que no puedes resolver con lo que tienes, detente y termina tu turno devolviendo exactamente:
 DECISION_NEEDED
 tarea: <id>
 pregunta: "..."
 opciones: ["A", "B"]
 contexto: "..."
-No commitees trabajo a medias que dependa de la respuesta; quedás pausado y se te reanuda con la respuesta. Para todo lo demás, asumí lo razonable y listá los supuestos en tu reporte.
+No commitees trabajo a medias que dependa de la respuesta; quedas pausado y se te reanuda con la respuesta. Para todo lo demás, asume lo razonable y lista los supuestos en tu reporte.
 
 [ENTREGA]
 - Un solo commit en tu rama, mensaje en español que empiece por "<id>: ...".
