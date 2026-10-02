@@ -1,0 +1,29 @@
+{
+  "proyecto": "AedesAlert Cali — Evaluación de la idea de negocio bajo 4 criterios de validación regional",
+  "slug": "validacion-regional-aedesalert",
+  "estado": "listo_para_orquestar",
+  "preguntas_pendientes": [],
+  "supuestos": [
+    "Respuestas del triage: alcance 'rehacer todo' (misma idea, todas las cifras re-verificadas), deck en HTML del harness, ejecución con sub-agentes reales.",
+    "El guion va como documento aparte (pedido del usuario durante el triage).",
+    "Sin aislamiento por worktree: la sesión no detecta un repo git en su directorio de trabajo (mismo bloqueo que PROCESO.md §7). Los sub-agentes comparten un espejo del milestone en la nube y cada tarea escribe solo sus propios archivos; el orquestador integra al repo del harness con un commit por tarea al cerrar cada wave.",
+    "cap_concurrencia 4 para que los 4 criterios corran en una sola tanda."
+  ],
+  "clasificacion": {
+    "dominio": "contenido",
+    "complejidad": "media",
+    "alcance": "Matriz de selección (Word), presentación HTML de 5 minutos y guion aparte que evalúan AedesAlert Cali bajo los 4 criterios de validación regional del curso."
+  },
+  "requisitos_tecnicos": {"frontend": "Deck HTML autocontenido 1280x720 (presentaciones-visuales)", "backend": "", "datos": "Fuentes oficiales y de prensa verificables a octubre de 2026 (DANE, CCC, Gobernación, Alcaldía, INS, Minciencias, SENA)", "otros": "Word académico B/N, Times New Roman 12, interlineado 1,5, APA 7"},
+  "requisitos_no_funcionales": [
+    {"requisito": "Toda cifra con fuente citada en APA 7 y verificada", "inferido": true},
+    {"requisito": "Exposición de máximo 5 minutos", "inferido": false},
+    {"requisito": "Documentos Word en blanco y negro, Times New Roman 12, interlineado 1,5", "inferido": false},
+    {"requisito": "Deck legible con proyector y exportable a PDF", "inferido": true}
+  ],
+  "tipos_requeridos": ["contenido", "docs", "presentacion"],
+  "skills_requeridas": ["optimizador-prompts", "verificador-datos", "presentaciones-visuales", "frontend-design", "optimizador-tokens"],
+  "fuera_de_alcance": ["Desarrollo del modelo predictivo", "Descarga y limpieza de datos SIVIGILA/NASA POWER", "Versión .pptx del deck"],
+  "riesgos": ["Cifras desactualizadas a octubre de 2026", "Convocatorias cerradas o canceladas (Minciencias, Fondo Emprender)", "Sitios oficiales caídos o que bloquean la descarga"],
+  "manifest": "milestones/validacion-regional-aedesalert/milestone.yaml"
+}

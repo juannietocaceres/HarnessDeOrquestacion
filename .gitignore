@@ -9,3 +9,7 @@ web-build/
 *.tsbuildinfo
 .env
 .env.*
+
+# Worktrees de sub-agentes y caché de Python
+.claude/worktrees/
+__pycache__/

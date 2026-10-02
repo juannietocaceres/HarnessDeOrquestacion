@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AedesAlert Cali: validación regional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Paleta: tinta azul marino y verde azulado (heredados de la v1), semáforo solo para riesgo */
+    --papel: #F4F7F6;
+    --superficie: #E4EDEB;
+    --blanco: #FFFFFF;
+    --tinta: #0F2A3D;
+    --tinta-2: #44596A;
+    --acento: #0B6E69;
+    --linea: #C5D3D1;
+    --banda: #0F2A3D;
+    --banda-texto: #FFFFFF;
+    --banda-texto-2: #B8CCD6;
+    --acento-osc: #7FD8CD;
+    --alerta-fondo: #FFF1D6;
+    --alerta-texto: #6E4700;
+    --riesgo-texto: #9E2A20;
+    --verde: #2F8F4E;
+    --ambar: #E0A100;
+    --rojo: #C2362B;
+    --f-titulo: "Archivo", "Arial Narrow", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --f-texto: "Atkinson Hyperlegible", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--banda);
+    color: var(--tinta);
+    font-family: var(--f-texto);
+    overflow: hidden;
+  }
+
+  /* Lienzo fijo 1280×720 escalado a la ventana */
+  .stage {
+    --s: 1;
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 1280px; height: 720px;
+    transform: translate(-50%, -50%) scale(var(--s));
+    background: var(--papel);
+    overflow: hidden;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    padding: 52px 72px 80px;
+    display: none;
+    flex-direction: column;
+    gap: 26px;
+  }
+  .slide.activa { display: flex; }
+
+  h1, h2, h3 { font-family: var(--f-titulo); margin: 0; color: var(--tinta); }
+  h1 { font-size: 64px; line-height: 1.02; font-weight: 800; font-stretch: 85%; letter-spacing: -0.5px; }
+  h2 { font-size: 44px; line-height: 1.08; font-weight: 750; font-stretch: 87.5%; }
+  h3 { font-size: 24px; line-height: 1.2; font-weight: 700; font-stretch: 92%; }
+  p { margin: 0; }
+  ul, ol { margin: 0; padding: 0; list-style: none; }
+  .lead { font-size: 25px; line-height: 1.35; color: var(--tinta-2); max-width: 1060px; }
+  .fuente { font-size: 16px; color: var(--tinta-2); }
+
+  /* Encabezado de criterio: título + mensaje a la izquierda, puntaje a la derecha */
+  .cabecera { display: grid; grid-template-columns: 1fr 210px; gap: 40px; align-items: start; }
+  .cabecera .lead { margin-top: 12px; }
+  .puntaje {
+    border-left: 4px solid var(--acento);
+    padding: 4px 0 4px 18px;
+  }
+  .puntaje .etq { font-size: 18px; color: var(--tinta-2); display: block; }
+  .puntaje .num { font-family: var(--f-titulo); font-size: 60px; font-weight: 800; line-height: 1; color: var(--acento); }
+  .puntaje .de { font-size: 22px; color: var(--tinta-2); margin-left: 4px; }
+  .puntaje .nota { font-size: 17px; line-height: 1.3; color: var(--tinta-2); margin-top: 8px; display: block; }
+  .pips { display: flex; gap: 6px; margin-top: 8px; }
+  .pips i { width: 20px; height: 20px; border-radius: 50%; border: 2.5px solid var(--acento); display: block; }
+  .pips i.on { background: var(--acento); }
+
+  /* Mapa semáforo (ilustración) */
+  .mapa polygon { stroke: var(--papel); stroke-width: 3; }
+  .mapa .v { fill: var(--verde); }
+  .mapa .a { fill: var(--ambar); }
+  .mapa .r { fill: var(--rojo); }
+  .leyenda { display: flex; gap: 18px; font-size: 17px; color: var(--tinta); margin-top: 14px; }
+  .leyenda span { display: inline-flex; align-items: center; gap: 7px; }
+  .leyenda b { width: 16px; height: 16px; display: inline-block; border-radius: 3px; }
+
+  /* 1. Portada */
+  .s-portada { display: none; }
+  .s-portada.activa { display: grid; grid-template-columns: 1fr 330px; gap: 56px; padding-top: 60px; }
+  .portada-texto { display: flex; flex-direction: column; gap: 26px; }
+  .portada-texto .lead { font-size: 26px; max-width: 760px; }
+  .indice h3 { font-size: 20px; font-weight: 600; color: var(--tinta-2); font-family: var(--f-texto); margin-bottom: 10px; }
+  .indice ol { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 28px; counter-reset: c; }
+  .indice li { font-size: 23px; display: flex; gap: 12px; align-items: baseline; }
+  .indice li::before { counter-increment: c; content: counter(c); font-family: var(--f-titulo); font-weight: 800; color: var(--acento); font-size: 24px; min-width: 16px; }
+  .autor { margin-top: auto; border-top: 2px solid var(--linea); padding-top: 18px; }
+  .autor strong { font-size: 24px; display: block; margin-bottom: 4px; }
+  .autor span { font-size: 19px; color: var(--tinta-2); display: block; line-height: 1.4; }
+  .portada-mapa { align-self: center; }
+  .portada-mapa figcaption { font-size: 16px; color: var(--tinta-2); margin-top: 10px; line-height: 1.35; }
+  figure { margin: 0; }
+
+  /* 2. La idea */
+  .idea { display: grid; grid-template-columns: 430px 1fr; gap: 48px; flex: 1; min-height: 0; }
+  .flujo { display: flex; flex-direction: column; }
+  .paso { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start; }
+  .paso .n {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--acento); color: var(--blanco);
+    font-family: var(--f-titulo); font-weight: 800; font-size: 24px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .paso h3 { font-size: 23px; margin-bottom: 2px; }
+  .paso p { font-size: 20px; line-height: 1.32; }
+  .flecha { height: 30px; margin-left: 13px; }
+  .flecha svg { display: block; }
+  .comparacion { display: grid; grid-template-columns: 1fr 1fr; gap: 0; align-content: start; }
+  .comparacion .col { padding: 18px 22px 20px; }
+  .comparacion .col h3 { margin-bottom: 4px; }
+  .comparacion .col .sub { font-size: 17px; color: var(--tinta-2); margin-bottom: 14px; line-height: 1.3; }
+  .comparacion .col li { font-size: 21px; line-height: 1.3; padding: 10px 0; border-top: 1px solid var(--linea); }
+  .col.dengueia { border: 2px solid var(--linea); border-right: none; }
+  .col.aedes { background: var(--superficie); border: 2px solid var(--acento); }
+  .municipios { grid-column: 1 / -1; font-size: 17px; color: var(--tinta-2); margin-top: 12px; line-height: 1.35; }
+
+  /* 3. Criterio 1: filas de evidencia */
+  .filas { display: flex; flex-direction: column; }
+  .fila { display: grid; grid-template-columns: 330px 1fr; gap: 32px; align-items: baseline; padding: 15px 0; border-top: 1px solid var(--linea); }
+  .fila:last-child { border-bottom: 1px solid var(--linea); }
+  .fila .dato { font-family: var(--f-titulo); font-size: 38px; font-weight: 800; font-stretch: 87.5%; color: var(--acento); line-height: 1.05; }
+  .fila p { font-size: 22px; line-height: 1.3; }
+  .fila .fuente { display: block; margin-top: 3px; }
+
+  /* 4. Criterio 2: barras + hechos */
+  .impacto { display: grid; grid-template-columns: 520px 1fr; gap: 52px; }
+  .barras h3 { font-size: 21px; font-family: var(--f-texto); font-weight: 700; margin-bottom: 18px; }
+  .barra { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .barra .nom { font-size: 21px; font-weight: 700; }
+  .barra .pista { display: flex; align-items: center; gap: 12px; }
+  .barra .relleno { height: 56px; border-radius: 0 4px 4px 0; }
+  .barra .val { font-family: var(--f-titulo); font-size: 36px; font-weight: 800; }
+  .barras .fuente { margin-top: 6px; }
+  .hechos li { font-size: 22px; line-height: 1.32; padding: 11px 0 11px 22px; border-top: 1px solid var(--linea); position: relative; }
+  .hechos li:last-child { border-bottom: 1px solid var(--linea); }
+  .hechos li::before { content: ""; position: absolute; left: 0; top: 21px; width: 9px; height: 9px; background: var(--acento); border-radius: 2px; }
+  .hechos strong { color: var(--tinta); }
+
+  /* 5. Criterio 3: tres niveles */
+  .niveles { display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 24px; }
+  .nivel { border-top: 6px solid var(--linea); padding-top: 16px; }
+  .nivel h3 { font-size: 28px; margin-bottom: 12px; }
+  .nivel li { font-size: 22px; line-height: 1.32; padding: 9px 0; border-bottom: 1px solid var(--linea); }
+  .nivel.distrital { border-top-color: var(--acento); background: var(--superficie); padding: 16px 20px 18px; }
+  .nivel.distrital li { border-bottom-color: #B9CBC8; }
+
+  /* 6. Criterio 4: ruta + cofinanciación */
+  .ecosistema { display: grid; grid-template-columns: 1fr 470px; gap: 44px; }
+  .ruta .paso { margin-bottom: 18px; }
+  .ruta h3.tit { font-size: 21px; font-family: var(--f-texto); color: var(--tinta-2); font-weight: 700; margin-bottom: 14px; }
+  .cofin { background: var(--alerta-fondo); border-left: 6px solid var(--ambar); padding: 20px 24px; align-self: start; }
+  .cofin h3 { color: var(--alerta-texto); font-size: 24px; margin-bottom: 4px; }
+  .cofin .sub { font-size: 18px; color: var(--alerta-texto); margin-bottom: 10px; }
+  .cofin li { font-size: 19px; line-height: 1.32; padding: 9px 0; border-top: 1px solid #EBD3A3; color: var(--tinta); }
+
+  /* 7. Matriz */
+  .matriz { width: 100%; border-collapse: collapse; }
+  .matriz th { font-size: 17px; font-weight: 700; color: var(--tinta-2); text-align: left; padding: 0 16px 8px; border-bottom: 2px solid var(--tinta); }
+  .matriz th:last-child { text-align: right; }
+  .matriz td { padding: 10px 16px; border-bottom: 1px solid var(--linea); vertical-align: middle; }
+  .matriz .crit { font-family: var(--f-titulo); font-size: 26px; font-weight: 750; font-stretch: 87.5%; width: 330px; line-height: 1.1; }
+  .matriz .frase { font-size: 22px; line-height: 1.3; }
+  .matriz .pt { width: 230px; }
+  .pt-in { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
+  .pt-in .num { font-family: var(--f-titulo); font-size: 50px; font-weight: 800; color: var(--acento); line-height: 1; min-width: 30px; text-align: right; }
+  .matriz .pips { margin-top: 0; }
+  .matriz tr.total td { background: var(--banda); color: var(--banda-texto); border-bottom: none; padding-top: 12px; padding-bottom: 12px; }
+  .matriz tr.total .crit { color: var(--banda-texto); font-size: 32px; }
+  .matriz tr.total .frase { color: var(--banda-texto-2); }
+  .matriz tr.total .num { color: var(--acento-osc); font-size: 64px; }
+  .matriz tr.total .num small { font-size: 32px; color: var(--banda-texto-2); font-weight: 700; }
+  .escala { font-size: 16px; color: var(--tinta-2); margin-top: -4px; width: fit-content; }
+  .s-matriz { gap: 18px; }
+  .s-matriz .lead { font-size: 24px; max-width: none; }
+
+  /* 8. Conclusión */
+  .cierre { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .riesgo { border-left: 6px solid var(--rojo); padding-left: 22px; }
+  .riesgo h3 { color: var(--riesgo-texto); margin-bottom: 8px; }
+  .riesgo li, .siguiente li { font-size: 21px; line-height: 1.32; padding: 10px 0; border-top: 1px solid var(--linea); }
+  .siguiente h3 { color: var(--acento); margin-bottom: 8px; }
+  .siguiente ol { counter-reset: p; }
+  .siguiente li { display: grid; grid-template-columns: 30px 1fr; gap: 8px; }
+  .siguiente li::before { counter-increment: p; content: counter(p); font-family: var(--f-titulo); font-weight: 800; color: var(--acento); font-size: 23px; }
+  .gracias { margin-top: auto; display: flex; align-items: baseline; gap: 24px; border-top: 2px solid var(--tinta); padding-top: 16px; }
+  .gracias strong { font-family: var(--f-titulo); font-size: 52px; font-weight: 800; font-stretch: 85%; line-height: 1; }
+  .gracias span { font-size: 20px; color: var(--tinta-2); }
+
+  /* R. Fuentes */
+  .fuentes { columns: 2; column-gap: 44px; }
+  .fuentes li { font-size: 17px; line-height: 1.3; padding: 6px 0; break-inside: avoid; border-bottom: 1px solid var(--linea); }
+  .fuentes li b { color: var(--tinta); }
+  .fuentes li span { color: var(--tinta-2); }
+
+  /* Navegación */
+  nav.controles {
+    position: absolute; right: 28px; bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+    z-index: 5;
+  }
+  nav.controles button {
+    width: 42px; height: 42px; border-radius: 50%;
+    border: 2px solid var(--linea); background: var(--blanco); color: var(--tinta);
+    display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0;
+  }
+  nav.controles button:disabled { opacity: 0.4; cursor: default; }
+  nav.controles button:focus-visible { outline: 3px solid var(--acento); outline-offset: 2px; }
+  .contador { font-size: 18px; color: var(--tinta-2); min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; }
+  .progreso { position: absolute; left: 0; bottom: 0; height: 5px; background: var(--acento); width: 0; z-index: 4; transition: width .3s ease; }
+
+  /* Notas del presentador (tecla N) */
+  .notas { display: none; }
+  .ver-notas .slide.activa .notas {
+    display: block;
+    position: absolute; left: 72px; right: 260px; bottom: 74px;
+    background: var(--banda); color: var(--banda-texto);
+    font-size: 20px; line-height: 1.4;
+    padding: 14px 20px; border-radius: 6px; z-index: 6;
+  }
+
+  /* Un único momento de movimiento: los puntajes de la matriz se llenan en orden */
+  @keyframes llenar { from { transform: scale(0.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .s-matriz.activa .pips i.on { animation: llenar .35s ease-out both; animation-delay: calc(var(--d, 0) * 140ms); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  @page { size: 1280px 720px; margin: 0; }
+  @media print {
+    html, body { height: auto; overflow: visible; background: var(--papel); }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .stage { position: static; transform: none; width: 1280px; height: auto; overflow: visible; }
+    .slide, .s-portada { display: flex !important; position: relative; width: 1280px; height: 720px; overflow: hidden; break-after: page; page-break-after: always; background: var(--papel); }
+    .s-portada { display: grid !important; }
+    .slide:last-of-type { break-after: auto; page-break-after: auto; }
+    nav.controles, .progreso, .notas { display: none !important; }
+    .pips i.on { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+<main class="deck">
+
+  <!-- 1 -->
+  <section class="slide s-portada" aria-label="Diapositiva 1 de 9">
+    <div class="portada-texto">
+      <h1>AedesAlert Cali: validación regional</h1>
+      <p class="lead">Modelo predictivo con inteligencia artificial para identificar zonas de riesgo de propagación del dengue</p>
+      <div class="indice">
+        <h3>Evaluada con los cuatro criterios de validación regional</h3>
+        <ol>
+          <li>Caracterización económica</li>
+          <li>Impacto social o técnico</li>
+          <li>Políticas de fomento</li>
+          <li>Apoyo del ecosistema</li>
+        </ol>
+      </div>
+      <div class="autor">
+        <strong>Juan Diego Nieto</strong>
+        <span>Ideación, Emprendimiento y Desarrollo Tecnológico</span>
+        <span>Ingeniería de Sistemas, UCC Cali, octubre de 2026</span>
+      </div>
+    </div>
+    <figure class="portada-mapa">
+      <svg class="mapa" viewBox="24 0 246 340" width="330" height="456" role="img" aria-label="Mapa esquemático de 22 comunas coloreadas en semáforo, ilustración con datos no reales">
+        <polygon class="v" points="159.9,19.0 159.9,49.0 133.9,64.0 107.9,49.0 107.9,19.0 133.9,4.0"/>
+        <polygon class="v" points="211.8,19.0 211.8,49.0 185.9,64.0 159.9,49.0 159.9,19.0 185.9,4.0"/>
+        <polygon class="v" points="133.9,64.0 133.9,94.0 107.9,109.0 81.9,94.0 81.9,64.0 107.9,49.0"/>
+        <polygon class="a" points="185.9,64.0 185.9,94.0 159.9,109.0 133.9,94.0 133.9,64.0 159.9,49.0"/>
+        <polygon class="v" points="237.8,64.0 237.8,94.0 211.8,109.0 185.9,94.0 185.9,64.0 211.8,49.0"/>
+        <polygon class="v" points="107.9,109.0 107.9,139.0 81.9,154.0 56.0,139.0 56.0,109.0 81.9,94.0"/>
+        <polygon class="a" points="159.9,109.0 159.9,139.0 133.9,154.0 107.9,139.0 107.9,109.0 133.9,94.0"/>
+        <polygon class="a" points="211.8,109.0 211.8,139.0 185.9,154.0 159.9,139.0 159.9,109.0 185.9,94.0"/>
+        <polygon class="r" points="263.8,109.0 263.8,139.0 237.8,154.0 211.8,139.0 211.8,109.0 237.8,94.0"/>
+        <polygon class="a" points="81.9,154.0 81.9,184.0 56.0,199.0 30.0,184.0 30.0,154.0 56.0,139.0"/>
+        <polygon class="v" points="133.9,154.0 133.9,184.0 107.9,199.0 81.9,184.0 81.9,154.0 107.9,139.0"/>
+        <polygon class="r" points="185.9,154.0 185.9,184.0 159.9,199.0 133.9,184.0 133.9,154.0 159.9,139.0"/>
+        <polygon class="r" points="237.8,154.0 237.8,184.0 211.8,199.0 185.9,184.0 185.9,154.0 211.8,139.0"/>
+        <polygon class="v" points="107.9,199.0 107.9,229.0 81.9,244.0 56.0,229.0 56.0,199.0 81.9,184.0"/>
+        <polygon class="v" points="159.9,199.0 159.9,229.0 133.9,244.0 107.9,229.0 107.9,199.0 133.9,184.0"/>
+        <polygon class="a" points="211.8,199.0 211.8,229.0 185.9,244.0 159.9,229.0 159.9,199.0 185.9,184.0"/>
+        <polygon class="r" points="263.8,199.0 263.8,229.0 237.8,244.0 211.8,229.0 211.8,199.0 237.8,184.0"/>
+        <polygon class="v" points="133.9,244.0 133.9,274.0 107.9,289.0 81.9,274.0 81.9,244.0 107.9,229.0"/>
+        <polygon class="a" points="185.9,244.0 185.9,274.0 159.9,289.0 133.9,274.0 133.9,244.0 159.9,229.0"/>
+        <polygon class="v" points="237.8,244.0 237.8,274.0 211.8,289.0 185.9,274.0 185.9,244.0 211.8,229.0"/>
+        <polygon class="v" points="159.9,289.0 159.9,319.0 133.9,334.0 107.9,319.0 107.9,289.0 133.9,274.0"/>
+        <polygon class="v" points="211.8,289.0 211.8,319.0 185.9,334.0 159.9,319.0 159.9,289.0 185.9,274.0"/>
+      </svg>
+      <div class="leyenda" aria-hidden="true">
+        <span><b style="background:var(--verde)"></b>Bajo</span>
+        <span><b style="background:var(--ambar)"></b>Medio</span>
+        <span><b style="background:var(--rojo)"></b>Alto</span>
+      </div>
+      <figcaption>Ilustración del mapa semáforo por comuna (22 comunas). Datos no reales.</figcaption>
+    </figure>
+    <aside class="notas">Presento AedesAlert Cali y la evalúo con los cuatro criterios de validación regional del curso.</aside>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" aria-label="Diapositiva 2 de 9">
+    <div>
+      <h2>La idea: un complemento abierto de DengueIA</h2>
+      <p class="lead" style="margin-top:12px">Cali ya demostró con DengueIA que anticipar el dengue funciona. AedesAlert lleva ese enfoque a una versión abierta y replicable para el Valle.</p>
+    </div>
+    <div class="idea">
+      <div class="flujo" aria-label="Cómo funciona AedesAlert">
+        <div class="paso">
+          <span class="n">1</span>
+          <div><h3>Datos</h3><p>Casos de dengue del SIVIGILA + clima de NASA POWER (lluvia, temperatura, humedad)</p></div>
+        </div>
+        <div class="flecha" aria-hidden="true"><svg width="18" height="30" viewBox="0 0 18 30"><path d="M9 2v22M2 18l7 8 7-8" fill="none" stroke="#0B6E69" stroke-width="3"/></svg></div>
+        <div class="paso">
+          <span class="n">2</span>
+          <div><h3>Modelo</h3><p>Random Forest y XGBoost, comparados con SARIMA como línea base</p></div>
+        </div>
+        <div class="flecha" aria-hidden="true"><svg width="18" height="30" viewBox="0 0 18 30"><path d="M9 2v22M2 18l7 8 7-8" fill="none" stroke="#0B6E69" stroke-width="3"/></svg></div>
+        <div class="paso">
+          <span class="n">3</span>
+          <div><h3>Alerta</h3><p>Mapa semáforo semanal del riesgo por comuna</p></div>
+        </div>
+      </div>
+      <div class="comparacion">
+        <div class="col dengueia">
+          <h3>DengueIA</h3>
+          <p class="sub">Secretaría de Salud de Cali, en uso desde mayo de 2026</p>
+          <ul>
+            <li>93&nbsp;% de efectividad reportada</li>
+            <li>Alertas hasta 3 semanas antes</li>
+            <li>174 zonas de 1&nbsp;km²</li>
+          </ul>
+        </div>
+        <div class="col aedes">
+          <h3>AedesAlert Cali</h3>
+          <p class="sub">La propuesta de este trabajo</p>
+          <ul>
+            <li>Datos abiertos y código libre</li>
+            <li>Prototipo con las 22 comunas de Cali</li>
+            <li>Replicable en otros 8 municipios en riesgo muy alto</li>
+          </ul>
+        </div>
+        <p class="municipios">Los otros 8: Buga, Candelaria, Cartago, Florida, Jamundí, Palmira, Tuluá y Yumbo.</p>
+      </div>
+    </div>
+    <aside class="notas">DengueIA prueba que el enfoque funciona; AedesAlert no compite: lo abre y lo replica por comuna para el resto del Valle.</aside>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" aria-label="Diapositiva 3 de 9">
+    <div class="cabecera">
+      <div>
+        <h2>Criterio 1: Caracterización económica</h2>
+        <p class="lead">Transforma el sector Salud, en su segmento HealthTech, con capacidades TI.</p>
+      </div>
+      <div class="puntaje" aria-label="Puntaje 5 de 5">
+        <span class="etq">Puntaje</span>
+        <span class="num">5</span><span class="de">de 5</span>
+        <div class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      </div>
+    </div>
+    <div class="filas">
+      <div class="fila">
+        <span class="dato">≈9,8&nbsp;% del&nbsp;PIB</span>
+        <p>El Valle es la 3.ª economía del país (cifras preliminares de 2025)<span class="fuente">DANE, 2026</span></p>
+      </div>
+      <div class="fila">
+        <span class="dato">528 empresas</span>
+        <p>Clúster de Excelencia Clínica (2023), con la línea «Modelos de negocio HealthTech»<span class="fuente">Cámara de Comercio de Cali, 2025a</span></p>
+      </div>
+      <div class="fila">
+        <span class="dato">2,42 de 5</span>
+        <p>Madurez digital intermedia de las instituciones de salud de la región<span class="fuente">Cámara de Comercio de Cali, 2025c</span></p>
+      </div>
+      <div class="fila">
+        <span class="dato">+7,2&nbsp;% vs.&nbsp;+4,9&nbsp;%</span>
+        <p>Crecimiento promedio del empleo TIC: Valle frente al país, 2019-2023<span class="fuente">Cámara de Comercio de Cali, 2025b</span></p>
+      </div>
+    </div>
+    <aside class="notas">Sector: Salud (HealthTech) con capacidades TI. Decir «cerca del 9,8 %», no «el 9,8 %».</aside>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" aria-label="Diapositiva 4 de 9">
+    <div class="cabecera">
+      <div>
+        <h2>Criterio 2: Impacto social o técnico</h2>
+        <p class="lead">El problema es grande y la anticipación funciona; lo que falta es que sea abierta y replicable en el Valle.</p>
+      </div>
+      <div class="puntaje" aria-label="Puntaje 4 de 5">
+        <span class="etq">Puntaje</span>
+        <span class="num">4</span><span class="de">de 5</span>
+        <div class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+        <span class="nota">Aporte incremental; demanda aún no validada</span>
+      </div>
+    </div>
+    <div class="impacto">
+      <div class="barras">
+        <h3>Casos de dengue por 100.000 habitantes, 2024</h3>
+        <div class="barra">
+          <span class="nom">Cali</span>
+          <div class="pista"><span class="relleno" style="width:300px;background:var(--rojo)"></span><span class="val">1.520</span></div>
+        </div>
+        <div class="barra">
+          <span class="nom">Colombia</span>
+          <div class="pista"><span class="relleno" style="width:185px;background:var(--tinta-2)"></span><span class="val">937</span></div>
+        </div>
+        <p class="fuente">Erazo Córdoba, 2026; Instituto Nacional de Salud, 2025</p>
+      </div>
+      <ul class="hechos">
+        <li>Emergencia sanitaria en Cali el 11 de junio de 2024, con más de 20.000 casos</li>
+        <li>9 municipios del Valle en riesgo muy alto, Cali incluida; brotes cada 2 a 4 años</li>
+        <li>≈USD&nbsp;252 millones al año en Colombia (USD de 2020)</li>
+        <li>El clima de 2 a 5 semanas antes mejora la predicción en Cali</li>
+      </ul>
+    </div>
+    <aside class="notas">Es 4 y no 5: DengueIA ya anticipa en Cali, así que el aporte es abrirlo y replicarlo, y esa demanda aún no está validada.</aside>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" aria-label="Diapositiva 5 de 9">
+    <div class="cabecera">
+      <div>
+        <h2>Criterio 3: Políticas de fomento</h2>
+        <p class="lead">Está alineada en los tres niveles, y el Distrito ya usa IA contra el dengue.</p>
+      </div>
+      <div class="puntaje" aria-label="Puntaje 5 de 5">
+        <span class="etq">Puntaje</span>
+        <span class="num">5</span><span class="de">de 5</span>
+        <div class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      </div>
+    </div>
+    <div class="niveles">
+      <div class="nivel">
+        <h3>Nacional</h3>
+        <ul>
+          <li>CONPES 4144 de 2025: Política Nacional de IA (2025-2030)</li>
+          <li>Plan Decenal de Salud Pública 2022-2031</li>
+        </ul>
+      </div>
+      <div class="nivel">
+        <h3>Departamental</h3>
+        <ul>
+          <li>Plan «Liderazgo que Transforma» 2024-2027 (Ordenanza 655)</li>
+          <li>Plan Territorial de Salud 2024-2027: propone IA y análisis de datos</li>
+          <li>Minciencias articulado a NIDO, con la misión de soberanía sanitaria</li>
+        </ul>
+      </div>
+      <div class="nivel distrital">
+        <h3>Distrital</h3>
+        <ul>
+          <li>Cali prioriza el dengue y las enfermedades transmitidas por vectores</li>
+          <li>La Alcaldía ya aplica IA con DengueIA</li>
+        </ul>
+      </div>
+    </div>
+    <aside class="notas">Nación, departamento y distrito apuntan en la misma dirección; el Distrito ya usa IA contra el dengue.</aside>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" aria-label="Diapositiva 6 de 9">
+    <div class="cabecera">
+      <div>
+        <h2>Criterio 4: Apoyo del ecosistema</h2>
+        <p class="lead">Hay apoyos gratuitos para empezar ya; la cofinanciación dependerá de un próximo ciclo.</p>
+      </div>
+      <div class="puntaje" aria-label="Puntaje 4 de 5">
+        <span class="etq">Puntaje</span>
+        <span class="num">4</span><span class="de">de 5</span>
+        <div class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+      </div>
+    </div>
+    <div class="ecosistema">
+      <div class="ruta">
+        <h3 class="tit">Ruta propuesta</h3>
+        <div class="paso">
+          <span class="n">1</span>
+          <div><h3>SENA-Tecnoparque</h3><p>Acompañamiento gratuito para el prototipo, con sublínea de IA y geotecnología</p></div>
+        </div>
+        <div class="paso">
+          <span class="n">2</span>
+          <div><h3>NIDO</h3><p>220 startups acompañadas en 2024-2025; ValleyCare para HealthTech</p></div>
+        </div>
+        <div class="paso">
+          <span class="n">3</span>
+          <div><h3>Aliados de validación</h3><p>Secretaría de Salud, Icesi y Univalle (DengueIA) y el Clúster de Excelencia Clínica</p></div>
+        </div>
+      </div>
+      <div class="cofin">
+        <h3>Cofinanciación</h3>
+        <p class="sub">A octubre de 2026 no hay convocatoria de cofinanciación abierta.</p>
+        <ul>
+          <li>Fondo Emprender: 12 convocatorias por más de $282.000 millones, cerradas en abril de 2026</li>
+          <li>ColombIA Inteligente: terminada en agosto de 2026</li>
+          <li>Valle INN+: ya adjudicada y con encaje bajo</li>
+        </ul>
+      </div>
+    </div>
+    <aside class="notas">Para empezar hay apoyo gratuito (Tecnoparque y NIDO); para cofinanciar habrá que esperar un próximo ciclo de Fondo Emprender, aún sin anunciar.</aside>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide s-matriz" aria-label="Diapositiva 7 de 9">
+    <div>
+      <h2>Matriz de selección: resultado principal</h2>
+      <p class="lead" style="margin-top:10px">AedesAlert Cali obtiene 18 de 20: fuerte en sector y políticas, con impacto y ecosistema en 4.</p>
+    </div>
+    <table class="matriz">
+      <thead>
+        <tr><th scope="col">Criterio</th><th scope="col">Cumplimiento en Cali y el Valle</th><th scope="col">Puntaje (1-5)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="crit">Caracterización económica</td>
+          <td class="frase">Transforma el sector Salud (HealthTech) con capacidades TI</td>
+          <td class="pt"><div class="pt-in"><div class="pips"><i class="on" style="--d:0"></i><i class="on" style="--d:1"></i><i class="on" style="--d:2"></i><i class="on" style="--d:3"></i><i class="on" style="--d:4"></i></div><span class="num">5</span></div></td>
+        </tr>
+        <tr>
+          <td class="crit">Impacto social o técnico</td>
+          <td class="frase">Problema grande y medido; DengueIA prueba el enfoque, AedesAlert lo abre y lo replica</td>
+          <td class="pt"><div class="pt-in"><div class="pips"><i class="on" style="--d:2"></i><i class="on" style="--d:3"></i><i class="on" style="--d:4"></i><i class="on" style="--d:5"></i><i></i></div><span class="num">4</span></div></td>
+        </tr>
+        <tr>
+          <td class="crit">Políticas de fomento</td>
+          <td class="frase">Alineada en los tres niveles; Cali ya usa IA contra el dengue</td>
+          <td class="pt"><div class="pt-in"><div class="pips"><i class="on" style="--d:4"></i><i class="on" style="--d:5"></i><i class="on" style="--d:6"></i><i class="on" style="--d:7"></i><i class="on" style="--d:8"></i></div><span class="num">5</span></div></td>
+        </tr>
+        <tr>
+          <td class="crit">Apoyo del ecosistema</td>
+          <td class="frase">Tecnoparque y NIDO apalancan ya; la cofinanciación dependerá de un próximo ciclo</td>
+          <td class="pt"><div class="pt-in"><div class="pips"><i class="on" style="--d:6"></i><i class="on" style="--d:7"></i><i class="on" style="--d:8"></i><i class="on" style="--d:9"></i><i></i></div><span class="num">4</span></div></td>
+        </tr>
+        <tr class="total">
+          <td class="crit">Total</td>
+          <td class="frase">Idea viable para Cali y el Valle como complemento abierto y replicable de DengueIA</td>
+          <td class="pt"><div class="pt-in"><span class="num">18<small>/20</small></span></div></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="escala">Escala de 1 (no cumple) a 5 (cumple con evidencia verificable).</p>
+    <aside class="notas">Resultado principal: 18 de 20. Fuerte en sector y políticas (5); impacto y ecosistema en 4.</aside>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" aria-label="Diapositiva 8 de 9">
+    <div>
+      <h2>Conclusión: riesgo y siguiente paso</h2>
+      <p class="lead" style="margin-top:12px">La idea pasa la validación regional como complemento abierto; el reto es validar la demanda y conseguir los datos.</p>
+    </div>
+    <div class="cierre">
+      <div class="riesgo">
+        <h3>Riesgo principal</h3>
+        <ul>
+          <li>Demanda no validada con las secretarías de salud de los otros municipios</li>
+          <li>Sin confirmar que existan datos históricos por comuna de varios años, incluido el brote de 2024</li>
+        </ul>
+      </div>
+      <div class="siguiente">
+        <h3>Siguiente paso</h3>
+        <ol>
+          <li><span>Confirmar qué años publica Datos Abiertos Cali y pedir los faltantes con un derecho de petición</span></li>
+          <li><span>Presentar el prototipo a Tecnoparque</span></li>
+          <li><span>Buscar la retroalimentación de una secretaría municipal en riesgo muy alto</span></li>
+        </ol>
+      </div>
+    </div>
+    <div class="gracias">
+      <strong>Gracias</strong>
+      <span>Juan Diego Nieto, UCC Cali</span>
+    </div>
+    <aside class="notas">Cerrar con el riesgo y los tres pasos concretos; luego «Gracias» y abrir preguntas.</aside>
+  </section>
+
+  <!-- R -->
+  <section class="slide" aria-label="Diapositiva 9 de 9, respaldo">
+    <div>
+      <h2>Fuentes</h2>
+      <p class="lead" style="margin-top:8px;font-size:21px">Diapositiva de respaldo, para preguntas. Referencias completas en APA 7 en el documento de la matriz.</p>
+    </div>
+    <ul class="fuentes">
+      <li><b>DANE (2026).</b> <span>PIB departamental 2025 preliminar: 3.ª economía, ≈9,8&nbsp;% del PIB.</span></li>
+      <li><b>Cámara de Comercio de Cali (2025a, 2025b, 2025c, 2026).</b> <span>Clúster de Excelencia Clínica, madurez digital, empleo TIC y NIDO.</span></li>
+      <li><b>Erazo Córdoba (2026), El País.</b> <span>1.520 casos por 100.000 hab. en Cali, 2024.</span></li>
+      <li><b>Instituto Nacional de Salud (2025).</b> <span>Informe de evento dengue 2024: 937 por 100.000 en el país.</span></li>
+      <li><b>Consultor Salud (2024a).</b> <span>Emergencia sanitaria en Cali, 11 de junio de 2024.</span></li>
+      <li><b>Gobernación del Valle del Cauca (2024e).</b> <span>Plan Territorial de Salud 2024-2027: 9 municipios en riesgo muy alto.</span></li>
+      <li><b>Rodríguez-Morales et al. (2024).</b> <span>Costo del dengue en Colombia, en USD de 2020.</span></li>
+      <li><b>Desjardins et al. (2020).</b> <span>Clima rezagado de 2 a 5 semanas en Cali.</span></li>
+      <li><b>The Rockefeller Foundation (2026); El País (2026).</b> <span>DengueIA: 93&nbsp;% de efectividad reportada, 174 zonas.</span></li>
+      <li><b>DNP (2025).</b> <span>CONPES 4144, Política Nacional de Inteligencia Artificial.</span></li>
+      <li><b>Infobae (2026).</b> <span>Fondo Emprender: 12 convocatorias, más de $282.000 millones.</span></li>
+      <li><b>Minciencias (2026).</b> <span>Convocatoria ColombIA Inteligente 2026.</span></li>
+    </ul>
+    <aside class="notas">Solo si preguntan de dónde sale una cifra.</aside>
+  </section>
+
+</main>
+<div class="progreso" id="progreso" aria-hidden="true"></div>
+<nav class="controles" aria-label="Navegación de diapositivas">
+  <button type="button" id="ant" aria-label="Diapositiva anterior"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M11.5 3 5.5 9l6 6" fill="none" stroke="currentColor" stroke-width="2.5"/></svg></button>
+  <span class="contador" id="contador" aria-live="polite">1 / 9</span>
+  <button type="button" id="sig" aria-label="Diapositiva siguiente"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M6.5 3l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.5"/></svg></button>
+</nav>
+</div>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var contador = document.getElementById('contador');
+  var progreso = document.getElementById('progreso');
+  var ant = document.getElementById('ant');
+  var sig = document.getElementById('sig');
+  var actual = 0;
+
+  function escalar() {
+    var s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+    stage.style.setProperty('--s', s);
+  }
+
+  function mostrar(n) {
+    actual = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, k) {
+      s.classList.toggle('activa', k === actual);
+      s.setAttribute('aria-hidden', k === actual ? 'false' : 'true');
+    });
+    contador.textContent = (actual + 1) + ' / ' + slides.length;
+    progreso.style.width = ((actual + 1) / slides.length * 100) + '%';
+    ant.disabled = actual === 0;
+    sig.disabled = actual === slides.length - 1;
+    if (location.hash !== '#' + (actual + 1)) {
+      history.replaceState(null, '', '#' + (actual + 1));
+    }
+  }
+
+  function desdeHash() {
+    var n = parseInt(location.hash.replace('#', ''), 10);
+    return isNaN(n) ? 0 : n - 1;
+  }
+
+  document.addEventListener('keydown', function (e) {
+    var enBoton = e.target && e.target.tagName === 'BUTTON';
+    if (enBoton && (e.key === ' ' || e.key === 'Enter')) return;
+    switch (e.key) {
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown':
+        mostrar(actual + 1); e.preventDefault(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+        mostrar(actual - 1); e.preventDefault(); break;
+      case ' ':
+        mostrar(actual + (e.shiftKey ? -1 : 1)); e.preventDefault(); break;
+      case 'Home': mostrar(0); e.preventDefault(); break;
+      case 'End': mostrar(slides.length - 1); e.preventDefault(); break;
+      case 'n': case 'N':
+        document.body.classList.toggle('ver-notas'); break;
+    }
+  });
+  ant.addEventListener('click', function () { mostrar(actual - 1); });
+  sig.addEventListener('click', function () { mostrar(actual + 1); });
+  window.addEventListener('hashchange', function () { mostrar(desdeHash()); });
+  window.addEventListener('resize', escalar);
+
+  escalar();
+  mostrar(desdeHash());
+})();
+</script>
+</body>
+</html>

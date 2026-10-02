@@ -1,0 +1,159 @@
+milestone: "AedesAlert Cali: validación regional de la idea de negocio (v2)"
+# cap 4 (no el default 3): la wave 1 son 4 investigaciones independientes, una
+# por criterio, y no comparten archivos. Así no hace falta partirla en dos lotes.
+cap_concurrencia: 4
+# Insumos de todas las tareas (milestones/validacion-regional-aedesalert/insumos/):
+#   pautas.md / pautas.png        -> la consigna del docente (4 criterios, 5 minutos)
+#   v1_matriz_texto.md            -> texto de la versión 1 (30-sep-2026), puntaje 18/20
+#   Contexto_Proyecto_Grado_Dengue_Cali.md -> la idea, objetivos, datos, cifras verificadas
+#   Matriz_Validacion_Regional_AedesAlert_Cali.docx / AedesAlert_Cali_Validacion_Regional.pptx -> v1
+# "Rehacer todo" (respuesta del triage): misma idea, toda cifra re-verificada a octubre de 2026.
+# El guion va como documento aparte (pedido del usuario durante el triage).
+tareas:
+  - id: T1
+    titulo: "Criterio 1: caracterización económica"
+    tipo: contenido
+    depende_de: []
+    descripcion: >
+      Investigar y verificar, con fuentes vigentes a octubre de 2026, a qué
+      sector productivo del Valle del Cauca fortalece o transforma AedesAlert
+      Cali (salud / HealthTech apoyado en TI). Incluye: peso del Valle en el
+      PIB nacional (dato DANE más reciente publicado), Clúster de Excelencia
+      Clínica y Clúster de Economía Digital de la Cámara de Comercio de Cali
+      (tamaño, líneas estratégicas), y cualquier cifra más reciente que
+      reemplace las de la v1. Verificar las afirmaciones de la v1 sobre este
+      criterio. Proponer puntaje 1-5 con justificación.
+    criterios_aceptacion:
+      - "Existe evidencias/T1-caracterizacion-economica.md con: respuesta corta a la pregunta del criterio, hallazgos con cifra + fuente + URL + fecha de consulta, referencias en APA 7, puntaje propuesto 1-5 con justificación."
+      - "Existe verificaciones/T1.md con el informe de verificador-datos sobre las afirmaciones de la v1 para este criterio."
+      - "Ninguna cifra del archivo de evidencias carece de URL de fuente."
+
+  - id: T2
+    titulo: "Criterio 2: impacto social o técnico"
+    tipo: contenido
+    depende_de: []
+    descripcion: >
+      Investigar y verificar, con fuentes vigentes a octubre de 2026, el
+      problema o cuello de botella que resuelve AedesAlert Cali, con sustento
+      cuantitativo y técnico: situación del dengue en Cali y Colombia en 2026
+      (último boletín INS / Secretaría de Salud de Cali disponible), emergencia
+      sanitaria de 2024, clasificación de riesgo en el Plan Territorial de
+      Salud del Valle, costo del dengue en Colombia, evidencia de que la
+      focalización funciona, y el sustento técnico (por qué clima rezagado +
+      casos permite anticipar; evidencia académica de modelos similares).
+      Verificar las afirmaciones de la v1 sobre este criterio. Proponer
+      puntaje 1-5 con justificación.
+    criterios_aceptacion:
+      - "Existe evidencias/T2-impacto.md con: respuesta corta a la pregunta del criterio, hallazgos con cifra + fuente + URL + fecha de consulta, referencias en APA 7, puntaje propuesto 1-5 con justificación."
+      - "Existe verificaciones/T2.md con el informe de verificador-datos sobre las afirmaciones de la v1 para este criterio."
+      - "Ninguna cifra del archivo de evidencias carece de URL de fuente."
+
+  - id: T3
+    titulo: "Criterio 3: políticas de fomento"
+    tipo: contenido
+    depende_de: []
+    descripcion: >
+      Identificar y verificar con qué plan de desarrollo (Alcaldía de Cali
+      2024-2027, Gobernación del Valle 2024-2027) y con qué política de
+      Ciencia, Tecnología e Innovación (CONPES 4144 de IA, política o plan
+      departamental de CTeI, Plan Decenal de Salud Pública u otras) se alinea
+      AedesAlert Cali, citando el eje, programa o meta concreta cuando exista.
+      Verificar las afirmaciones de la v1 sobre este criterio. Proponer
+      puntaje 1-5 con justificación.
+    criterios_aceptacion:
+      - "Existe evidencias/T3-politicas.md con: respuesta corta a la pregunta del criterio, alineación por nivel (nacional, departamental, distrital) con el instrumento, el eje o programa y la URL, referencias en APA 7, puntaje propuesto 1-5 con justificación."
+      - "Existe verificaciones/T3.md con el informe de verificador-datos sobre las afirmaciones de la v1 para este criterio."
+      - "Ninguna afirmación de alineación carece de URL de fuente."
+
+  - id: T4
+    titulo: "Criterio 4: apoyo del ecosistema"
+    tipo: contenido
+    depende_de: []
+    descripcion: >
+      Identificar y verificar, con el estado vigente a octubre de 2026, qué
+      entidades o programas locales podrían apalancar o cofinanciar AedesAlert
+      Cali: los tres que nombra la pauta (Cámara de Comercio de Cali - NIDO,
+      Valle INN, SENA: Tecnoparque y Fondo Emprender) y otros pertinentes
+      (Clúster de Excelencia Clínica, Minciencias, universidad/UCC). Para cada
+      uno: qué ofrece, si hay convocatoria abierta o próxima, requisitos
+      relevantes para un estudiante, y nivel de encaje. Verificar las
+      afirmaciones de la v1 sobre este criterio. Proponer puntaje 1-5 con
+      justificación.
+    criterios_aceptacion:
+      - "Existe evidencias/T4-ecosistema.md con: respuesta corta a la pregunta del criterio, una ficha por entidad (qué ofrece, estado a oct-2026, encaje alto/medio/bajo, URL), referencias en APA 7, puntaje propuesto 1-5 con justificación."
+      - "El archivo cubre NIDO, Valle INN y SENA."
+      - "Existe verificaciones/T4.md con el informe de verificador-datos sobre las afirmaciones de la v1 para este criterio."
+
+  - id: T5
+    titulo: "Matriz de selección consolidada y escaleta de la exposición"
+    tipo: contenido
+    depende_de: [T1, T2, T3, T4]
+    descripcion: >
+      Consolidar las evidencias de T1-T4 en una única fuente de verdad para
+      los entregables: la matriz de selección (criterio, descripción del
+      cumplimiento en el contexto Cali/Valle, puntaje 1-5, total), los textos
+      de análisis por criterio, la conclusión y la lista única de referencias
+      APA 7. Incluir además la escaleta de la exposición de 5 minutos
+      (diapositivas, mensaje de cada una, cifras que muestra, tiempo
+      asignado) para que el deck y el guion se hagan en paralelo y coincidan.
+    criterios_aceptacion:
+      - "Existe matriz-consolidada.md con la matriz de 4 criterios, puntajes y total, análisis por criterio, conclusión y referencias APA 7 ordenadas alfabéticamente."
+      - "Toda cifra de matriz-consolidada.md aparece en algún archivo de evidencias/ con su URL."
+      - "La escaleta suma entre 4:30 y 5:00 minutos y tiene como máximo 8 diapositivas expuestas."
+
+  - id: T6
+    titulo: "Documento Word de la matriz de selección"
+    tipo: docs
+    depende_de: [T5]
+    descripcion: >
+      Producir el documento Word de la evaluación a partir de
+      matriz-consolidada.md: portada UCC (Juan Diego Nieto, curso Ideación,
+      Emprendimiento y Desarrollo Tecnológico, docente en blanco, Santiago de
+      Cali, octubre de 2026), introducción, descripción de la idea, Tabla 1
+      matriz de selección, análisis por criterio, conclusión y referencias.
+      Formato académico en blanco y negro, Times New Roman 12, interlineado
+      1,5, texto justificado, APA 7. Sin guion de la presentación (va aparte, T8).
+    criterios_aceptacion:
+      - "Existe entregables/Matriz_Validacion_Regional_AedesAlert_Cali_v2.docx y abre sin errores (python-docx lo lee y LibreOffice lo convierte a PDF)."
+      - "El documento usa Times New Roman 12, interlineado 1,5 y no tiene colores de texto distintos de negro."
+      - "La Tabla 1 tiene los 4 criterios de la pauta, sus puntajes y el total, iguales a matriz-consolidada.md."
+      - "Existe verificaciones/T6.md con el informe de verificador-datos sobre el documento."
+
+  - id: T7
+    titulo: "Presentación HTML de 5 minutos"
+    tipo: presentacion
+    depende_de: [T5]
+    descripcion: >
+      Construir la presentación de la exposición con presentaciones-visuales
+      siguiendo la escaleta de matriz-consolidada.md: un HTML autocontenido
+      en presentaciones/aedesalert-validacion-regional.html, para clase con
+      proyector, exportable a PDF. Una idea por diapositiva; la matriz de
+      selección es el resultado principal. Notas del presentador breves (el
+      guion completo va aparte, T8).
+    criterios_aceptacion:
+      - "Existe presentaciones/aedesalert-validacion-regional.html autocontenido (sin recursos externos salvo Google Fonts con fallback)."
+      - "Navegación por teclado, contador de diapositivas y @media print con una diapositiva por página."
+      - "Todas las combinaciones texto/fondo pasan contraste.py (>= 4.5:1, o >= 3:1 en texto grande)."
+      - "Las cifras y puntajes del deck coinciden con matriz-consolidada.md."
+      - "Existe verificaciones/T7.md con el informe de verificador-datos sobre el deck."
+    verificacion_manual:
+      - "Abrir el HTML en el PC del salón o en el proyector y pasar las diapositivas con las flechas."
+      - "Exportar a PDF con Ctrl+P como respaldo por si el PC del salón no abre el HTML."
+
+  - id: T8
+    titulo: "Guion de la presentación (documento aparte)"
+    tipo: contenido
+    depende_de: [T5]
+    descripcion: >
+      Escribir el guion hablado de la exposición de 5 minutos como documento
+      independiente (pedido explícito del usuario: "el guion de la
+      presentación me lo dejas aparte"), siguiendo la escaleta de
+      matriz-consolidada.md diapositiva por diapositiva, con tiempos, en
+      primera persona y lenguaje natural para decir en voz alta. Incluir una
+      sección corta de posibles preguntas del docente con respuesta.
+    criterios_aceptacion:
+      - "Existe entregables/Guion_Presentacion_AedesAlert_Cali.docx, en Times New Roman 12, blanco y negro."
+      - "El guion tiene un bloque por diapositiva de la escaleta, con el rango de tiempo, y suma entre 4:30 y 5:00 a unas 130 palabras por minuto (se reporta el conteo de palabras)."
+      - "Las cifras del guion coinciden con matriz-consolidada.md."
+    verificacion_manual:
+      - "Ensayar el guion en voz alta con cronómetro."
