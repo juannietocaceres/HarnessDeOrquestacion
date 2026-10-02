@@ -1,0 +1,52 @@
+{
+  "proyecto": "Enigma Go",
+  "slug": "enigma-go-mvp",
+  "estado": "listo_para_orquestar",
+  "preguntas_pendientes": [],
+  "supuestos": [
+    "El plan es completo (plataforma, stack, alcance y criterios por fase): no hace falta preguntar.",
+    "Se toma §13 como alcance de este milestone: fases 0–3 obligatorias; 4 y 5 son opcionales y pasan a milestones propios.",
+    "El estilo noir es de la fase 5 en el plan: queda en el milestone de pulido, no en T5.",
+    "Las verificaciones en dispositivo real (Expo Go, cámara, impresora) van en verificacion_manual de T1 y T6, con un equivalente automático en criterios_aceptacion, porque ningún sub-agente puede cumplirlas.",
+    "optimizador-prompts (no interactivo): descripciones ordenadas citando §N del plan y rutas de §4; criterios copiados del plan sin cambiar su alcance."
+  ],
+  "clasificacion": {
+    "dominio": "mobile",
+    "complejidad": "alta",
+    "alcance": "MVP offline de Enigma Go: generador de casos por plantillas, flujo completo de juego en modo app y modo exterior/mixto con QR, historial local y README."
+  },
+  "requisitos_tecnicos": {
+    "frontend": "Expo (React Native) + TypeScript, expo-router, Zustand.",
+    "backend": "Ninguno en este milestone (Supabase + Edge Functions solo en la fase 4).",
+    "datos": "Plantillas JSON validadas con Zod; partidas e historial en AsyncStorage.",
+    "otros": "QR con react-native-qrcode-svg y expo-camera; PDF con expo-print + expo-sharing; Jest + @testing-library/react-native."
+  },
+  "requisitos_no_funcionales": [
+    { "requisito": "Solo herramientas gratuitas o con plan gratis", "inferido": false },
+    { "requisito": "Funciona offline (generador sin IA)", "inferido": false },
+    { "requisito": "Casos reproducibles por semilla", "inferido": false },
+    { "requisito": "Sin API keys en el repositorio", "inferido": false },
+    { "requisito": "Contenido apto para público familiar, sin violencia gráfica", "inferido": false },
+    { "requisito": "Textos legibles y controles táctiles accesibles en pantallas de teléfono", "inferido": true }
+  ],
+  "tipos_requeridos": ["mobile", "data", "frontend", "docs"],
+  "skills_requeridas": ["frontend-design", "mobile-native", "testing", "revision-codigo", "documentacion"],
+  "fuera_de_alcance": [
+    "Fase 4: generación de casos con IA vía Supabase Edge Function (milestone enigma-go-ia)",
+    "Fase 5: estilo noir, sonidos y vibración, onboarding y build APK con EAS (milestone enigma-go-pulido)",
+    "Multijugador en red: el MVP se juega pasando un solo celular",
+    "Pagos o historias premium",
+    "GPS y geocercas"
+  ],
+  "riesgos": [
+    "Las aceptaciones de las fases 0 y 3 que exigen dispositivo real están en verificacion_manual: aparecen en el checklist del cierre de las waves de T1 y T6, que no bloquea la wave siguiente, así que si nadie las hace quedan sin comprobar.",
+    "El test de 500 casos puede ser lento o inestable si el generador reintenta mucho; conviene fijar semillas en el test.",
+    "T5 y T6 tocan las mismas pantallas (play, flujo de partida): van en waves distintas para evitar conflictos de merge."
+  ],
+  "particion_propuesta": [
+    { "slug": "enigma-go-mvp", "alcance": "Fases 0–3 del plan y README (este manifest)." },
+    { "slug": "enigma-go-ia", "alcance": "Fase 4: Supabase, Edge Function generate-case, fallback a plantillas y límite diario." },
+    { "slug": "enigma-go-pulido", "alcance": "Fase 5: estilo noir, sonidos/vibración, onboarding y APK de prueba." }
+  ],
+  "manifest": "milestones/mejora-skills/pruebas/triage/sobre-detallado/milestone.yaml"
+}

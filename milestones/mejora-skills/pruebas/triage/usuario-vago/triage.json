@@ -1,0 +1,55 @@
+{
+  "proyecto": "Clon de Twitter",
+  "slug": "clon-twitter",
+  "estado": "requiere_aclaracion",
+  "preguntas_pendientes": [
+    {
+      "pregunta": "¿Para qué escala es el proyecto?",
+      "opciones": [
+        "Demo o proyecto de clase (decenas de usuarios)",
+        "Comunidad pequeña real (hasta ~1.000 usuarios)",
+        "Producto público que debe escalar (miles de usuarios o más)"
+      ]
+    },
+    {
+      "pregunta": "¿En qué plataforma se usa?",
+      "opciones": [
+        "Web (navegador, también en el móvil)",
+        "App móvil nativa (iOS/Android)",
+        "Ambas"
+      ]
+    },
+    {
+      "pregunta": "¿Qué stack prefieres?",
+      "opciones": [
+        "JavaScript/TypeScript de punta a punta (Node + frontend web)",
+        "Python en el backend (FastAPI/Django) + frontend web",
+        "Backend como servicio (Supabase/Firebase) + frontend",
+        "Me da igual: elige lo más simple y gratuito"
+      ]
+    }
+  ],
+  "clasificacion": {
+    "dominio": "mixto",
+    "complejidad": "media",
+    "alcance": "Provisional: red social de mensajes cortos con cuentas, publicaciones, seguidores y timeline; se fija tras las respuestas."
+  },
+  "requisitos_tecnicos": {
+    "frontend": "Por definir (depende de la plataforma).",
+    "backend": "API con autenticación, publicaciones, seguimiento y timeline.",
+    "datos": "Usuarios, publicaciones y relaciones de seguimiento.",
+    "otros": ""
+  },
+  "requisitos_no_funcionales": [
+    { "requisito": "Contraseñas con hash y sesiones seguras", "inferido": true },
+    { "requisito": "Protección de datos personales de los usuarios", "inferido": true },
+    { "requisito": "Moderación mínima o reporte de contenido", "inferido": true }
+  ],
+  "tipos_requeridos": [],
+  "skills_requeridas": ["especificacion"],
+  "fuera_de_alcance": [],
+  "riesgos": [
+    "\"Clon de Twitter\" puede significar desde una demo hasta una red social completa: sin acotar la escala el alcance crece solo."
+  ],
+  "manifest": null
+}

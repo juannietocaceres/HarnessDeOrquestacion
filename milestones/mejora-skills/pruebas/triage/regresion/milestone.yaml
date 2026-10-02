@@ -1,0 +1,58 @@
+milestone: "Panel de administración de tareas (demo de clase)"
+cap_concurrencia: 2   # pedido explícito: máximo 2 tareas en paralelo para que se vea el cap
+# Generado por triage-proyecto (prueba de regresión) desde la prosa de
+# regresion/entrada.md. Referencia: milestones/panel-tareas-demo/milestone.yaml.
+tareas:
+  - id: T1
+    titulo: "Modelo de datos de una tarea"
+    tipo: backend
+    depende_de: []
+    descripcion: >
+      Definir los campos de una tarea del panel con sus tipos y validaciones,
+      documentados en schema/tareas.md con al menos un ejemplo en JSON.
+    criterios_aceptacion:
+      - "El esquema define al menos: id, titulo, estado, fecha_creacion."
+      - "estado es un enum con estos valores exactos: pendiente, en_curso, hecha."
+      - "Incluye al menos un ejemplo de objeto válido en JSON."
+
+  - id: T2
+    titulo: "Contrato de API para crear y listar tareas"
+    tipo: backend
+    depende_de: [T1]
+    descripcion: >
+      Documentar el contrato REST para crear y listar tareas del panel a
+      partir del modelo de T1.
+    criterios_aceptacion: []   # vacío a propósito: el usuario aún no tiene claro el contrato -> especificacion
+
+  - id: T3
+    titulo: "UI: lista de tareas"
+    tipo: frontend
+    depende_de: [T2]
+    descripcion: >
+      Componente estático (HTML/CSS/JS sin build) en ui/lista-tareas.html que
+      muestra tareas de ejemplo con la forma de datos del contrato de T2.
+    criterios_aceptacion:
+      - "Muestra al menos 3 tareas de ejemplo con el estado visualmente distinguible."
+      - "Sigue los principios de frontend-design (tipografía y color elegidos a propósito, no defaults genéricos)."
+
+  - id: T4
+    titulo: "UI: formulario de nueva tarea"
+    tipo: frontend
+    depende_de: [T2]
+    descripcion: >
+      Componente estático (HTML/CSS/JS sin build) en ui/nueva-tarea.html con
+      un formulario para crear una tarea según el payload de creación del
+      contrato de T2.
+    criterios_aceptacion:
+      - "El formulario incluye los campos requeridos por el contrato de T2."
+      - "Sigue los principios de frontend-design."
+
+  - id: T5
+    titulo: "UI: contador de tareas pendientes"
+    tipo: frontend
+    depende_de: [T2]
+    descripcion: >
+      Componente estático pequeño en ui/badge-pendientes.html que muestra
+      cuántas tareas están pendientes.
+    criterios_aceptacion:
+      - "Muestra un número y una etiqueta clara del estado 'pendientes'."

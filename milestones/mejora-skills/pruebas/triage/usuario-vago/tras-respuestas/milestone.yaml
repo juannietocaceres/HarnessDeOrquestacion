@@ -1,0 +1,108 @@
+milestone: "Clon de Twitter — MVP web para una comunidad pequeña"
+cap_concurrencia: 3
+# Generado por triage-proyecto (prueba de estrés "usuario vago") tras asumir
+# las respuestas a las 3 preguntas de triage.json (ver supuestos en
+# tras-respuestas/triage.json). Todo el código vive en clon-twitter/.
+tareas:
+  - id: T1
+    titulo: "Modelo de datos y migraciones"
+    tipo: backend
+    depende_de: []
+    descripcion: >
+      Crear clon-twitter/ con un backend Node.js + TypeScript + Express y
+      SQLite. Definir el esquema de usuarios, publicaciones y seguimientos
+      con migraciones versionadas y un script de datos de ejemplo (seed).
+      Documentar el modelo en clon-twitter/docs/modelo.md.
+    criterios_aceptacion:
+      - "Existen las tablas usuarios, publicaciones y seguimientos con claves foráneas."
+      - "npm run migrate crea la base desde cero y npm run seed carga al menos 3 usuarios y 10 publicaciones."
+      - "Una publicación no admite más de 280 caracteres (restricción en el esquema y test que lo comprueba)."
+      - "npm test y npm run typecheck en verde."
+
+  - id: T2
+    titulo: "API de autenticación"
+    tipo: backend
+    depende_de: [T1]
+    descripcion: >
+      Endpoints de registro, inicio y cierre de sesión con contraseñas
+      hasheadas (bcrypt o argon2) y sesión en cookie httpOnly. Middleware
+      que protege las rutas que requieren usuario.
+    criterios_aceptacion:
+      - "POST /auth/registro, POST /auth/login y POST /auth/logout con tests de éxito y de error."
+      - "Las contraseñas nunca se guardan ni se devuelven en texto plano (test)."
+      - "Una ruta protegida devuelve 401 sin sesión válida (test)."
+
+  - id: T3
+    titulo: "API de publicaciones, seguimiento y timeline"
+    tipo: backend
+    depende_de: [T1]
+    descripcion: >
+      Endpoints para publicar, borrar la publicación propia, seguir y dejar
+      de seguir a un usuario, ver el perfil de un usuario y obtener el
+      timeline (publicaciones propias y de las cuentas seguidas, de la más
+      reciente a la más antigua, paginado).
+    criterios_aceptacion:
+      - "POST /publicaciones rechaza textos vacíos o de más de 280 caracteres (test)."
+      - "Un usuario solo puede borrar sus propias publicaciones (test con 403)."
+      - "GET /timeline devuelve publicaciones propias y de seguidos, en orden cronológico inverso y paginadas de a 20 (test)."
+      - "Seguir dos veces a la misma cuenta no duplica la relación (test)."
+
+  - id: T4
+    titulo: "UI de registro e inicio de sesión"
+    tipo: frontend
+    depende_de: [T2]
+    descripcion: >
+      Frontend web en clon-twitter/web (Vite + TypeScript) con pantallas de
+      registro e inicio de sesión que consumen la API de T2, con errores de
+      validación visibles y diseño responsive.
+    criterios_aceptacion:
+      - "Registro, login y logout funcionan contra la API local (test de componente o e2e)."
+      - "Los errores de la API (usuario existente, credenciales inválidas) se muestran junto al formulario."
+      - "Usable a 360 px de ancho sin scroll horizontal."
+
+  - id: T5
+    titulo: "UI de timeline, publicar, perfil y seguir"
+    tipo: frontend
+    depende_de: [T2, T3]
+    descripcion: >
+      Pantallas de timeline con caja para publicar (contador de 280
+      caracteres), perfil de usuario con su lista de publicaciones y botón
+      seguir/dejar de seguir, consumiendo la API de T3 con la sesión de T2.
+    criterios_aceptacion:
+      - "Publicar desde la caja agrega la publicación al inicio del timeline sin recargar la página."
+      - "El contador impide enviar más de 280 caracteres."
+      - "Seguir a un usuario desde su perfil hace aparecer sus publicaciones en el timeline."
+
+  - id: T6
+    titulo: "Reporte de publicaciones (moderación mínima)"
+    tipo: backend
+    depende_de: [T3]
+    descripcion: >
+      Permitir que un usuario reporte una publicación y que exista una forma
+      mínima de revisar los reportes. Qué pasa con una publicación reportada
+      (ocultarla, umbral de reportes, rol de moderador) está por definir.
+    criterios_aceptacion: []   # vacío a propósito: la política de moderación no está definida -> especificacion
+
+  - id: T7
+    titulo: "Pruebas end-to-end del flujo principal"
+    tipo: testing
+    depende_de: [T4, T5]
+    descripcion: >
+      Suite e2e (Playwright) que recorre registro → login → publicar →
+      seguir a otro usuario → ver su publicación en el timeline → logout,
+      contra el backend y el frontend levantados en local.
+    criterios_aceptacion:
+      - "npm run test:e2e recorre el flujo completo sin fallos en un entorno limpio."
+      - "La suite levanta y limpia su propia base de datos de prueba."
+
+  - id: T8
+    titulo: "README del proyecto"
+    tipo: docs
+    depende_de: [T6, T7]
+    descripcion: >
+      clon-twitter/README.md con instalación, variables de entorno, cómo
+      correr migraciones, tests y e2e, arquitectura (API + web) y límites
+      conocidos del MVP.
+    criterios_aceptacion:
+      - "README con instalación, variables de entorno, tests y arquitectura."
+      - "Sin secretos ni credenciales en el repositorio."
