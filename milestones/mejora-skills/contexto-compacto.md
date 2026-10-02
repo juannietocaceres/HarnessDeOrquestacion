@@ -1,8 +1,8 @@
 # Contexto compacto — mejora-skills
-Actualizado: 2026-10-01 · cierre de wave 4 · fuentes: estado.yaml, decisiones.md, bloqueos-externos.md
+Actualizado: 2026-10-01 · cierre de wave 5 (milestone completo) · fuentes: estado.yaml, decisiones.md, bloqueos-externos.md
 
 ## Estado
-wave_actual: 5 | siguiente: 5 [M9] | cap: 3
+wave_actual: 5 | siguiente: ninguna (milestone completo) | cap: 3
 manifest_snapshot_sha256: 0836eaf7dc2e0f249fcf4f4522ee38704570d88a4e5758bc219bfabfff17f06a
 M1: COMPLETADA · commits 565567f, 448b188 · merge 0ba8ac3 · .claude/skills/presentaciones-visuales/, presentaciones/harness-clase.html
 M2: COMPLETADA · commits 92531ee, f439ec0 · merge ec2c5e2 · .claude/skills/optimizador-prompts/ (+ PLANTILLA-SUBAGENTE.md)
@@ -12,7 +12,7 @@ M5: COMPLETADA · commits 671cf30, 24c2c1b · merge 8b588ea · .claude/skills/tr
 M6: COMPLETADA · commit 5031af3 · merge 3f7d539 · .claude/skills/optimizador-tokens/
 M7: COMPLETADA · commit 16be2e3 · merge 515eecd · .claude/skills/orquestador/SKILL.md
 M8: COMPLETADA · commit 05c5e5b · merge 3052107 · CLAUDE.md, README.md, RESUMEN-HARNESS.md, PROCESO.md §14
-M9: EN_CURSO · milestones/e2e-skills/
+M9: COMPLETADA · commits 74ca4a1, d8f7b20, f347b65 · merges E2E b66a6bc, aaf93ef · corrida en milestones/e2e-skills/ (sesión principal; tareas en worktrees; checklist manual en milestones/e2e-skills/decisiones.md) · resumen en PROCESO §14
 
 ## Decisiones vigentes (literales del gate)
 - M4 §7.1 write-swift → **dejarla fuera.**
@@ -24,7 +24,7 @@ M9: EN_CURSO · milestones/e2e-skills/
 - M5 criterios no verificables por un sub-agente → **campo propio** `verificacion_manual:`; precisión del usuario: se listan al cierre de **cada wave**, checklist informativo que **no bloquea**.
 
 ## Pendiente
-- Protocolo: sub-agentes devuelven DECISION_NEEDED; cada worktree hace paso 0 `git merge --ff-only main`; al cierre de wave, `empaquetar` regenera contexto-compacto.md.
+- Protocolo: sub-agentes devuelven DECISION_NEEDED; cada worktree hace paso 0 `git merge --ff-only main` (los worktrees nacen en 46fa018); al cierre de wave, `empaquetar` regenera contexto-compacto.md.
 - M8 resolvió los pendientes de docs, triage-proyecto y registro (0 ❌ en verificador-datos).
 - Propuesto, fuera de alcance: `.gitattributes` para finales de línea de skills vendorizadas.
 - Bloqueos externos: ninguno.
@@ -35,4 +35,5 @@ M9: EN_CURSO · milestones/e2e-skills/
 - docs/vendor/emilkowalski-skills.md: hash, convivencia, costo de contexto
 
 
-<!-- metricas: tokens_original=1622 tokens_final=700 ahorro=57% metodo=estimado entidades_revisadas=88 entidades_preservadas=true ignoradas(pendientes resueltos por M8)=panel-tareas-demo/decisiones.md preflight_manifest.py T1 T5 especificacion revision-codigo testing documentacion contenido -->
+
+<!-- metricas: tokens_original=1862 tokens_final=769 ahorro=59% metodo=estimado entidades_revisadas=98 entidades_preservadas=true ignoradas(pendientes resueltos por M8)=panel-tareas-demo/decisiones.md preflight_manifest.py T1 T5 especificacion revision-codigo testing documentacion contenido -->

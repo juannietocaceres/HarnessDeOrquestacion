@@ -1,7 +1,7 @@
 milestone: "Ampliación de skills del harness"
 manifest_snapshot_sha256: 0836eaf7dc2e0f249fcf4f4522ee38704570d88a4e5758bc219bfabfff17f06a
 preflight: OK   # ids únicos, deps internas resueltas, sin ciclos, campos requeridos presentes
-wave_actual: 5   # waves 1-4 cerradas e integradas a main (wave 4: merge de M8)
+wave_actual: 5   # las 5 waves cerradas — milestone completo
 waves_planificadas:
   - wave: 1
     tareas: [M1, M2, M3, M4]   # cap 3 -> lote 1: M1,M2,M3; luego M4
@@ -21,7 +21,7 @@ tareas:
   M5: { estado: COMPLETADA, commits: [671cf30, 24c2c1b], merge: 8b588ea }
   M6: { estado: COMPLETADA, commits: [5031af3], merge: 3f7d539 }   # gate: modelo adoptado, umbral ~4.000
   M7: { estado: COMPLETADA, commits: [16be2e3], merge: 515eecd }
-  M8: { estado: COMPLETADA, commits: [05c5e5b] }
-  M9: { estado: EN_CURSO, commit: null, worktree: null }   # corrida E2E real: milestones/e2e-skills/
+  M8: { estado: COMPLETADA, commits: [05c5e5b], merge: 3052107 }
+  M9: { estado: COMPLETADA, commits: [74ca4a1, d8f7b20, f347b65], merges_e2e: [b66a6bc, aaf93ef] }   # corrida en la sesión principal (triage + gate al usuario); tareas internas en worktrees
 decisiones_pendientes: []
 bloqueos_externos: []

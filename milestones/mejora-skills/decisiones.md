@@ -86,3 +86,22 @@ declara `verificacion_manual`, así que no hay checklist manual de la wave.
   triage-proyecto actualizados, cita §8 → §9 en panel-tareas-demo. Pasada
   de `verificador-datos` sobre los cuatro documentos: 0 ❌ (4 ⚠️ históricos
   sin registro en el repo, sin cambio). Sin `verificacion_manual` en la wave.
+
+## Wave 5 (M9)
+
+- **M9**: sin decisiones. Corrida real de punta a punta en
+  `milestones/e2e-skills/`, ejecutada en la sesión principal (para que
+  triage pudiera preguntar y el gate llegara al usuario); las 3 tareas
+  internas corrieron en worktrees. Las skills nuevas se usaron todas al
+  menos una vez (detalle en PROCESO §14). Checklist manual de esa corrida en
+  `milestones/e2e-skills/decisiones.md`.
+
+## Milestone cerrado
+
+9 tareas, 5 waves, 7 decisiones del gate (más una pregunta de seguimiento y
+una precisión del usuario), todas en las waves 1 y 2. Al cierre,
+`verificador-datos` sobre los docs tocados: M8 dejó los cuatro documentos
+raíz con 0 ❌. Lo único que se agregó después es el párrafo de M9 en
+PROCESO §14, que el orquestador contrastó con el repo (hashes, conteo de
+slides, 21 carpetas, fecha de `46fa018`). Ninguna tarea declaró
+`verificacion_manual`.
