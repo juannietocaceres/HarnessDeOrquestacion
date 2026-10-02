@@ -1,0 +1,33 @@
+{
+  "proyecto": "Landing y deck de Enigma Go para clase",
+  "slug": "e2e-skills",
+  "estado": "listo_para_orquestar",
+  "preguntas_pendientes": [],
+  "supuestos": [
+    "La landing es un HTML estático autocontenido en landing/enigma-go/, independiente del proyecto Expo (no hay build ni servidor).",
+    "Idioma de la landing y el deck: español, público de compañeros de clase sin contexto técnico.",
+    "Como Enigma Go está pausado (solo su T1 completada), landing y deck lo presentan como proyecto en desarrollo y no prometen funciones como hechas."
+  ],
+  "clasificacion": {
+    "dominio": "mixto",
+    "complejidad": "baja",
+    "alcance": "Contenido verificado, landing estática con animación de entrada y deck HTML de 5 slides para presentar Enigma Go en clase."
+  },
+  "requisitos_tecnicos": {
+    "frontend": "HTML/CSS/JS autocontenido, sin build; animación CSS/JS con prefers-reduced-motion.",
+    "backend": "",
+    "datos": "",
+    "otros": "Deck con presentaciones-visuales: navegación por teclado, @media print, notas del presentador."
+  },
+  "requisitos_no_funcionales": [
+    { "requisito": "Accesibilidad: contraste ≥ 4.5:1 y respeto de prefers-reduced-motion", "inferido": true },
+    { "requisito": "Legible en proyector de aula", "inferido": true },
+    { "requisito": "Funciona offline abriendo el archivo (sin servidor)", "inferido": true },
+    { "requisito": "Veracidad: no presentar como implementado lo que solo está planeado", "inferido": true }
+  ],
+  "tipos_requeridos": ["contenido", "frontend", "presentacion"],
+  "skills_requeridas": ["verificador-datos", "frontend-design", "emil-design-eng", "animate", "review-animations", "presentaciones-visuales", "optimizador-prompts", "optimizador-tokens", "revision-codigo"],
+  "fuera_de_alcance": ["Implementar la app Enigma Go o cualquier parte del milestone enigma-go", "Publicar la landing en un hosting", "Más de 5 slides"],
+  "riesgos": ["Afirmar funciones de Enigma Go que todavía no existen (el milestone está pausado)", "Contradicción frontend-design vs Emil en la animación de entrada (resuelta: stagger solo dentro de un grupo relacionado)"],
+  "manifest": "milestones/e2e-skills/milestone.yaml"
+}

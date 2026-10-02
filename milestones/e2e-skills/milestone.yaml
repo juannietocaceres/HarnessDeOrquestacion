@@ -1,0 +1,50 @@
+milestone: "Landing y deck de Enigma Go para clase (validación E2E de skills)"
+cap_concurrencia: 3
+tareas:
+  # T1 existe para que landing y deck afirmen lo mismo: enigma-go está pausado
+  # (solo su T1 completada, sin mergear), así que hay que separar plan de realidad.
+  - id: T1
+    titulo: "Contenido verificado de Enigma Go"
+    tipo: contenido
+    depende_de: []
+    descripcion: >
+      Redactar en presentaciones/enigma-go/contenido.md el contenido base que
+      usarán la landing y el deck: qué es Enigma Go, cómo se juega, los modos de
+      juego y el estado real del proyecto. Fuente: milestones/enigma-go/plan.md,
+      milestone.yaml y estado.yaml. Público: compañeros de clase sin contexto
+      técnico. No inventar cifras ni funciones.
+    criterios_aceptacion:
+      - "Existe presentaciones/enigma-go/contenido.md con: qué es Enigma Go, cómo se juega (configurar → jugar → acusar → revelar → ranking), los 3 modos (app, exterior, mixto) y el estado real del proyecto"
+      - "Cada afirmación distingue lo planeado en el MVP de lo ya implementado, según milestones/enigma-go/plan.md y estado.yaml"
+      - "Informe de verificador-datos en milestones/e2e-skills/verificaciones/T1.md sin afirmaciones ❌"
+  - id: T2
+    titulo: "Landing page de Enigma Go con animación de entrada"
+    tipo: frontend
+    depende_de: [T1]
+    descripcion: >
+      Construir landing/enigma-go/index.html, una página única autocontenida
+      para presentar Enigma Go en clase, con una animación de entrada. Textos
+      tomados de presentaciones/enigma-go/contenido.md.
+    criterios_aceptacion:
+      - "Existe landing/enigma-go/index.html autocontenido (CSS y JS inline; solo Google Fonts como recurso externo, con fallback declarado)"
+      - "Tiene una animación de entrada que respeta prefers-reduced-motion"
+      - "Las afirmaciones del texto coinciden con presentaciones/enigma-go/contenido.md"
+      - "Contraste ≥ 4.5:1 en texto normal y sin scroll horizontal a 375 px y 1280 px de ancho"
+      - "La autorrevisión incluye review-animations y su resultado queda en el reporte de la tarea"
+    verificacion_manual:
+      - "Proyectar la landing en el aula y confirmar que la animación de entrada se ve fluida y el texto se lee desde el fondo."
+  - id: T3
+    titulo: "Deck de 5 slides que explica el juego"
+    tipo: presentacion
+    depende_de: [T1]
+    descripcion: >
+      Generar presentaciones/enigma-go-deck.html, un deck de exactamente 5
+      slides que explique cómo se juega Enigma Go, a partir de
+      presentaciones/enigma-go/contenido.md.
+    criterios_aceptacion:
+      - "Existe presentaciones/enigma-go-deck.html con exactamente 5 slides, navegable con ← → e imprimible con una slide por página"
+      - "Sin texto desbordado a 1280×720"
+      - "Las afirmaciones coinciden con presentaciones/enigma-go/contenido.md"
+      - "Informe de verificador-datos en milestones/e2e-skills/verificaciones/T3.md sin afirmaciones ❌"
+    verificacion_manual:
+      - "Ensayar el deck en el proyector del aula: 5 slides legibles y notas del presentador con la tecla N."
