@@ -530,9 +530,15 @@ reapareció en la práctica (T2) y se resolvió con la regla del gate de la wave
 commiteado dice que su T1 sigue `EN_CURSO`, aunque el commit `e2c6dda`
 existe; T1 y T3 basaron sus afirmaciones en git y no en ese archivo.
 
-**Pendiente, fuera de alcance**: M4 propuso un `.gitattributes` para fijar
-los finales de línea de las skills vendorizadas. Con `core.autocrlf=true`
-el working tree tiene CRLF y upstream LF, así que un `diff -r` directo
-marca todas las líneas como distintas aunque el contenido sea idéntico (hay
-que usar `--strip-trailing-cr` o comparar hashes de blob). Queda anotado,
-no se aplicó.
+**Finales de línea de las skills (resuelto)**: M4 propuso un
+`.gitattributes` para fijar los finales de línea de las skills
+vendorizadas. Con `core.autocrlf=true` el working tree tenía CRLF y upstream
+LF, así que un `diff -r` directo marcaba todas las líneas como distintas
+aunque el contenido fuera idéntico. Se agregó `.gitattributes` en la raíz
+con `.claude/skills/** text eol=lf`. `git add --renormalize .` no cambió
+nada en el índice (los blobs ya estaban en LF), pero sí hubo que volver a
+sacar los archivos para que el working tree pasara a LF (47/47
+`w/lf`). Ahora `diff -r` contra upstream se puede usar directo. Ese mismo
+día se commiteó la nota de pausa de `milestones/enigma-go/estado.yaml`, que
+cierra el hallazgo de arriba: T1 figura `COMPLETADA` (commit `e2c6dda`, sin
+mergear) y el milestone queda pausado.

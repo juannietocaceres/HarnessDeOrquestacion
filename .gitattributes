@@ -1,0 +1,2 @@
+# Skills vendorizadas: LF en el working tree para poder diff-ear contra upstream
+.claude/skills/** text eol=lf
