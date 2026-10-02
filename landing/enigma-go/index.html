@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enigma Go</title>
+<meta name="description" content="Enigma Go: un proyecto de app para el celular que va a armar juegos de misterio para tu grupo y tu tiempo. En desarrollo; todavía no se puede jugar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Gloock&display=swap">
+<style>
+  :root {
+    /* Paleta: noche de juego de mesa. Contraste medido con contraste.py (todos ≥ 7:1). */
+    --tinta: #1F1B3D;      /* fondo */
+    --mesa: #2A2552;       /* superficies */
+    --papel: #F3EEDF;      /* texto principal, 14.1:1 sobre tinta */
+    --lila: #BDB6E0;       /* texto secundario, 8.5:1 sobre tinta, 7.4:1 sobre mesa */
+    --citrino: #F2C14E;    /* pistas y números, 9.8:1 sobre tinta */
+    --coral: #FF9E8C;      /* estado real, 7.1:1 sobre mesa */
+    --linea: #4A4380;      /* bordes decorativos, sin texto encima */
+
+    --display: "Gloock", Georgia, "Times New Roman", serif;
+    --texto: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+    --gutter: clamp(16px, 5vw, 64px);
+    --ancho: 1180px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--tinta);
+    color: var(--papel);
+    font-family: var(--texto);
+    font-size: clamp(1.125rem, 0.9rem + 0.6vw, 1.375rem);
+    line-height: 1.55;
+    overflow-wrap: break-word;
+  }
+
+  h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.08; margin: 0; }
+  p { margin: 0; }
+  ul, ol { margin: 0; padding: 0; list-style: none; }
+
+  .contenedor {
+    width: 100%;
+    max-width: var(--ancho);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+
+  /* ---------- Portada ---------- */
+
+  .portada {
+    min-height: 100svh;
+    display: grid;
+    align-items: center;
+    padding: clamp(48px, 8vh, 96px) 0;
+  }
+
+  .portada__grid {
+    display: grid;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .portada__grid { grid-template-columns: 1.25fr 1fr; }
+  }
+
+  .marca {
+    font-family: var(--display);
+    font-size: clamp(3.25rem, 1.5rem + 5.5vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: var(--citrino);
+    margin-bottom: 0.25em;
+  }
+
+  .titular {
+    font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3.4rem);
+    line-height: 1.12;
+  }
+
+  /* Cada línea del titular se revela desde abajo dentro de su propia máscara. */
+  .linea { display: block; overflow: hidden; padding-bottom: 0.08em; }
+  .linea > span { display: block; }
+
+  .lema {
+    margin-top: 1.25em;
+    color: var(--lila);
+    max-width: 34ch;
+  }
+
+  .aviso {
+    display: inline-block;
+    margin-top: 1.5em;
+    padding: 0.45em 0.9em;
+    border: 1.5px solid var(--coral);
+    border-radius: 12px;
+    color: var(--coral);
+    font-weight: 700;
+    font-size: 0.9em;
+  }
+
+  /* La ficha del caso: lo que vas a elegir antes de jugar. */
+  .ficha {
+    background: var(--mesa);
+    border-radius: 18px;
+    padding: clamp(24px, 3vw, 36px);
+    border: 1px dashed var(--linea);
+  }
+
+  .ficha h2 {
+    font-size: clamp(1.5rem, 1.1rem + 1vw, 2rem);
+    margin-bottom: 0.9em;
+  }
+
+  .ficha__lista { display: grid; gap: 1em; }
+
+  .ficha__lista li {
+    display: grid;
+    grid-template-columns: 7.5em 1fr;
+    gap: 0.75em;
+    align-items: baseline;
+    padding-bottom: 1em;
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .ficha__lista li:last-child { border-bottom: 0; padding-bottom: 0; }
+
+  .ficha__dato { color: var(--lila); }
+  .ficha__valor { font-weight: 700; }
+
+  @media (max-width: 420px) {
+    .ficha__lista li { grid-template-columns: 1fr; gap: 0.1em; }
+  }
+
+  .ficha__pie {
+    margin-top: 1.25em;
+    color: var(--lila);
+    font-size: 0.9em;
+  }
+
+  /* ---------- Secciones ---------- */
+
+  .seccion { padding: clamp(56px, 9vw, 120px) 0; }
+  .seccion + .seccion { border-top: 1px solid var(--linea); }
+
+  .seccion h2 {
+    font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem);
+    margin-bottom: 0.6em;
+    max-width: 20ch;
+  }
+
+  .intro { max-width: 60ch; color: var(--papel); }
+  .intro + .intro { margin-top: 1em; }
+
+  .notas {
+    margin-top: 1.75em;
+    display: grid;
+    gap: 0.9em;
+    max-width: 62ch;
+  }
+
+  .notas li {
+    padding-left: 1.4em;
+    position: relative;
+  }
+
+  /* Un punto de pista como viñeta. */
+  .notas li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: var(--citrino);
+  }
+
+  /* Pasos: es una secuencia real, por eso van numerados. */
+  .pasos {
+    counter-reset: paso;
+    display: grid;
+    gap: clamp(24px, 3vw, 36px);
+    margin-top: 1.5em;
+  }
+
+  .pasos li {
+    counter-increment: paso;
+    display: grid;
+    grid-template-columns: 2.4em 1fr;
+    gap: 0.6em 1em;
+    max-width: 64ch;
+  }
+
+  .pasos li::before {
+    content: counter(paso);
+    font-family: var(--display);
+    font-size: 2.2em;
+    line-height: 1;
+    color: var(--citrino);
+  }
+
+  .pasos h3 { font-size: 1.5em; margin-bottom: 0.25em; }
+  .pasos p { color: var(--lila); }
+
+  /* Modos y tipos: nombre grande a la izquierda, descripción a la derecha. */
+  .filas { display: grid; margin-top: 1.5em; }
+
+  .fila {
+    display: grid;
+    gap: 0.4em 2em;
+    padding: 1.25em 0;
+    border-top: 1px solid var(--linea);
+  }
+
+  .fila:last-child { border-bottom: 1px solid var(--linea); }
+
+  @media (min-width: 760px) {
+    .fila { grid-template-columns: minmax(8em, 1fr) 2.2fr; align-items: baseline; }
+  }
+
+  .fila h3 { font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem); }
+  .fila__meta { color: var(--citrino); font-weight: 700; display: block; margin-bottom: 0.2em; }
+  .fila p { max-width: 54ch; }
+
+  .detalle {
+    margin-top: 1.5em;
+    max-width: 60ch;
+    color: var(--lila);
+  }
+
+  /* ---------- Estado real ---------- */
+
+  .estado {
+    background: var(--mesa);
+    border-radius: 22px;
+    padding: clamp(24px, 4vw, 56px);
+  }
+
+  .estado h2 { color: var(--papel); }
+
+  .estado__frase {
+    font-family: var(--display);
+    font-size: clamp(1.4rem, 1rem + 1.4vw, 2.1rem);
+    line-height: 1.25;
+    color: var(--coral);
+    max-width: 30ch;
+    margin-bottom: 1.25em;
+  }
+
+  /* Las 7 tareas del plan: la primera hecha (sin integrar), 6 pendientes. */
+  .tareas {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    max-width: 520px;
+    margin: 0 0 0.6em;
+  }
+
+  .tareas span {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    border: 2px solid var(--linea);
+  }
+
+  .tareas span:first-child {
+    border-color: var(--citrino);
+    background: repeating-linear-gradient(135deg, var(--citrino) 0 6px, transparent 6px 12px);
+  }
+
+  .tareas__leyenda { color: var(--lila); font-size: 0.9em; margin-bottom: 1.5em; max-width: 52ch; }
+
+  .estado .notas li::before { background: var(--coral); }
+
+  /* ---------- Cierre ---------- */
+
+  .cierre h2 { max-width: 22ch; }
+  .cierre .intro { color: var(--lila); }
+
+  .pie {
+    padding: 32px 0 48px;
+    color: var(--lila);
+    font-size: 0.85em;
+  }
+
+  /* ---------- Animación de entrada ----------
+     Un solo momento orquestado al cargar: el titular sube línea a línea
+     (stagger de 80 ms dentro del mismo grupo), la ficha del caso aparece
+     y sus cuatro datos entran escalonados. Las secciones de abajo no se animan. */
+
+  @keyframes subir {
+    from { transform: translateY(105%); }
+    to   { transform: translateY(0); }
+  }
+
+  @keyframes aparecer {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @keyframes aparecer-suave {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @keyframes fundido {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .marca,
+    .linea > span {
+      animation: subir 900ms var(--ease-out) both;
+    }
+    .marca { animation-name: aparecer-suave; animation-duration: 700ms; }
+    .linea:nth-child(1) > span { animation-delay: 120ms; }
+    .linea:nth-child(2) > span { animation-delay: 200ms; }
+    .linea:nth-child(3) > span { animation-delay: 280ms; }
+    .linea:nth-child(4) > span { animation-delay: 360ms; }
+
+    .lema,
+    .aviso { animation: aparecer-suave 600ms var(--ease-out) 560ms both; }
+
+    .ficha { animation: aparecer 700ms var(--ease-out) 420ms both; }
+
+    .ficha__lista li { animation: aparecer-suave 500ms var(--ease-out) both; }
+    .ficha__lista li:nth-child(1) { animation-delay: 560ms; }
+    .ficha__lista li:nth-child(2) { animation-delay: 620ms; }
+    .ficha__lista li:nth-child(3) { animation-delay: 680ms; }
+    .ficha__lista li:nth-child(4) { animation-delay: 740ms; }
+  }
+
+  /* Movimiento reducido: sin desplazamientos, solo un fundido breve del bloque de portada. */
+  @media (prefers-reduced-motion: reduce) {
+    .portada__grid { animation: fundido 250ms ease both; }
+  }
+</style>
+</head>
+<body>
+
+<header class="portada">
+  <div class="contenedor portada__grid">
+    <div>
+      <p class="marca">Enigma Go</p>
+      <h1 class="titular">
+        <span class="linea"><span>Un juego de misterio</span></span>
+        <span class="linea"><span>nuevo cada vez,</span></span>
+        <span class="linea"><span>armado para tu grupo</span></span>
+        <span class="linea"><span>y tu tiempo.</span></span>
+      </h1>
+      <p class="lema">El plan: tú pones el grupo y el tiempo; la app pone el misterio.</p>
+      <p class="aviso">Proyecto en desarrollo: todavía no se puede jugar</p>
+    </div>
+
+    <aside class="ficha" aria-labelledby="ficha-titulo">
+      <h2 id="ficha-titulo">Lo que vas a elegir</h2>
+      <ul class="ficha__lista">
+        <li><span class="ficha__dato">Jugadores</span><span class="ficha__valor">De 1 a 12</span></li>
+        <li><span class="ficha__dato">Tiempo</span><span class="ficha__valor">15, 30, 45, 60 o 90 minutos</span></li>
+        <li><span class="ficha__dato">Modo</span><span class="ficha__valor">App, exterior o mixto</span></li>
+        <li><span class="ficha__dato">Dificultad</span><span class="ficha__valor">Fácil, media o difícil</span></li>
+      </ul>
+      <p class="ficha__pie">Con eso, la app va a armar un caso único: una historia, varios sospechosos, pistas y una solución.</p>
+    </aside>
+  </div>
+</header>
+
+<main>
+
+  <section class="seccion" aria-labelledby="que-es">
+    <div class="contenedor">
+      <h2 id="que-es">Qué es Enigma Go</h2>
+      <p class="intro">Es una app para el celular que va a crear juegos de misterio personalizados. Tú le vas a decir cuántos juegan, cuánto tiempo tienen, dónde se juega y qué tan difícil lo quieren, y la app va a armar el caso.</p>
+      <p class="intro">Va a guiar la partida y, al final, va a revelar quién fue el culpable y mostrar un ranking.</p>
+      <ul class="notas">
+        <li>En la primera versión (el MVP), los casos van a salir de plantillas, sin IA, para que funcione sin internet y gratis.</li>
+        <li>En el MVP se va a jugar pasando un solo celular entre el grupo; jugar cada quien en su celular queda fuera.</li>
+        <li>Una condición del proyecto: usar solo herramientas gratuitas o con plan gratis.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="seccion" aria-labelledby="como">
+    <div class="contenedor">
+      <h2 id="como">Cómo se va a jugar, en 5 pasos</h2>
+      <p class="intro">El recorrido planeado es configurar, jugar, acusar, revelar y ver el ranking.</p>
+      <ol class="pasos">
+        <li>
+          <div>
+            <h3>Configurar</h3>
+            <p>Vas a elegir número de jugadores, tiempo, modo y dificultad. La app te va a sugerir un tipo de juego y vas a poder cambiarlo. Luego vas a escribir los nombres de los jugadores.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Jugar</h3>
+            <p>La app va a contar la historia inicial. Durante la partida vas a ver un temporizador, las pistas se van a desbloquear una a una y vas a tener la lista de sospechosos para tomar notas.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Acusar</h3>
+            <p>Cada jugador, o el grupo, va a elegir a quién cree culpable. Si el tiempo llega a cero, la acusación será obligatoria.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Revelar</h3>
+            <p>La app va a decir “¡Caso resuelto!” o “El culpable escapó” y va a explicar la solución.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Ranking</h3>
+            <p>Se van a repartir puntos: acertar suma, terminar con tiempo de sobra da bonus y pedir pistas extra resta.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="seccion" aria-labelledby="modos">
+    <div class="contenedor">
+      <h2 id="modos">Tres modos de juego</h2>
+      <div class="filas">
+        <div class="fila">
+          <h3>App</h3>
+          <p>Todo va a pasar dentro del celular.</p>
+        </div>
+        <div class="fila">
+          <h3>Exterior</h3>
+          <p>Las pistas van a ser códigos QR impresos que se esconden en un lugar real; al escanear cada QR se va a desbloquear su pista.</p>
+        </div>
+        <div class="fila">
+          <h3>Mixto</h3>
+          <p>Algunas pistas van a aparecer en la app y otras se van a conseguir escaneando QR.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" aria-labelledby="tipos">
+    <div class="contenedor">
+      <h2 id="tipos">Tres tipos de juego</h2>
+      <p class="intro">La app va a sugerir uno según el número de jugadores y el modo, y vas a poder cambiarlo.</p>
+      <div class="filas">
+        <div class="fila">
+          <h3>Detective</h3>
+          <p><span class="fila__meta">Modo app, de 1 a 6 jugadores</span>El grupo va a investigar junto: leer pistas, interrogar sospechosos y acusar.</p>
+        </div>
+        <div class="fila">
+          <h3>Asesinato con roles</h3>
+          <p><span class="fila__meta">Modo app o mixto, de 4 a 12 jugadores</span>Cada jugador va a recibir un personaje secreto y uno de ellos será el culpable; habrá rondas de pistas y votación.</p>
+        </div>
+        <div class="fila">
+          <h3>Búsqueda</h3>
+          <p><span class="fila__meta">Modo exterior, de 2 a 12 jugadores</span>El organizador va a esconder QR en un lugar; cada QR va a revelar una pista y el orden de las pistas va a llevar a la solución.</p>
+        </div>
+      </div>
+      <p class="detalle">En el juego con roles, el celular se va a pasar de mano en mano (“pasa el celular a…”) y cada quien va a tocar para ver su rol secreto y volver a ocultarlo.</p>
+    </div>
+  </section>
+
+  <section class="seccion" aria-labelledby="estado">
+    <div class="contenedor">
+      <div class="estado">
+        <h2 id="estado">Dónde está el proyecto hoy</h2>
+        <p class="estado__frase">Enigma Go es, por ahora, un plan detallado y un proyecto base: el juego todavía no se puede jugar.</p>
+
+        <div class="tareas" role="img" aria-label="7 tareas planeadas: la primera hecha, sin integrar; las otras 6 pendientes">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <p class="tareas__leyenda">7 tareas repartidas en 6 oleadas, que cubren las fases 0 a 3 del plan. Solo la primera está hecha.</p>
+
+        <ul class="notas">
+          <li>Hoy no hay ninguna parte del juego funcionando: no se puede descargar ni jugar.</li>
+          <li>El desarrollo está pausado.</li>
+          <li>La tarea hecha es el proyecto base: el esqueleto vacío de la app, con sus herramientas instaladas y una pantalla de inicio provisional. Vive en una rama aparte, todavía sin integrar.</li>
+          <li>Las otras 6 tareas están pendientes: el motor que arma los casos, las plantillas de historias, el generador con su validador, las pantallas del modo app, el modo exterior/mixto con QR y el README.</li>
+          <li>La IA generativa (fase 4) y el pulido con versión instalable para Android (fase 5) son opcionales y quedan fuera de esta etapa del trabajo.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion cierre" aria-labelledby="cierre">
+    <div class="contenedor">
+      <h2 id="cierre">Un misterio distinto en cada partida, para el grupo y el tiempo que tengas.</h2>
+      <p class="intro">Hoy Enigma Go está en fase de plan, con el esqueleto de la app listo en una rama aparte. Lo que viene es construir el motor de casos y las pantallas para poder jugarlo.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pie">
+  <div class="contenedor">
+    <p>Textos basados en el plan del proyecto Enigma Go.</p>
+  </div>
+</footer>
+
+</body>
+</html>
