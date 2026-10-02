@@ -1,7 +1,7 @@
 milestone: "Ampliación de skills del harness"
 manifest_snapshot_sha256: 0836eaf7dc2e0f249fcf4f4522ee38704570d88a4e5758bc219bfabfff17f06a
 preflight: OK   # ids únicos, deps internas resueltas, sin ciclos, campos requeridos presentes
-wave_actual: 2   # wave 1 cerrada e integrada a main (merges 0ba8ac3..1c2c0d6)
+wave_actual: 3   # waves 1 y 2 cerradas e integradas a main (wave 2: merges 8b588ea, 3f7d539)
 waves_planificadas:
   - wave: 1
     tareas: [M1, M2, M3, M4]   # cap 3 -> lote 1: M1,M2,M3; luego M4
@@ -18,9 +18,9 @@ tareas:
   M2: { estado: COMPLETADA, commits: [92531ee, f439ec0], merge: ec2c5e2 }
   M3: { estado: COMPLETADA, commits: [ae8f172], merge: 316c2b1 }
   M4: { estado: COMPLETADA, commits: [7be6d8e], merge: 1c2c0d6 }   # 10 skills de Emil (gate §7.1/§7.2), upstream d16ebe6
-  M5: { estado: EN_CURSO, commit: null, worktree: null }
-  M6: { estado: EN_CURSO, commit: null, worktree: null }
-  M7: { estado: PENDIENTE, commit: null, worktree: null }
+  M5: { estado: COMPLETADA, commits: [671cf30, 24c2c1b], merge: 8b588ea }
+  M6: { estado: COMPLETADA, commits: [5031af3], merge: 3f7d539 }   # gate: modelo adoptado, umbral ~4.000
+  M7: { estado: EN_CURSO, commit: null, worktree: null }
   M8: { estado: PENDIENTE, commit: null, worktree: null }
   M9: { estado: PENDIENTE, commit: null, worktree: null }
 decisiones_pendientes: []
