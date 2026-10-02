@@ -117,9 +117,11 @@ Se arma siempre con [PLANTILLA-SUBAGENTE.md](PLANTILLA-SUBAGENTE.md), con
 estos bloques en este orden:
 
 ```
+[PASO 0] git merge --ff-only main + comprobar archivos de la wave anterior
 [TAREA] id, título, tipo
 [OBJETIVO] descripción
 [CRITERIOS DE ACEPTACIÓN] lista literal del manifest (nunca parafrasear)
+[VERIFICACIÓN MANUAL] lista literal, informativa (solo si la tarea la declara)
 [CONTEXTO] cápsula de optimizador-tokens + rutas relevantes
 [SKILLS A APLICAR] según orquestador §8
 [RESTRICCIONES] worktree propio, puerto libre si levanta servidor, no tocar otras carpetas
@@ -140,6 +142,14 @@ Reglas específicas de este destino:
   su alcance), en `[CONTEXTO]` (rutas concretas, secciones del plan citadas)
   y en `[RESTRICCIONES]` (qué carpetas puede tocar y cuáles no).
 - **IDs, rutas, puertos, versiones y nombres de ramas** se copian exactos.
+- **`verificacion_manual`** se copia literal, igual que los criterios, y se
+  marca como informativa: el sub-agente no la verifica ni bloquea su cierre
+  por ella (`orquestador` §1).
+- **`modelo`** no va en el texto del prompt: el orquestador lo pasa como
+  parámetro `model` del tool `Agent` (`orquestador` §5).
+- **`[PASO 0]`** va siempre: los worktrees pueden arrancar desde un commit
+  viejo, así que el sub-agente sincroniza con `main` y comprueba los
+  archivos de la wave anterior antes de empezar (`orquestador` §5).
 - **`[SKILLS A APLICAR]`** sale de la tabla de `orquestador` §8 según el
   `tipo` de la tarea y lo que toca (p. ej. `revision-codigo` siempre que hay
   cambios de código; `frontend-design` si toca UI; `testing` si hay lógica
