@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "triage-proyecto/triage.schema.json",
+  "title": "triage.json — salida de la skill triage-proyecto",
+  "description": "Clasificación de una idea de proyecto y puntero al milestone.yaml borrador que consume el orquestador. Ver .claude/skills/triage-proyecto/SKILL.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "proyecto",
+    "slug",
+    "estado",
+    "preguntas_pendientes",
+    "clasificacion",
+    "requisitos_tecnicos",
+    "requisitos_no_funcionales",
+    "tipos_requeridos",
+    "skills_requeridas",
+    "fuera_de_alcance",
+    "riesgos",
+    "manifest"
+  ],
+  "properties": {
+    "proyecto": { "type": "string", "minLength": 1 },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "estado": { "enum": ["requiere_aclaracion", "listo_para_orquestar"] },
+    "preguntas_pendientes": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["pregunta", "opciones"],
+        "properties": {
+          "pregunta": { "type": "string", "minLength": 1 },
+          "opciones": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 4,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "supuestos": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "clasificacion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dominio", "complejidad", "alcance"],
+      "properties": {
+        "dominio": { "enum": ["web", "backend", "mobile", "data", "cli", "devops", "contenido", "mixto"] },
+        "complejidad": { "enum": ["baja", "media", "alta"] },
+        "alcance": { "type": "string", "minLength": 1 }
+      }
+    },
+    "requisitos_tecnicos": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frontend", "backend", "datos", "otros"],
+      "properties": {
+        "frontend": { "type": "string" },
+        "backend": { "type": "string" },
+        "datos": { "type": "string" },
+        "otros": { "type": "string" }
+      }
+    },
+    "requisitos_no_funcionales": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["requisito", "inferido"],
+        "properties": {
+          "requisito": { "type": "string", "minLength": 1 },
+          "inferido": { "type": "boolean" }
+        }
+      }
+    },
+    "tipos_requeridos": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": ["backend", "frontend", "data", "cli", "mobile", "docs", "testing", "otro", "presentacion", "contenido"]
+      }
+    },
+    "skills_requeridas": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }
+    },
+    "fuera_de_alcance": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "riesgos": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "ajuste_de_alcance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pedido_original", "motivo", "alcance_realista"],
+      "properties": {
+        "pedido_original": { "type": "string", "minLength": 1 },
+        "motivo": { "type": "string", "minLength": 1 },
+        "alcance_realista": { "type": "string", "minLength": 1 }
+      }
+    },
+    "particion_propuesta": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slug", "alcance"],
+        "properties": {
+          "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+          "alcance": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "manifest": {
+      "type": ["string", "null"],
+      "pattern": "milestone\\.yaml$"
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "estado": { "const": "requiere_aclaracion" } } },
+      "then": { "properties": { "preguntas_pendientes": { "minItems": 1 } } }
+    },
+    {
+      "if": { "properties": { "estado": { "const": "listo_para_orquestar" } } },
+      "then": {
+        "properties": {
+          "preguntas_pendientes": { "maxItems": 0 },
+          "manifest": { "type": "string" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "clasificacion": { "properties": { "complejidad": { "const": "alta" } } } }
+      },
+      "then": { "required": ["particion_propuesta"] }
+    }
+  ]
+}

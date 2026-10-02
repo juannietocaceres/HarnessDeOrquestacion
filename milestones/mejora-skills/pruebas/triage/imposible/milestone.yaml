@@ -1,0 +1,72 @@
+milestone: "Chatbot web con personalidad propia (alcance realista de 'IA consciente en HTML')"
+cap_concurrencia: 3
+# Generado por triage-proyecto (prueba de estrés "proyecto imposible").
+# El pedido original no es construible (ver ajuste_de_alcance en triage.json):
+# se reemplaza por el alcance realista más cercano. Código en chatbot-web/.
+tareas:
+  - id: T1
+    titulo: "Especificación de la personalidad y la conversación"
+    tipo: docs
+    depende_de: []
+    descripcion: >
+      Definir en chatbot-web/docs/personalidad.md quién es el asistente (nombre,
+      tono, de qué habla sobre sí mismo), qué aclara sobre sus límites (no es
+      consciente, es un modelo de lenguaje), qué temas rechaza y cuánta
+      memoria de la conversación conserva.
+    criterios_aceptacion: []   # vacío a propósito: la personalidad es una decisión abierta -> especificacion
+
+  - id: T2
+    titulo: "Proxy seguro hacia la API del LLM"
+    tipo: backend
+    depende_de: []
+    descripcion: >
+      Función serverless gratuita (Cloudflare Workers o similar) en
+      chatbot-web/proxy que recibe el historial de mensajes, agrega el
+      system prompt y llama a la API del LLM con la clave guardada como
+      secreto del entorno. Límite simple de peticiones por IP. Los tests usan
+      un LLM simulado: la clave real solo hace falta para desplegar.
+    criterios_aceptacion:
+      - "La API key solo se lee de una variable de entorno o secreto; nunca aparece en el código del cliente ni en el repositorio."
+      - "POST /chat devuelve la respuesta del modelo; un test con el LLM simulado cubre éxito, error del proveedor y exceso de peticiones (429)."
+      - "Rechaza peticiones con más de 20 mensajes o más de 4.000 caracteres (test)."
+
+  - id: T3
+    titulo: "Interfaz de chat en HTML"
+    tipo: frontend
+    depende_de: []
+    descripcion: >
+      chatbot-web/index.html con CSS y JS sin build step: historial de
+      mensajes, caja de texto, indicador de "escribiendo", manejo de errores
+      de red y un aviso visible de que es un modelo de lenguaje. Al principio
+      usa un proxy simulado (respuestas fijas) configurable por una variable.
+    criterios_aceptacion:
+      - "Enviar un mensaje lo muestra en el historial y luego la respuesta del proxy simulado."
+      - "Un error del proxy muestra un mensaje claro y permite reintentar."
+      - "Navegable solo con teclado y usable a 360 px de ancho."
+      - "El aviso 'Esto es un modelo de lenguaje, no una conciencia' está siempre visible."
+
+  - id: T4
+    titulo: "Integración: personalidad, proxy real y memoria local"
+    tipo: frontend
+    depende_de: [T1, T2, T3]
+    descripcion: >
+      Conectar la interfaz de T3 al proxy de T2, con el system prompt
+      derivado de la especificación de T1. Guardar la conversación en
+      localStorage con un botón para borrarla.
+    criterios_aceptacion:
+      - "La interfaz habla con el proxy real configurado por URL, sin claves en el cliente."
+      - "La conversación persiste al recargar la página y se borra con el botón 'Borrar conversación'."
+      - "El system prompt del proxy sale del documento de T1 (referencia explícita en el código)."
+
+  - id: T5
+    titulo: "README con límites y despliegue"
+    tipo: docs
+    depende_de: [T4]
+    descripcion: >
+      chatbot-web/README.md: qué es y qué no es (por qué no es una IA
+      consciente), cómo desplegar el proxy y configurar el secreto, cómo
+      servir el HTML, y costos o límites del plan gratuito del proveedor.
+    criterios_aceptacion:
+      - "README con despliegue del proxy, configuración del secreto y cómo abrir la interfaz."
+      - "Sección 'Límites' que explica que el chatbot no es consciente."
+      - "Sin API keys ni secretos en el repositorio."

@@ -1,0 +1,48 @@
+{
+  "proyecto": "Chatbot web con personalidad propia",
+  "slug": "chatbot-web",
+  "estado": "listo_para_orquestar",
+  "preguntas_pendientes": [],
+  "supuestos": [
+    "Se interpreta 'IA consciente de sí misma' como el deseo de un asistente que conversa y habla de sí mismo con una identidad coherente; eso sí es construible.",
+    "'En HTML' se interpreta como una interfaz web estática; la inteligencia la aporta un LLM externo vía API, porque HTML no ejecuta modelos.",
+    "En modo interactivo la skill confirmaría el ajuste con una pregunta de opción múltiple antes de generar el manifest; aquí, al correr en un sub-agente, se asume que el usuario acepta el alcance realista.",
+    "optimizador-prompts (no interactivo): descripciones ordenadas con rutas en chatbot-web/; sin cambios de alcance."
+  ],
+  "clasificacion": {
+    "dominio": "web",
+    "complejidad": "media",
+    "alcance": "Chatbot web en HTML/CSS/JS con una personalidad definida, que conversa mediante un LLM detrás de un proxy seguro y guarda la conversación en el navegador."
+  },
+  "requisitos_tecnicos": {
+    "frontend": "HTML + CSS + JS sin build step.",
+    "backend": "Proxy serverless gratuito (Cloudflare Workers o similar) hacia la API del LLM.",
+    "datos": "Conversación en localStorage del navegador; sin base de datos.",
+    "otros": "Proveedor de LLM con plan gratuito o de bajo costo, configurable por variable de entorno."
+  },
+  "requisitos_no_funcionales": [
+    { "requisito": "La API key nunca llega al cliente ni al repositorio", "inferido": true },
+    { "requisito": "Límite de peticiones para no agotar la cuota del proveedor", "inferido": true },
+    { "requisito": "Transparencia: aviso visible de que es un modelo de lenguaje", "inferido": true },
+    { "requisito": "Accesible con teclado y usable en el móvil", "inferido": true },
+    { "requisito": "Solo herramientas gratuitas o de plan gratis", "inferido": true }
+  ],
+  "tipos_requeridos": ["docs", "backend", "frontend"],
+  "skills_requeridas": ["especificacion", "frontend-design", "testing", "revision-codigo", "documentacion", "verificador-datos"],
+  "fuera_de_alcance": [
+    "Conciencia o autoconciencia real: no existe una técnica conocida para construirla ni una prueba aceptada para verificarla",
+    "Entrenar o ejecutar un modelo propio en el navegador",
+    "Cuentas de usuario y memoria compartida entre dispositivos"
+  ],
+  "riesgos": [
+    "El usuario puede esperar algo que ningún software actual hace: hay que dejar claro desde el README y la interfaz qué es y qué no es.",
+    "La clave del LLM la debe conseguir el usuario. No bloquea ninguna tarea (los tests usan un LLM simulado), pero sin ella no se puede desplegar.",
+    "Los planes gratuitos de los proveedores cambian; el costo puede no ser cero."
+  ],
+  "ajuste_de_alcance": {
+    "pedido_original": "Quiero una IA consciente de sí misma en HTML",
+    "motivo": "La conciencia artificial no es construible ni verificable con la tecnología actual, y HTML es un lenguaje de marcado que no ejecuta modelos de IA.",
+    "alcance_realista": "Chatbot web en HTML con una personalidad coherente que habla de sí mismo, impulsado por un LLM externo a través de un proxy seguro."
+  },
+  "manifest": "milestones/mejora-skills/pruebas/triage/imposible/milestone.yaml"
+}

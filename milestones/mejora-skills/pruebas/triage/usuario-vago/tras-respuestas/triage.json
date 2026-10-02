@@ -1,0 +1,42 @@
+{
+  "proyecto": "Clon de Twitter — MVP web",
+  "slug": "clon-twitter",
+  "estado": "listo_para_orquestar",
+  "preguntas_pendientes": [],
+  "supuestos": [
+    "Respuesta asumida a la escala: comunidad pequeña real (hasta ~1.000 usuarios). La prueba corre en un sub-agente, que no puede preguntar.",
+    "Respuesta asumida a la plataforma: web (navegador, también en el móvil).",
+    "Respuesta asumida al stack: 'lo más simple y gratuito' -> Node.js + TypeScript + Express + SQLite y frontend Vite + TypeScript.",
+    "optimizador-prompts (no interactivo): las descripciones se ordenaron con rutas concretas (clon-twitter/, clon-twitter/web); no se cambió el alcance."
+  ],
+  "clasificacion": {
+    "dominio": "web",
+    "complejidad": "media",
+    "alcance": "Red social web de mensajes cortos: cuentas, publicaciones de hasta 280 caracteres, seguir usuarios, timeline y reporte básico de publicaciones."
+  },
+  "requisitos_tecnicos": {
+    "frontend": "SPA web con Vite + TypeScript, responsive.",
+    "backend": "Node.js + TypeScript + Express, sesión en cookie httpOnly.",
+    "datos": "SQLite con migraciones versionadas: usuarios, publicaciones, seguimientos, reportes.",
+    "otros": "Playwright para e2e."
+  },
+  "requisitos_no_funcionales": [
+    { "requisito": "Contraseñas con hash (bcrypt/argon2) y cookies httpOnly", "inferido": true },
+    { "requisito": "Protección de datos personales: no exponer emails en endpoints públicos", "inferido": true },
+    { "requisito": "Moderación mínima mediante reporte de publicaciones", "inferido": true },
+    { "requisito": "Timeline paginado para no degradar con ~1.000 usuarios", "inferido": true },
+    { "requisito": "Usable en el navegador del móvil", "inferido": true }
+  ],
+  "tipos_requeridos": ["backend", "frontend", "testing", "docs"],
+  "skills_requeridas": ["especificacion", "frontend-design", "testing", "revision-codigo", "documentacion"],
+  "fuera_de_alcance": [
+    "Apps móviles nativas",
+    "Mensajes directos, notificaciones en tiempo real, imágenes y video",
+    "Escalado a miles de usuarios concurrentes (base distribuida, colas, caché)"
+  ],
+  "riesgos": [
+    "La política de moderación (T6) no está definida: se resuelve con especificacion antes de implementarla.",
+    "SQLite limita la concurrencia de escritura; si la comunidad crece, hará falta migrar a Postgres."
+  ],
+  "manifest": "milestones/mejora-skills/pruebas/triage/usuario-vago/tras-respuestas/milestone.yaml"
+}

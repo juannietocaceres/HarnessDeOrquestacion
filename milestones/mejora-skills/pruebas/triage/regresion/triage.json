@@ -1,0 +1,37 @@
+{
+  "proyecto": "Panel de administración de tareas (demo de clase)",
+  "slug": "panel-tareas-demo",
+  "estado": "listo_para_orquestar",
+  "preguntas_pendientes": [],
+  "supuestos": [
+    "Plataforma (web estática), objetivo (demo de clase) y alcance (modelo, contrato, 3 componentes) están en la prosa: no hace falta preguntar.",
+    "El contrato de API queda sin criterios a propósito porque el usuario dice que aún no lo tiene claro; lo resolverá especificacion.",
+    "optimizador-prompts (no interactivo): descripciones ordenadas con las rutas que dio el usuario; criterios tomados literalmente de la prosa."
+  ],
+  "clasificacion": {
+    "dominio": "web",
+    "complejidad": "media",
+    "alcance": "Modelo de datos de tareas, contrato REST de crear/listar y tres componentes UI estáticos (lista, formulario, contador de pendientes)."
+  },
+  "requisitos_tecnicos": {
+    "frontend": "HTML/CSS/JS estático, sin build step.",
+    "backend": "Solo contrato documentado (sin implementación de servidor).",
+    "datos": "Esquema de tarea en schema/tareas.md con ejemplo JSON.",
+    "otros": ""
+  },
+  "requisitos_no_funcionales": [
+    { "requisito": "UI con identidad visual propia, no plantilla genérica", "inferido": false },
+    { "requisito": "Estado de cada tarea distinguible sin depender solo del color", "inferido": true },
+    { "requisito": "Máximo 2 tareas en paralelo (cap de concurrencia)", "inferido": false }
+  ],
+  "tipos_requeridos": ["backend", "frontend"],
+  "skills_requeridas": ["especificacion", "frontend-design", "revision-codigo"],
+  "fuera_de_alcance": [
+    "Servidor o base de datos reales",
+    "Edición y borrado de tareas"
+  ],
+  "riesgos": [
+    "Los tres componentes UI dependen del contrato de T2, que todavía no está definido: si especificacion lo retrasa, se frena toda la wave 3."
+  ],
+  "manifest": "milestones/mejora-skills/pruebas/triage/regresion/milestone.yaml"
+}
