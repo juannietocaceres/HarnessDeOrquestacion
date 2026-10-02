@@ -439,7 +439,7 @@ tres ahorra ~340.
   - M5 criterios que un sub-agente no puede verificar → **campo propio**
     `verificacion_manual:`; precisión posterior del usuario: se listan al
     cierre de **cada wave** como checklist informativo que **no bloquea**.
-- Wave 3 (M7) cerró sin decisiones.
+- Waves 3 (M7), 4 (M8) y 5 (M9) cerraron sin decisiones.
 
 **Contradicciones encontradas entre skills**, y cómo quedaron:
 
@@ -493,14 +493,42 @@ tres ahorra ~340.
 **Hallazgo: los worktrees arrancan desde un commit viejo.** Los worktrees
 que crea `isolation: "worktree"` en esta corrida no nacieron desde la punta
 de `main`, sino desde `46fa018` (un commit del 18 de septiembre, anterior a
-todo el milestone): lo registró la prueba de M7 (`46fa018 → e6de756` al
-sincronizar) y volvió a pasar en el worktree de M8. Sin corregirlo, un
+todo el milestone). Lo reportaron M1, M2 y M3 desde la wave 1 (cada uno
+avanzó su rama con fast-forward antes de trabajar) y se repitió en los
+worktrees de todas las waves siguientes (M7: `46fa018 → e6de756`). Sin corregirlo, un
 sub-agente de la wave 2 no vería lo que integró la wave 1, que es justo la
 premisa del modelo de waves. La mitigación es un **paso 0** obligatorio en
 la plantilla de prompt (`optimizador-prompts/PLANTILLA-SUBAGENTE.md`) y en
 `orquestador` §5: antes de nada, `git merge --ff-only main` y comprobar que
 existen los archivos que integró la wave anterior; si falla, el sub-agente
 devuelve `DECISION_NEEDED` en vez de trabajar sobre una base vieja.
+
+**Validación de punta a punta (M9).** La idea del plan ("una landing page
+para presentar Enigma Go en clase, con una animación de entrada y un deck de
+5 slides que explique el juego") entró por `triage-proyecto` sin preguntas
+(plataforma, objetivo y alcance venían en la frase) y salió como
+[`milestones/e2e-skills/`](milestones/e2e-skills/): `mixto`, complejidad
+baja, 3 tareas en 2 waves (T1 `contenido` → T2 `frontend` y T3
+`presentacion` en paralelo), con `verificacion_manual` en T2 y T3. M9 corrió
+en la sesión principal y no en un sub-agente, porque una corrida real
+necesita que el triage pueda preguntar y que el gate llegue al usuario; las
+tres tareas sí corrieron en worktrees, con prompts armados desde
+`PLANTILLA-SUBAGENTE.md` (paso 0 incluido). Uso de cada skill nueva:
+`triage-proyecto` (entrada), `optimizador-prompts` (los 3 prompts),
+`verificador-datos` (T1 ✅ 28 / ❌ 0; T3 ✅ 27 / ❌ 0), `presentaciones-visuales`
+(T3), `frontend-design` + `emil-design-eng` + `animate` y
+`review-animations` en la autorrevisión (T2, veredicto Approve) y
+`optimizador-tokens` en modo `empaquetar` al cierre de cada wave
+(`verificar_entidades.py` en verde: 20/20 y 27/27 entidades). El
+`contexto-compacto.md` final mide 608 → 387 tokens estimados (−36 %); con
+fuentes tan chicas el ahorro es marginal y el valor está en tener un punto
+de reanudación verificado. El gate no tuvo preguntas en ninguna de las dos
+waves y el checklist manual de la wave 2 quedó en
+`milestones/e2e-skills/decisiones.md`. La contradicción de stagger
+reapareció en la práctica (T2) y se resolvió con la regla del gate de la wave
+1 sin volver a preguntar. Hallazgo: el `milestones/enigma-go/estado.yaml`
+commiteado dice que su T1 sigue `EN_CURSO`, aunque el commit `e2c6dda`
+existe; T1 y T3 basaron sus afirmaciones en git y no en ese archivo.
 
 **Pendiente, fuera de alcance**: M4 propuso un `.gitattributes` para fijar
 los finales de línea de las skills vendorizadas. Con `core.autocrlf=true`

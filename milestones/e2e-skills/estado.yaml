@@ -2,7 +2,7 @@ milestone: "Landing y deck de Enigma Go para clase (validación E2E de skills)"
 origen: "triage-proyecto (idea de PLAN-MEJORA-SKILLS.md §4 M9) — triage.json"
 manifest_snapshot_sha256: 41a21031f666f1a3de946a3aedf1cfe34c33dac3c4bb9ba78744cb7ced36f546
 preflight: OK   # preflight_manifest.py: 3 tareas, 2 waves
-wave_actual: 2   # wave 1 cerrada (merge dd774c0)
+wave_actual: 2   # wave 2 cerrada (merges b66a6bc, aaf93ef) — milestone completo
 waves_planificadas:
   - wave: 1
     tareas: [T1]
@@ -10,7 +10,7 @@ waves_planificadas:
     tareas: [T2, T3]
 tareas:
   T1: { estado: COMPLETADA, commits: [7969dc8], merge: dd774c0 }
-  T2: { estado: EN_CURSO, commit: null, worktree: null }
-  T3: { estado: EN_CURSO, commit: null, worktree: null }
+  T2: { estado: COMPLETADA, commits: [3ec0054], merge: b66a6bc }
+  T3: { estado: COMPLETADA, commits: [f029730], merge: aaf93ef }
 decisiones_pendientes: []
 bloqueos_externos: []
