@@ -1,0 +1,21 @@
+// ALTERNATIVA si se prefiere Firebase (el gate confirmó Supabase como opción por defecto). No se usa con Supabase.
+// Favoritos en usuarios/{uid}/favoritos/{itemId}: el id del documento es el
+// item_id, así la unicidad (usuario, elemento) no necesita índice único.
+// Nota: `keys().hasOnly` no se pudo confirmar en la doc consultada (2026-10-05,
+// firebase.google.com/docs/firestore/security/rules-conditions); probar con el emulador.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /usuarios/{uid}/favoritos/{itemId} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['titulo', 'creado_en'])
+        && request.resource.data.titulo is string
+        && request.resource.data.titulo.trim().size() >= 1
+        && request.resource.data.titulo.size() <= 200
+        && itemId.size() <= 100
+        && request.resource.data.creado_en == request.time;
+      allow update: if false;
+    }
+  }
+}
