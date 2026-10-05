@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AedesAlert Cali: Business Model Canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Same visual family as the regional-validation deck: navy ink + teal, traffic light only for risk */
+    --papel: #F4F7F6;
+    --superficie: #E4EDEB;
+    --blanco: #FFFFFF;
+    --tinta: #0F2A3D;
+    --tinta-2: #44596A;
+    --acento: #0B6E69;
+    --linea: #C5D3D1;
+    --banda: #0F2A3D;
+    --banda-texto: #FFFFFF;
+    --banda-texto-2: #B8CCD6;
+    --acento-osc: #7FD8CD;
+    --alerta-fondo: #FFF1D6;
+    --alerta-texto: #6E4700;
+    --riesgo-texto: #9E2A20;
+    --verde: #2F8F4E;
+    --ambar: #E0A100;
+    --rojo: #C2362B;
+    --f-titulo: "Archivo", "Arial Narrow", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --f-texto: "Atkinson Hyperlegible", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--banda); color: var(--tinta); font-family: var(--f-texto); overflow: hidden; }
+
+  /* Fixed 1280×720 canvas scaled to the window */
+  .stage {
+    --s: 1;
+    position: absolute; left: 50%; top: 50%;
+    width: 1280px; height: 720px;
+    transform: translate(-50%, -50%) scale(var(--s));
+    background: var(--papel);
+    overflow: hidden;
+  }
+  .slide { position: absolute; inset: 0; padding: 48px 72px 80px; display: none; flex-direction: column; gap: 24px; }
+  .slide.activa { display: flex; }
+
+  h1, h2, h3 { font-family: var(--f-titulo); margin: 0; color: var(--tinta); }
+  h1 { font-size: 76px; line-height: 1.0; font-weight: 800; font-stretch: 85%; letter-spacing: -0.5px; }
+  h2 { font-size: 44px; line-height: 1.08; font-weight: 750; font-stretch: 87.5%; }
+  h3 { font-size: 24px; line-height: 1.2; font-weight: 700; font-stretch: 92%; }
+  p { margin: 0; }
+  ul, ol { margin: 0; padding: 0; list-style: none; }
+  .lead { font-size: 24px; line-height: 1.35; color: var(--tinta-2); max-width: 1100px; margin-top: 10px; }
+  .fuente { font-size: 16px; color: var(--tinta-2); }
+  figure { margin: 0; }
+
+  /* Traffic-light map (illustration) */
+  .mapa polygon { stroke: var(--papel); stroke-width: 3; }
+  .mapa .v { fill: var(--verde); }
+  .mapa .a { fill: var(--ambar); }
+  .mapa .r { fill: var(--rojo); }
+  .leyenda { display: flex; gap: 18px; font-size: 17px; color: var(--tinta); margin-top: 12px; }
+  .leyenda span { display: inline-flex; align-items: center; gap: 7px; }
+  .leyenda b { width: 16px; height: 16px; display: inline-block; border-radius: 3px; }
+  figcaption { font-size: 16px; color: var(--tinta-2); margin-top: 8px; line-height: 1.35; }
+
+  /* Bulleted lists with a small teal square */
+  .lista li { font-size: 21px; line-height: 1.3; padding: 9px 0 9px 22px; border-top: 1px solid var(--linea); position: relative; }
+  .lista li:last-child { border-bottom: 1px solid var(--linea); }
+  .lista li::before { content: ""; position: absolute; left: 0; top: 19px; width: 9px; height: 9px; background: var(--acento); border-radius: 2px; }
+
+  /* 1. Title */
+  .s-portada { display: none; }
+  .s-portada.activa { display: grid; grid-template-columns: 1fr 330px; gap: 56px; padding-top: 72px; }
+  .portada-texto { display: flex; flex-direction: column; gap: 24px; }
+  .portada-texto .lead { font-size: 30px; max-width: 720px; color: var(--tinta); }
+  .portada-texto .sub2 { font-size: 22px; color: var(--tinta-2); max-width: 700px; line-height: 1.4; }
+  .autor { margin-top: auto; border-top: 2px solid var(--linea); padding-top: 18px; }
+  .autor strong { font-size: 24px; display: block; margin-bottom: 4px; }
+  .autor span { font-size: 19px; color: var(--tinta-2); display: block; line-height: 1.4; }
+  .portada-mapa { align-self: center; }
+
+  /* 2. Problem */
+  .problema { display: grid; grid-template-columns: 500px 1fr; gap: 56px; }
+  .barras h3 { font-size: 21px; font-family: var(--f-texto); font-weight: 700; margin-bottom: 18px; }
+  .barra { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .barra .nom { font-size: 21px; font-weight: 700; }
+  .barra .pista { display: flex; align-items: center; gap: 12px; }
+  .barra .relleno { height: 56px; border-radius: 0 4px 4px 0; }
+  .barra .val { font-family: var(--f-titulo); font-size: 36px; font-weight: 800; }
+  .problema .fila { grid-template-columns: 250px 1fr; }
+  .problema .fila .dato { font-size: 40px; }
+  .muni { margin-top: 26px; }
+  .muni h3 { font-size: 21px; font-family: var(--f-texto); margin-bottom: 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips span { font-size: 19px; padding: 5px 12px; border-radius: 4px; background: var(--blanco); border: 1.5px solid var(--linea); }
+  .chips span.cali { background: var(--banda); color: var(--banda-texto); border-color: var(--banda); }
+
+  /* Figure rows (slides 3 and 10) */
+  .filas { display: flex; flex-direction: column; }
+  .fila { display: grid; grid-template-columns: 300px 1fr; gap: 28px; align-items: baseline; padding: 13px 0; border-top: 1px solid var(--linea); }
+  .fila:last-child { border-bottom: 1px solid var(--linea); }
+  .fila .dato { font-family: var(--f-titulo); font-size: 36px; font-weight: 800; font-stretch: 87.5%; color: var(--acento); line-height: 1.05; }
+  .fila p { font-size: 21px; line-height: 1.3; }
+  .fila .fuente { display: block; margin-top: 3px; }
+
+  /* 3. Sector */
+  .sector { display: grid; grid-template-columns: 1fr 420px; gap: 44px; }
+  .mercados { display: flex; flex-direction: column; gap: 14px; }
+  .mercados h3.tit { font-size: 21px; font-family: var(--f-texto); color: var(--tinta-2); }
+  .mercado { padding: 16px 20px; border: 2px solid var(--linea); }
+  .mercado h3 { margin-bottom: 6px; }
+  .mercado p { font-size: 20px; line-height: 1.32; }
+  .mercado.foco { background: var(--superficie); border-color: var(--acento); }
+  .mercado.foco .marca { display: inline-block; margin-top: 8px; font-size: 18px; font-weight: 700; color: var(--acento); }
+
+  /* 4. Trends: three columns */
+  .tres { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 26px; }
+  .col3 { border-top: 6px solid var(--linea); padding-top: 14px; }
+  .col3 h3 { font-size: 26px; margin-bottom: 10px; }
+  .col3 li { font-size: 21px; line-height: 1.3; padding: 10px 0; border-bottom: 1px solid var(--linea); }
+  .col3 li b { font-family: var(--f-titulo); font-size: 30px; font-weight: 800; color: var(--acento); display: block; line-height: 1.1; }
+  .col3.reglas { background: var(--superficie); border-top-color: var(--acento); padding: 14px 20px 16px; }
+  .col3.reglas li { border-bottom-color: #B9CBC8; }
+
+  /* 5. Idea */
+  .idea { display: grid; grid-template-columns: 400px 1fr; gap: 44px; flex: 1; min-height: 0; }
+  .flujo { display: flex; flex-direction: column; }
+  .paso { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start; }
+  .paso .n { width: 44px; height: 44px; border-radius: 50%; background: var(--acento); color: var(--blanco); font-family: var(--f-titulo); font-weight: 800; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+  .paso h3 { font-size: 23px; margin-bottom: 2px; }
+  .paso p { font-size: 20px; line-height: 1.32; }
+  .flecha { height: 30px; margin-left: 13px; }
+  .flecha svg { display: block; }
+  .comparacion { display: grid; grid-template-columns: 1fr 1fr; align-content: start; }
+  .comparacion .col { padding: 16px 22px 18px; }
+  .comparacion .col h3 { margin-bottom: 4px; }
+  .comparacion .col .sub { font-size: 17px; color: var(--tinta-2); margin-bottom: 10px; line-height: 1.3; }
+  .comparacion .col li { font-size: 20px; line-height: 1.3; padding: 8px 0; border-top: 1px solid var(--linea); }
+  .col.dengueia { border: 2px solid var(--linea); border-right: none; }
+  .col.aedes { background: var(--superficie); border: 2px solid var(--acento); }
+  .complemento { grid-column: 1 / -1; margin-top: 14px; font-family: var(--f-titulo); font-size: 28px; font-weight: 750; font-stretch: 90%; color: var(--acento); }
+
+  /* 6. Canvas */
+  .s-canvas { padding: 22px 40px 62px; gap: 10px; }
+  .s-canvas .cab { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
+  .s-canvas h2 { font-size: 32px; }
+  .s-canvas .orden { font-size: 17px; color: var(--tinta-2); }
+  .s-canvas .orden b { color: var(--tinta); }
+  .canvas { flex: 1; min-height: 0; display: flex; flex-direction: column; border: 2px solid var(--tinta); background: var(--blanco); }
+  .cv-top { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1.12fr 0.86fr 1.12fr 0.98fr; }
+  .cv-col { display: flex; flex-direction: column; min-height: 0; }
+  .cv-col .blq { flex: 1 1 auto; }
+  .cv-bot { display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid var(--tinta); }
+  .blq { padding: 7px 10px 5px; border: 1px solid var(--linea); position: relative; min-height: 0; overflow: hidden; }
+  .blq h3 { font-size: 16px; font-family: var(--f-texto); font-weight: 700; color: var(--tinta); margin-bottom: 3px; display: flex; gap: 6px; align-items: baseline; }
+  .blq h3 .n { font-family: var(--f-titulo); font-weight: 800; color: var(--blanco); background: var(--acento); border-radius: 50%; width: 21px; height: 21px; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; flex: none; position: relative; top: -1px; }
+  .blq li { font-size: 14px; line-height: 1.2; padding: 2px 0 2px 10px; position: relative; color: var(--tinta); }
+  .blq li::before { content: ""; position: absolute; left: 0; top: 8px; width: 5px; height: 5px; background: var(--acento); border-radius: 1px; }
+  .b-valor { background: var(--superficie); border: 2px solid var(--acento); }
+  .b-costo ul, .b-ingre ul { columns: 2; column-gap: 16px; }
+  .b-costo li, .b-ingre li { break-inside: avoid; }
+  .b-valor li { font-size: 15px; padding-top: 4px; padding-bottom: 4px; }
+
+  /* 7–9. Block slides: column layouts */
+  .bloques { display: grid; gap: 30px; flex: 1; min-height: 0; }
+  .bloques.dos { grid-template-columns: 1fr 1.15fr; }
+  .bloques.tres-b { grid-template-columns: 1fr 1fr 1fr; gap: 26px; }
+  .bloque h3 { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+  .bloque h3 .n { font-family: var(--f-titulo); font-weight: 800; font-size: 18px; color: var(--blanco); background: var(--acento); border-radius: 50%; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; flex: none; position: relative; top: -2px; }
+  .bloque .lista li { font-size: 20px; padding-top: 7px; padding-bottom: 7px; }
+  .bloque .lista li::before { top: 17px; }
+  .seg li strong { color: var(--tinta); }
+  .seg .hip { color: var(--alerta-texto); font-weight: 700; }
+  .s-b8 .lista li, .s-b9 .lista li { font-size: 20px; }
+  .tira { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .nota-caja { padding: 12px 18px; font-size: 19px; line-height: 1.32; }
+  .nota-caja.ambar { background: var(--alerta-fondo); border-left: 6px solid var(--ambar); }
+  .nota-caja.ambar strong { color: var(--alerta-texto); }
+  .nota-caja.verde { background: var(--superficie); border-left: 6px solid var(--acento); }
+  .nota-caja.verde strong { color: var(--acento); }
+
+  /* 10. Costs */
+  .costos { display: grid; grid-template-columns: 1fr 380px; gap: 44px; }
+  .balanza { background: var(--superficie); padding: 20px 24px; align-self: start; border-left: 6px solid var(--acento); }
+  .balanza h3 { margin-bottom: 12px; }
+  .balanza .lin { font-size: 20px; line-height: 1.32; padding: 8px 0; border-top: 1px solid #B9CBC8; }
+
+  /* 11. Risks */
+  .cierre { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .riesgo { border-left: 6px solid var(--rojo); padding-left: 22px; }
+  .riesgo h3 { color: var(--riesgo-texto); margin-bottom: 8px; }
+  .riesgo li, .siguiente li { font-size: 21px; line-height: 1.32; padding: 10px 0; border-top: 1px solid var(--linea); }
+  .siguiente h3 { color: var(--acento); margin-bottom: 8px; }
+  .siguiente ol { counter-reset: p; }
+  .siguiente li { display: grid; grid-template-columns: 30px 1fr; gap: 8px; }
+  .siguiente li::before { counter-increment: p; content: counter(p); font-family: var(--f-titulo); font-weight: 800; color: var(--acento); font-size: 23px; }
+
+  /* 12. Closing */
+  .s-final { display: none; }
+  .s-final.activa { display: grid; grid-template-columns: 1fr 300px; gap: 56px; align-items: center; padding-top: 56px; }
+  .final-texto { display: flex; flex-direction: column; gap: 28px; }
+  .final-texto .frase { font-family: var(--f-titulo); font-size: 70px; font-weight: 800; font-stretch: 85%; line-height: 1.05; color: var(--tinta); }
+  .final-texto .frase span { display: block; }
+  .final-texto .lead { font-size: 25px; max-width: 720px; }
+  .gracias { display: flex; flex-direction: column; gap: 8px; border-top: 2px solid var(--tinta); padding-top: 16px; }
+  .gracias strong { font-family: var(--f-titulo); font-size: 44px; font-weight: 800; font-stretch: 85%; line-height: 1; color: var(--acento); }
+  .gracias span { font-size: 20px; color: var(--tinta-2); }
+
+  /* 13. Sources */
+  .fuentes { columns: 2; column-gap: 44px; }
+  .fuentes li { font-size: 16px; line-height: 1.3; padding: 5px 0; break-inside: avoid; border-bottom: 1px solid var(--linea); }
+  .fuentes li b { color: var(--tinta); }
+  .fuentes li span { color: var(--tinta-2); }
+
+  /* Navigation */
+  nav.controles { position: absolute; right: 28px; bottom: 16px; display: flex; align-items: center; gap: 10px; z-index: 5; }
+  nav.controles button { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--linea); background: var(--blanco); color: var(--tinta); display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+  nav.controles button:disabled { opacity: 0.4; cursor: default; }
+  nav.controles button:focus-visible { outline: 3px solid var(--acento); outline-offset: 2px; }
+  .contador { font-size: 18px; color: var(--tinta-2); min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; }
+  .progreso { position: absolute; left: 0; bottom: 0; height: 5px; background: var(--acento); width: 0; z-index: 4; transition: width .3s ease; }
+
+  /* Speaker notes (N key) */
+  .notas { display: none; }
+  .ver-notas .slide.activa .notas {
+    display: block; position: absolute; left: 72px; right: 260px; bottom: 70px;
+    background: var(--banda); color: var(--banda-texto);
+    font-size: 20px; line-height: 1.4; padding: 14px 20px; border-radius: 6px; z-index: 6;
+  }
+
+  /* One motion moment: the Cali bar grows on slide 2 */
+  @keyframes crecer { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .s-problema.activa .relleno { transform-origin: left; animation: crecer .6s ease-out both; }
+  .s-problema.activa .relleno.pais { animation-delay: .15s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  @page { size: 1280px 720px; margin: 0; }
+  @media print {
+    html, body { height: auto; overflow: visible; background: var(--papel); }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .stage { position: static; transform: none; width: 1280px; height: auto; overflow: visible; }
+    .slide { display: flex !important; position: relative; width: 1280px; height: 720px; overflow: hidden; break-after: page; page-break-after: always; background: var(--papel); }
+    .s-portada, .s-final { display: grid !important; }
+    .slide:last-of-type { break-after: auto; page-break-after: auto; }
+    nav.controles, .progreso, .notas { display: none !important; }
+    .relleno { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+<main class="deck">
+
+  <!-- 1 -->
+  <section class="slide s-portada" aria-label="Slide 1 of 13">
+    <div class="portada-texto">
+      <h1>AedesAlert Cali</h1>
+      <p class="lead">Weekly dengue risk by comuna, with open data</p>
+      <p class="sub2">An open early-warning map for dengue in Valle del Cauca, and the business model behind it.</p>
+      <div class="autor">
+        <strong>Juan Diego Nieto</strong>
+        <span>Systems Engineering, UCC Cali</span>
+        <span>Learning Activity 3: Business Model Canvas, October 2026</span>
+      </div>
+    </div>
+    <figure class="portada-mapa">
+      <svg class="mapa" viewBox="24 0 246 340" width="330" height="456" role="img" aria-label="Schematic map of 22 comunas in traffic-light colors, illustrative, not real data">
+        <polygon class="v" points="159.9,19.0 159.9,49.0 133.9,64.0 107.9,49.0 107.9,19.0 133.9,4.0"/>
+        <polygon class="v" points="211.8,19.0 211.8,49.0 185.9,64.0 159.9,49.0 159.9,19.0 185.9,4.0"/>
+        <polygon class="v" points="133.9,64.0 133.9,94.0 107.9,109.0 81.9,94.0 81.9,64.0 107.9,49.0"/>
+        <polygon class="a" points="185.9,64.0 185.9,94.0 159.9,109.0 133.9,94.0 133.9,64.0 159.9,49.0"/>
+        <polygon class="v" points="237.8,64.0 237.8,94.0 211.8,109.0 185.9,94.0 185.9,64.0 211.8,49.0"/>
+        <polygon class="v" points="107.9,109.0 107.9,139.0 81.9,154.0 56.0,139.0 56.0,109.0 81.9,94.0"/>
+        <polygon class="a" points="159.9,109.0 159.9,139.0 133.9,154.0 107.9,139.0 107.9,109.0 133.9,94.0"/>
+        <polygon class="a" points="211.8,109.0 211.8,139.0 185.9,154.0 159.9,139.0 159.9,109.0 185.9,94.0"/>
+        <polygon class="r" points="263.8,109.0 263.8,139.0 237.8,154.0 211.8,139.0 211.8,109.0 237.8,94.0"/>
+        <polygon class="a" points="81.9,154.0 81.9,184.0 56.0,199.0 30.0,184.0 30.0,154.0 56.0,139.0"/>
+        <polygon class="v" points="133.9,154.0 133.9,184.0 107.9,199.0 81.9,184.0 81.9,154.0 107.9,139.0"/>
+        <polygon class="r" points="185.9,154.0 185.9,184.0 159.9,199.0 133.9,184.0 133.9,154.0 159.9,139.0"/>
+        <polygon class="r" points="237.8,154.0 237.8,184.0 211.8,199.0 185.9,184.0 185.9,154.0 211.8,139.0"/>
+        <polygon class="v" points="107.9,199.0 107.9,229.0 81.9,244.0 56.0,229.0 56.0,199.0 81.9,184.0"/>
+        <polygon class="v" points="159.9,199.0 159.9,229.0 133.9,244.0 107.9,229.0 107.9,199.0 133.9,184.0"/>
+        <polygon class="a" points="211.8,199.0 211.8,229.0 185.9,244.0 159.9,229.0 159.9,199.0 185.9,184.0"/>
+        <polygon class="r" points="263.8,199.0 263.8,229.0 237.8,244.0 211.8,229.0 211.8,199.0 237.8,184.0"/>
+        <polygon class="v" points="133.9,244.0 133.9,274.0 107.9,289.0 81.9,274.0 81.9,244.0 107.9,229.0"/>
+        <polygon class="a" points="185.9,244.0 185.9,274.0 159.9,289.0 133.9,274.0 133.9,244.0 159.9,229.0"/>
+        <polygon class="v" points="237.8,244.0 237.8,274.0 211.8,289.0 185.9,274.0 185.9,244.0 211.8,229.0"/>
+        <polygon class="v" points="159.9,289.0 159.9,319.0 133.9,334.0 107.9,319.0 107.9,289.0 133.9,274.0"/>
+        <polygon class="v" points="211.8,289.0 211.8,319.0 185.9,334.0 159.9,319.0 159.9,289.0 185.9,274.0"/>
+      </svg>
+      <div class="leyenda" aria-hidden="true">
+        <span><b style="background:var(--verde)"></b>Low</span>
+        <span><b style="background:var(--ambar)"></b>Medium</span>
+        <span><b style="background:var(--rojo)"></b>High</span>
+      </div>
+      <figcaption>Traffic-light map by comuna (22 comunas). Illustrative, not real data.</figcaption>
+    </figure>
+    <aside class="notas">Hello. I am Diego. This is AedesAlert Cali: an open early-warning map for dengue, and today its business model.</aside>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide s-problema" aria-label="Slide 2 of 13">
+    <div>
+      <h2>Dengue hits Valle del Cauca hard</h2>
+      <p class="lead">It is a large, measured public health problem, and Cali is well above the national average.</p>
+    </div>
+    <div class="problema">
+      <div>
+        <div class="barras">
+          <h3>Dengue cases per 100,000 people, 2024</h3>
+          <div class="barra">
+            <span class="nom">Cali</span>
+            <div class="pista"><span class="relleno" style="width:300px;background:var(--rojo)"></span><span class="val">1,520</span></div>
+          </div>
+          <div class="barra">
+            <span class="nom">Colombia</span>
+            <div class="pista"><span class="relleno pais" style="width:185px;background:var(--tinta-2)"></span><span class="val">937</span></div>
+          </div>
+          <p class="fuente">Rockefeller Foundation, 2026; INS, 2025</p>
+        </div>
+        <div class="muni">
+          <h3>9 municipalities of Valle at very high risk</h3>
+          <div class="chips">
+            <span class="cali">Cali</span><span>Buga</span><span>Candelaria</span><span>Cartago</span><span>Florida</span><span>Jamundí</span><span>Palmira</span><span>Tuluá</span><span>Yumbo</span>
+          </div>
+          <p class="fuente" style="margin-top:8px">Gobernación del Valle, 2024</p>
+        </div>
+      </div>
+      <div class="filas">
+        <div class="fila">
+          <span class="dato">312,643</span>
+          <p>dengue cases in Colombia in 2024<span class="fuente">INS, 2025</span></p>
+        </div>
+        <div class="fila">
+          <span class="dato">≈USD 252 million</span>
+          <p>cost of dengue to Colombia every year (2020 dollars)<span class="fuente">Rodríguez-Morales et al., 2024</span></p>
+        </div>
+      </div>
+    </div>
+    <aside class="notas">Cali had 1,520 cases per 100,000 people in 2024, against 937 in Colombia. Nine municipalities of the Valle are at very high risk.</aside>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" aria-label="Slide 3 of 13">
+    <div>
+      <h2>The sector: health, powered by IT</h2>
+      <p class="lead">AedesAlert belongs to the health sector (HealthTech), and its first market is public health (GovTech).</p>
+    </div>
+    <div class="sector">
+      <div class="filas">
+        <div class="fila">
+          <span class="dato">8.14% of GDP</span>
+          <p>Colombia's spending on health (2024)<span class="fuente">World Bank, 2026</span></p>
+        </div>
+        <div class="fila">
+          <span class="dato">+2.5%</span>
+          <p>growth of health care activity in 2025<span class="fuente">DANE, 2026</span></p>
+        </div>
+        <div class="fila">
+          <span class="dato">about 9.8%</span>
+          <p>of Colombia's GDP comes from Valle, the 3rd largest economy<span class="fuente">DANE, 2026 (own calculation)</span></p>
+        </div>
+        <div class="fila">
+          <span class="dato">528 firms</span>
+          <p>in Cali's Clinical Excellence Cluster (2023)<span class="fuente">Cámara de Comercio de Cali, 2025</span></p>
+        </div>
+      </div>
+      <div class="mercados">
+        <h3 class="tit">Two markets inside the sector</h3>
+        <div class="mercado">
+          <h3>Clinical care</h3>
+          <p>Private clinics, hospitals and insurers that treat patients.</p>
+        </div>
+        <div class="mercado foco">
+          <h3>Public health</h3>
+          <p>Health secretariats that watch and control outbreaks for a whole city.</p>
+          <span class="marca">AedesAlert starts here</span>
+        </div>
+      </div>
+    </div>
+    <aside class="notas">Health is a big sector. Valle is about 9.8% of GDP, our own calculation from DANE. We start in public health, not in clinics.</aside>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" aria-label="Slide 4 of 13">
+    <div>
+      <h2>Sector trends and rules</h2>
+      <p class="lead">The sector is going digital, Valle has strong surveillance, and the law allows open, aggregated data.</p>
+    </div>
+    <div class="tres">
+      <div class="col3">
+        <h3>Going digital</h3>
+        <ul>
+          <li><b>9%</b>of Colombia's 2,295 startups are HealthTech</li>
+          <li><b>11%</b>of the country's startups are in Valle</li>
+          <li><b>2.42 / 5</b>digital maturity of the region's health institutions</li>
+        </ul>
+      </div>
+      <div class="col3">
+        <h3>Strong surveillance</h3>
+        <ul>
+          <li><b>1st</b>Valle ranks first in public health surveillance</li>
+          <li><b>98.68%</b>surveillance score, first quarter of 2026</li>
+        </ul>
+      </div>
+      <div class="col3 reglas">
+        <h3>Rules we follow</h3>
+        <ul>
+          <li>Health data are sensitive (Law 1581 of 2012), so we use aggregated, anonymized data only</li>
+          <li>National AI policy: CONPES 4144 of 2025</li>
+        </ul>
+      </div>
+    </div>
+    <aside class="notas">Digital health is growing but institutions are still at 2.42 out of 5. Valle is first in surveillance. We only use aggregated, anonymized data.</aside>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" aria-label="Slide 5 of 13">
+    <div>
+      <h2>The idea, and DengueIA</h2>
+      <p class="lead">DengueIA proved in Cali that forecasting dengue works; AedesAlert makes it open and replicable for the rest of the Valle.</p>
+    </div>
+    <div class="idea">
+      <div class="flujo" aria-label="How AedesAlert works">
+        <div class="paso">
+          <span class="n">1</span>
+          <div><h3>Data</h3><p>SIVIGILA dengue cases + NASA POWER weather</p></div>
+        </div>
+        <div class="flecha" aria-hidden="true"><svg width="18" height="30" viewBox="0 0 18 30"><path d="M9 2v22M2 18l7 8 7-8" fill="none" stroke="#0B6E69" stroke-width="3"/></svg></div>
+        <div class="paso">
+          <span class="n">2</span>
+          <div><h3>Model</h3><p>Random Forest and XGBoost, compared with SARIMA</p></div>
+        </div>
+        <div class="flecha" aria-hidden="true"><svg width="18" height="30" viewBox="0 0 18 30"><path d="M9 2v22M2 18l7 8 7-8" fill="none" stroke="#0B6E69" stroke-width="3"/></svg></div>
+        <div class="paso">
+          <span class="n">3</span>
+          <div><h3>Alert</h3><p>Weekly traffic-light map by comuna</p></div>
+        </div>
+      </div>
+      <div class="comparacion">
+        <div class="col dengueia">
+          <h3>DengueIA</h3>
+          <p class="sub">Cali's health secretariat</p>
+          <ul>
+            <li>174 zones of 1 km²</li>
+            <li>~2.2 million people</li>
+            <li>93% reported effectiveness</li>
+            <li>Alerts up to 3 weeks ahead</li>
+          </ul>
+        </div>
+        <div class="col aedes">
+          <h3>AedesAlert</h3>
+          <p class="sub">This project</p>
+          <ul>
+            <li>Risk by comuna (city district)</li>
+            <li>Open data, open-source code</li>
+            <li>Prototype with Cali's 22 comunas</li>
+            <li>Then the other 8 very-high-risk municipalities</li>
+          </ul>
+        </div>
+        <p class="complemento">A complement, not a competitor</p>
+      </div>
+    </div>
+    <aside class="notas">Say "reported effectiveness": the 93% is DengueIA's number, not ours. We do not claim to be more accurate; we make it open and replicable.</aside>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide s-canvas" aria-label="Slide 6 of 13">
+    <div class="cab">
+      <h2>The Business Model Canvas</h2>
+      <p class="orden">Order we follow: <b>4 → 7 → 6 → 5 → 9 → 3 → 2 → 1 → 8</b></p>
+    </div>
+    <div class="canvas" role="group" aria-label="Business Model Canvas of AedesAlert Cali">
+     <div class="cv-top">
+      <div class="blq b-socios">
+        <h3><span class="n">1</span>Key Partners</h3>
+        <ul>
+          <li>Health secretariats: comuna data and validation</li>
+          <li>Valle Public Health Laboratory</li>
+          <li>UCC: academic backing and SGR alliances</li>
+          <li>SENA-Tecnoparque, NIDO, Clinical Excellence Cluster</li>
+          <li>INS and NASA POWER: open data</li>
+          <li>GitHub and Streamlit: infrastructure</li>
+          <li>Municipal public hospitals (ESE): mosquito control</li>
+          <li>Minciencias/SGR, Fondo Emprender, international donors</li>
+        </ul>
+      </div>
+      <div class="cv-col">
+      <div class="blq b-activ">
+        <h3><span class="n">2</span>Key Activities</h3>
+        <ul>
+          <li>Clean data every week</li>
+          <li>Train and compare models (RF/XGBoost vs SARIMA)</li>
+          <li>Publish weekly map and report</li>
+          <li>Validate with the secretariat</li>
+          <li>Replicate per municipality</li>
+          <li>Document and train</li>
+          <li>Sell through SECOP II</li>
+          <li>Anonymize and aggregate data</li>
+        </ul>
+      </div>
+      <div class="blq b-recur">
+        <h3><span class="n">3</span>Key Resources</h3>
+        <ul>
+          <li>Data: SIVIGILA cases + NASA POWER weather</li>
+          <li>Models and open-source code on GitHub</li>
+          <li>Web map on Streamlit (free)</li>
+          <li>Author: data, AI, deployment</li>
+          <li>UCC advisor and Tecnoparque</li>
+          <li>Trust with each secretariat's technical staff</li>
+        </ul>
+      </div>
+      </div>
+      <div class="blq b-valor">
+        <h3><span class="n">4</span>Value Propositions</h3>
+        <ul>
+          <li>Weekly dengue risk map by comuna (traffic light)</li>
+          <li>Shows where to focus mosquito control first</li>
+          <li>Open data and open-source code: no license fees</li>
+          <li>Replicable in the 8 very-high-risk municipalities</li>
+          <li>Complements DengueIA; does not compete</li>
+        </ul>
+      </div>
+      <div class="cv-col">
+      <div class="blq b-relac">
+        <h3><span class="n">5</span>Customer Relationships</h3>
+        <ul>
+          <li>Co-creation: validate the map with vector-control staff</li>
+          <li>Weekly risk report</li>
+          <li>Training so the team runs it on its own</li>
+          <li>Support through a yearly contract</li>
+          <li>Open community on GitHub</li>
+        </ul>
+      </div>
+      <div class="blq b-canal">
+        <h3><span class="n">6</span>Channels</h3>
+        <ul>
+          <li>SECOP II and direct public contracting</li>
+          <li>Public demo: web map + GitHub</li>
+          <li>Pitch at the departmental surveillance committee (COVE)</li>
+          <li>Agreements through UCC</li>
+          <li>NIDO, Tecnoparque, Clinical Excellence Cluster</li>
+          <li>Pilot with one health secretariat</li>
+        </ul>
+      </div>
+      </div>
+      <div class="blq b-segm">
+        <h3><span class="n">7</span>Customer Segments</h3>
+        <ul>
+          <li>Paying: health secretariats of Buga, Candelaria, Cartago, Florida, Jamundí, Palmira, Tuluá and Yumbo (very high risk)</li>
+          <li>Customer and ally: Valle del Cauca health secretariat</li>
+          <li>Reference user: Cali health secretariat (uses DengueIA)</li>
+          <li>Hypothesis: clinics and insurers (IPS/EPS)</li>
+          <li>Free users: universities and developers</li>
+        </ul>
+      </div>
+     </div>
+     <div class="cv-bot">
+      <div class="blq b-costo">
+        <h3><span class="n">8</span>Cost Structure</h3>
+        <ul>
+          <li>People: 1 person (benchmark COP 2.2M/month, engineer in Cali)</li>
+          <li>Infrastructure: COP 0 (NASA POWER, GitHub, Streamlit)</li>
+          <li>.com.co domain: COP 114,990</li>
+          <li>Travel to municipalities (to be estimated)</li>
+          <li>6-month pilot ≈ COP 13.2M (estimate)</li>
+          <li>Low-cost model</li>
+        </ul>
+      </div>
+      <div class="blq b-ingre">
+        <h3><span class="n">9</span>Revenue Streams</h3>
+        <ul>
+          <li>Services for health secretariats: setup per municipality, training, yearly support (price to be validated)</li>
+          <li>University–government agreements (UCC)</li>
+          <li>Project funding: SGR-CTeI, international cooperation</li>
+          <li>Hypothesis: clinic/insurer subscription</li>
+          <li>Seed capital: Fondo Emprender</li>
+          <li>Code always free</li>
+        </ul>
+      </div>
+     </div>
+    </div>
+    <aside class="notas">The whole model on one page. I will walk through it in the order our teacher suggested: value first, costs last.</aside>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" aria-label="Slide 7 of 13">
+    <div>
+      <h2>Value and customers</h2>
+      <p class="lead">Health secretariats of the 8 very-high-risk municipalities pay; Cali is a reference user; clinics and insurers are a hypothesis.</p>
+    </div>
+    <div class="bloques dos">
+      <div class="bloque">
+        <h3><span class="n">4</span>Value proposition</h3>
+        <ul class="lista">
+          <li>Weekly dengue risk map by comuna (traffic light)</li>
+          <li>Shows where to focus mosquito control first</li>
+          <li>Open data and open-source code: no license fees</li>
+          <li>Replicable in the 8 very-high-risk municipalities</li>
+          <li>Complements DengueIA; does not compete</li>
+        </ul>
+      </div>
+      <div class="bloque seg">
+        <h3><span class="n">7</span>Customer segments</h3>
+        <ul class="lista">
+          <li><strong>Paying:</strong> health secretariats of Buga, Candelaria, Cartago, Florida, Jamundí, Palmira, Tuluá and Yumbo</li>
+          <li><strong>Customer and ally:</strong> Valle del Cauca health secretariat</li>
+          <li><strong>Reference user:</strong> Cali health secretariat, which already uses DengueIA</li>
+          <li><span class="hip">Hypothesis:</span> clinics (IPS) and insurers (EPS)</li>
+          <li><strong>Free users:</strong> universities, student research groups and developers</li>
+        </ul>
+      </div>
+    </div>
+    <aside class="notas">Cali is not my main customer: it already has DengueIA. Clinics and insurers are a hypothesis, to be validated with interviews.</aside>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide s-b8" aria-label="Slide 8 of 13">
+    <div>
+      <h2>Channels, relationships and revenue</h2>
+      <p class="lead">The code is free; revenue comes from setup, training and yearly support, bought through public procurement.</p>
+    </div>
+    <div class="bloques tres-b">
+      <div class="bloque">
+        <h3><span class="n">6</span>Channels</h3>
+        <ul class="lista">
+          <li>Pitch at the surveillance committee (COVE)</li>
+          <li>Public demo: web map + GitHub</li>
+          <li>Pilot with one secretariat</li>
+          <li>SECOP II, direct contracting</li>
+          <li>Agreement through UCC</li>
+        </ul>
+      </div>
+      <div class="bloque">
+        <h3><span class="n">5</span>Relationships</h3>
+        <ul class="lista">
+          <li>Co-creation with vector-control staff</li>
+          <li>Weekly risk report</li>
+          <li>Training so the team runs it alone</li>
+          <li>Yearly support contract</li>
+        </ul>
+      </div>
+      <div class="bloque">
+        <h3><span class="n">9</span>Revenue</h3>
+        <ul class="lista">
+          <li>Setup, training and yearly support for secretariats (price to be validated)</li>
+          <li>Benchmark: COP 12.9–16.7 million per contract (Cali, 2023)</li>
+          <li>Project funding: SGR-CTeI</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tira">
+      <p class="nota-caja ambar"><strong>Why not the PIC?</strong> That public health budget goes to the local public hospital (Palmira 2026: COP 2,300 million).</p>
+      <p class="nota-caja verde"><strong>Precedent:</strong> the AEDES program against dengue, funded with royalties: COP 14,770 million.</p>
+    </div>
+    <aside class="notas">The code is free; we charge for setup, training and support. The price is an assumption, to be validated. The PIC money goes to the local hospital, not to us.</aside>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide s-b9" aria-label="Slide 9 of 13">
+    <div>
+      <h2>Resources, activities and partners</h2>
+      <p class="lead">Open data, free tools and one person, backed by the health secretariats, UCC and the local ecosystem.</p>
+    </div>
+    <div class="bloques tres-b">
+      <div class="bloque">
+        <h3><span class="n">3</span>Resources</h3>
+        <ul class="lista">
+          <li>SIVIGILA cases + NASA POWER weather</li>
+          <li>Open-source code on GitHub</li>
+          <li>Web map on Streamlit (free)</li>
+          <li>The author: data, AI, deployment</li>
+          <li>UCC thesis advisor</li>
+        </ul>
+      </div>
+      <div class="bloque">
+        <h3><span class="n">2</span>Activities</h3>
+        <ul class="lista">
+          <li>Weekly data cleaning</li>
+          <li>Model comparison</li>
+          <li>Weekly map and report</li>
+          <li>Validation with the secretariat</li>
+          <li>Replication, training</li>
+          <li>SECOP II sales</li>
+          <li>Data governance</li>
+        </ul>
+      </div>
+      <div class="bloque">
+        <h3><span class="n">1</span>Partners</h3>
+        <ul class="lista">
+          <li>Health secretariats and the Public Health Lab</li>
+          <li>UCC and Tecnoparque</li>
+          <li>NIDO (220 startups supported)</li>
+          <li>Clinical Excellence Cluster</li>
+          <li>Local public hospitals (ESE)</li>
+          <li>Funders: Minciencias/SGR, Fondo Emprender</li>
+        </ul>
+      </div>
+    </div>
+    <aside class="notas">The key resource is comuna-level data, which may need an agreement with each secretariat. The local hospitals do the mosquito control the map helps to target.</aside>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" aria-label="Slide 10 of 13">
+    <div>
+      <h2>Cost structure</h2>
+      <p class="lead">A low-cost model: infrastructure is free; the real cost is one person's time.</p>
+    </div>
+    <div class="costos">
+      <div class="filas">
+        <div class="fila">
+          <span class="dato">COP 0</span>
+          <p>Infrastructure: NASA POWER, GitHub Free, Streamlit Community Cloud</p>
+        </div>
+        <div class="fila">
+          <span class="dato">COP 2.2M/month</span>
+          <p>People: a systems engineer in Cali (small sample)<span class="fuente">Indeed, 2026</span></p>
+        </div>
+        <div class="fila">
+          <span class="dato">COP 114,990</span>
+          <p>A .com.co domain name<span class="fuente">MI.COM.CO, 2026</span></p>
+        </div>
+        <div class="fila">
+          <span class="dato">≈COP 13.2M</span>
+          <p>6-month pilot with one person, plus travel (estimate)</p>
+        </div>
+      </div>
+      <div class="balanza">
+        <h3>Fixed costs &gt; variable costs</h3>
+        <div class="lin"><span><b>Fixed:</b> one person's time, the largest cost</span></div>
+        <div class="lin"><span><b>Variable:</b> travel to each municipality for validation and training, still to be estimated</span></div>
+      </div>
+    </div>
+    <aside class="notas">Infrastructure is free while the map is public. Say "small sample": the Cali salary comes from 7 salaries on Indeed.</aside>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" aria-label="Slide 11 of 13">
+    <div>
+      <h2>Risks and next steps</h2>
+      <p class="lead">Demand and data are not validated yet; the next steps test both.</p>
+    </div>
+    <div class="cierre">
+      <div class="riesgo">
+        <h3>Risks</h3>
+        <ul>
+          <li>Demand in the 8 municipalities is not validated</li>
+          <li>Comuna-level data may need a data agreement</li>
+          <li>No accuracy comparison with DengueIA</li>
+          <li>The price is an assumption</li>
+        </ul>
+      </div>
+      <div class="siguiente">
+        <h3>Next steps</h3>
+        <ol>
+          <li><span>Prototype with Cali's 22 comunas (thesis)</span></li>
+          <li><span>Interviews and a pilot with one secretariat</span></li>
+          <li><span>SECOP II registration and a pitch at the COVE</span></li>
+          <li><span>SGR-CTeI call through UCC</span></li>
+        </ol>
+      </div>
+    </div>
+    <aside class="notas">Be honest: demand, data and price are not validated yet. Each next step tests one of these risks.</aside>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide s-final" aria-label="Slide 12 of 13">
+    <div class="final-texto">
+      <p class="frase"><span>Open data.</span><span>Open code.</span><span>Earlier action.</span></p>
+      <p class="lead">DengueIA showed it works in Cali; AedesAlert brings it, openly, to the rest of the Valle.</p>
+      <div class="gracias">
+        <strong>Thank you. Questions?</strong>
+        <span>Juan Diego Nieto, UCC Cali</span>
+      </div>
+    </div>
+    <figure>
+      <svg class="mapa" viewBox="24 0 246 340" width="300" height="415" role="img" aria-label="Schematic map of 22 comunas in traffic-light colors, illustrative, not real data">
+        <polygon class="v" points="159.9,19.0 159.9,49.0 133.9,64.0 107.9,49.0 107.9,19.0 133.9,4.0"/>
+        <polygon class="v" points="211.8,19.0 211.8,49.0 185.9,64.0 159.9,49.0 159.9,19.0 185.9,4.0"/>
+        <polygon class="v" points="133.9,64.0 133.9,94.0 107.9,109.0 81.9,94.0 81.9,64.0 107.9,49.0"/>
+        <polygon class="a" points="185.9,64.0 185.9,94.0 159.9,109.0 133.9,94.0 133.9,64.0 159.9,49.0"/>
+        <polygon class="v" points="237.8,64.0 237.8,94.0 211.8,109.0 185.9,94.0 185.9,64.0 211.8,49.0"/>
+        <polygon class="v" points="107.9,109.0 107.9,139.0 81.9,154.0 56.0,139.0 56.0,109.0 81.9,94.0"/>
+        <polygon class="a" points="159.9,109.0 159.9,139.0 133.9,154.0 107.9,139.0 107.9,109.0 133.9,94.0"/>
+        <polygon class="a" points="211.8,109.0 211.8,139.0 185.9,154.0 159.9,139.0 159.9,109.0 185.9,94.0"/>
+        <polygon class="r" points="263.8,109.0 263.8,139.0 237.8,154.0 211.8,139.0 211.8,109.0 237.8,94.0"/>
+        <polygon class="a" points="81.9,154.0 81.9,184.0 56.0,199.0 30.0,184.0 30.0,154.0 56.0,139.0"/>
+        <polygon class="v" points="133.9,154.0 133.9,184.0 107.9,199.0 81.9,184.0 81.9,154.0 107.9,139.0"/>
+        <polygon class="r" points="185.9,154.0 185.9,184.0 159.9,199.0 133.9,184.0 133.9,154.0 159.9,139.0"/>
+        <polygon class="r" points="237.8,154.0 237.8,184.0 211.8,199.0 185.9,184.0 185.9,154.0 211.8,139.0"/>
+        <polygon class="v" points="107.9,199.0 107.9,229.0 81.9,244.0 56.0,229.0 56.0,199.0 81.9,184.0"/>
+        <polygon class="v" points="159.9,199.0 159.9,229.0 133.9,244.0 107.9,229.0 107.9,199.0 133.9,184.0"/>
+        <polygon class="a" points="211.8,199.0 211.8,229.0 185.9,244.0 159.9,229.0 159.9,199.0 185.9,184.0"/>
+        <polygon class="r" points="263.8,199.0 263.8,229.0 237.8,244.0 211.8,229.0 211.8,199.0 237.8,184.0"/>
+        <polygon class="v" points="133.9,244.0 133.9,274.0 107.9,289.0 81.9,274.0 81.9,244.0 107.9,229.0"/>
+        <polygon class="a" points="185.9,244.0 185.9,274.0 159.9,289.0 133.9,274.0 133.9,244.0 159.9,229.0"/>
+        <polygon class="v" points="237.8,244.0 237.8,274.0 211.8,289.0 185.9,274.0 185.9,244.0 211.8,229.0"/>
+        <polygon class="v" points="159.9,289.0 159.9,319.0 133.9,334.0 107.9,319.0 107.9,289.0 133.9,274.0"/>
+        <polygon class="v" points="211.8,289.0 211.8,319.0 185.9,334.0 159.9,319.0 159.9,289.0 185.9,274.0"/>
+      </svg>
+      <figcaption>Illustrative, not real data.</figcaption>
+    </figure>
+    <aside class="notas">Close with the three short sentences, then open for questions.</aside>
+  </section>
+
+  <!-- 13 backup -->
+  <section class="slide" aria-label="Slide 13 of 13, backup">
+    <div>
+      <h2>Sources</h2>
+      <p class="lead" style="font-size:21px">Backup slide for questions. All numbers come from public, cited sources.</p>
+    </div>
+    <ul class="fuentes">
+      <li><b>DANE (2026).</b> <span>Departmental GDP 2025 (Valle about 9.8%); health care activity +2.5% in 2025.</span></li>
+      <li><b>World Bank (2026).</b> <span>Current health expenditure: 8.14% of GDP, 2024.</span></li>
+      <li><b>INS (2025, 2026).</b> <span>Dengue report 2024: 312,643 cases, 937 per 100,000; surveillance ranking, 98.68%.</span></li>
+      <li><b>Rockefeller Foundation (2026).</b> <span>DengueIA: 93% reported effectiveness; Cali 1,520 per 100,000.</span></li>
+      <li><b>Universidad Icesi (2026).</b> <span>DengueIA first phase: 174 zones, ~2.2 million people.</span></li>
+      <li><b>Gobernación del Valle (2024).</b> <span>Health plan 2024-2027: 9 municipalities at very high risk.</span></li>
+      <li><b>Gobernación del Valle (n.d.).</b> <span>AEDES program: COP 14,770 million.</span></li>
+      <li><b>Cámara de Comercio de Cali (2025, 2026).</b> <span>Clinical Excellence Cluster (528 firms), digital maturity 2.42 / 5, NIDO (220 startups).</span></li>
+      <li><b>SECOP II (2026).</b> <span>Public contracts: Cali vector-control services; PIC Palmira 2026.</span></li>
+      <li><b>BBVA Spark (2026); La República (2026).</b> <span>HealthTech 9% of 2,295 startups; Valle 11%.</span></li>
+      <li><b>Indeed (2026); MI.COM.CO (2026).</b> <span>Systems engineer salary in Cali; .com.co domain price.</span></li>
+      <li><b>Rodríguez-Morales et al. (2024).</b> <span>Cost of dengue in Colombia, 2020 dollars.</span></li>
+      <li><b>Desjardins et al. (2020).</b> <span>Lagged weather improves dengue prediction in Cali.</span></li>
+      <li><b>Law 1581 of 2012; CONPES 4144 of 2025.</b> <span>Sensitive data; national AI policy.</span></li>
+    </ul>
+    <aside class="notas">Only if someone asks where a number comes from.</aside>
+  </section>
+
+</main>
+<div class="progreso" id="progreso" aria-hidden="true"></div>
+<nav class="controles" aria-label="Slide navigation">
+  <button type="button" id="ant" aria-label="Previous slide"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M11.5 3 5.5 9l6 6" fill="none" stroke="currentColor" stroke-width="2.5"/></svg></button>
+  <span class="contador" id="contador" aria-live="polite">1 / 13</span>
+  <button type="button" id="sig" aria-label="Next slide"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M6.5 3l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.5"/></svg></button>
+</nav>
+</div>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var contador = document.getElementById('contador');
+  var progreso = document.getElementById('progreso');
+  var ant = document.getElementById('ant');
+  var sig = document.getElementById('sig');
+  var actual = 0;
+
+  function escalar() {
+    var s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+    stage.style.setProperty('--s', s);
+  }
+
+  function mostrar(n) {
+    actual = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, k) {
+      s.classList.toggle('activa', k === actual);
+      s.setAttribute('aria-hidden', k === actual ? 'false' : 'true');
+    });
+    contador.textContent = (actual + 1) + ' / ' + slides.length;
+    progreso.style.width = ((actual + 1) / slides.length * 100) + '%';
+    ant.disabled = actual === 0;
+    sig.disabled = actual === slides.length - 1;
+    if (location.hash !== '#' + (actual + 1)) {
+      history.replaceState(null, '', '#' + (actual + 1));
+    }
+  }
+
+  function desdeHash() {
+    var n = parseInt(location.hash.replace('#', ''), 10);
+    return isNaN(n) ? 0 : n - 1;
+  }
+
+  document.addEventListener('keydown', function (e) {
+    var enBoton = e.target && e.target.tagName === 'BUTTON';
+    if (enBoton && (e.key === ' ' || e.key === 'Enter')) return;
+    switch (e.key) {
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown':
+        mostrar(actual + 1); e.preventDefault(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+        mostrar(actual - 1); e.preventDefault(); break;
+      case ' ':
+        mostrar(actual + (e.shiftKey ? -1 : 1)); e.preventDefault(); break;
+      case 'Home': mostrar(0); e.preventDefault(); break;
+      case 'End': mostrar(slides.length - 1); e.preventDefault(); break;
+      case 'n': case 'N':
+        document.body.classList.toggle('ver-notas'); break;
+    }
+  });
+  ant.addEventListener('click', function () { mostrar(actual - 1); });
+  sig.addEventListener('click', function () { mostrar(actual + 1); });
+  window.addEventListener('hashchange', function () { mostrar(desdeHash()); });
+  window.addEventListener('resize', escalar);
+
+  escalar();
+  mostrar(desdeHash());
+})();
+</script>
+</body>
+</html>

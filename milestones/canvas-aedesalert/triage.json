@@ -1,0 +1,30 @@
+{
+  "proyecto": "AedesAlert Cali — Actividad 3: Canvas, informe del sector y presentación en inglés",
+  "slug": "canvas-aedesalert",
+  "estado": "listo_para_orquestar",
+  "preguntas_pendientes": [],
+  "supuestos": [
+    "Respuestas del triage: presentación y guion en inglés (+0.3); informe del sector en español; guion aparte; ejecución con sub-agentes.",
+    "Cambio durante el triage: Diego construye el lienzo Canvas él mismo en su plantilla (insumos/modelo-canvas.png); el harness entrega una guía por bloque con una propuesta de referencia (T4, T5).",
+    "El deck y el guion usan la propuesta de referencia de la guía; si Diego cambia su Canvas, debe ajustar esas diapositivas.",
+    "Sin aislamiento por worktree (mismo bloqueo que PROCESO.md §7); espejo en la nube y commits por tarea a cargo de Diego.",
+    "Se reutilizan las evidencias del milestone validacion-regional-aedesalert y la decisión de presentar AedesAlert como complemento abierto y replicable de DengueIA."
+  ],
+  "clasificacion": {
+    "dominio": "contenido",
+    "complejidad": "media",
+    "alcance": "Informe del sector económico (Word, español), guía para construir el Canvas (Word), presentación HTML de 10 minutos en inglés y guion en inglés aparte."
+  },
+  "requisitos_tecnicos": {"frontend": "Deck HTML autocontenido 1280x720 (presentaciones-visuales)", "backend": "", "datos": "Fuentes oficiales y académicas verificables a octubre de 2026", "otros": "Word académico B/N, Times New Roman 12, APA 7"},
+  "requisitos_no_funcionales": [
+    {"requisito": "Presentación de 10 minutos", "inferido": false},
+    {"requisito": "Presentación en inglés para la bonificación", "inferido": false},
+    {"requisito": "Toda cifra con fuente verificable", "inferido": true},
+    {"requisito": "Inglés fácil de pronunciar para un hablante C1", "inferido": true}
+  ],
+  "tipos_requeridos": ["contenido", "docs", "presentacion"],
+  "skills_requeridas": ["optimizador-prompts", "verificador-datos", "presentaciones-visuales", "frontend-design", "optimizador-tokens"],
+  "fuera_de_alcance": ["Llenar el lienzo Canvas final (lo hace Diego)", "Versión .pptx del deck", "Desarrollo del modelo predictivo"],
+  "riesgos": ["El Canvas final de Diego puede diferir de la propuesta de referencia usada en el deck", "Costos de referencia que cambian (nube, salarios)", "Fuentes oficiales que bloquean la consulta (403)"],
+  "manifest": "milestones/canvas-aedesalert/milestone.yaml"
+}

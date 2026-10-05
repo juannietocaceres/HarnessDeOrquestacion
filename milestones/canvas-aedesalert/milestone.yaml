@@ -1,0 +1,135 @@
+milestone: "AedesAlert Cali: lienzo Canvas, informe del sector y presentación en inglés (Actividad 3)"
+cap_concurrencia: 3
+# Insumos (milestones/canvas-aedesalert/insumos/): pautas.md / pautas.png (consigna), dengueia-fase1.md
+# (resumen del artículo de Icesi del 21-sep-2026). Base previa reutilizable: milestones/validacion-regional-aedesalert/
+# (matriz-consolidada.md, evidencias/T1..T4) — la idea se presenta como complemento abierto y replicable de DengueIA
+# (decisión del gate de la wave 1 de ese milestone).
+# Respuestas del triage: presentación y guion en INGLÉS (bonificación +0.3); informe y Canvas en español;
+# guion aparte; ejecución con sub-agentes. Cambio durante el triage: Diego hace el lienzo él mismo;
+# el harness le entrega una guía (T4, T5).
+tareas:
+  - id: T1
+    titulo: "Investigación: características e indicadores del sector económico"
+    tipo: contenido
+    depende_de: []
+    descripcion: >
+      Reunir y verificar, con fuentes vigentes a octubre de 2026, las características
+      e indicadores del sector económico de la idea (salud / HealthTech apoyado en TI,
+      con foco en el Valle del Cauca y Cali): tamaño y peso en la economía, empresas y
+      empleo, gasto en salud, carga del dengue como problema de salud pública,
+      madurez digital del sector, tendencias HealthTech/GovTech, mercado de IA en salud
+      en Colombia, marco regulatorio relevante (datos de salud, Habeas Data, IA) y
+      actores. Reutilizar y actualizar las evidencias del milestone
+      validacion-regional-aedesalert.
+    criterios_aceptacion:
+      - "Existe evidencias/T1-sector.md con al menos 12 indicadores, cada uno con cifra, año, fuente, URL y fecha de consulta."
+      - "El archivo incluye una sección de características cualitativas del sector (estructura, actores, tendencias, regulación) con fuentes."
+      - "Existe verificaciones/T1.md con el informe de verificador-datos."
+
+  - id: T2
+    titulo: "Investigación: insumos del modelo de negocio"
+    tipo: contenido
+    depende_de: []
+    descripcion: >
+      Investigar los datos que necesita el lienzo Canvas de AedesAlert Cali: quiénes
+      son los segmentos de clientes reales (secretarías de salud municipales del Valle
+      en riesgo muy alto, Gobernación, IPS/EPS, laboratorios, aseguradoras), cómo
+      compra el sector público en Colombia (SECOP II, contratación directa con
+      universidades, convenios interadministrativos), fuentes de financiación posibles
+      (Sistema General de Regalías - CTeI, Fondo Emprender, NIDO, cooperación
+      internacional), costos de referencia (nube con capa gratuita o créditos
+      académicos, salario de un ingeniero junior en Cali, dominios), y cómo se
+      diferencia de DengueIA (artículo de la primera fase en insumos/dengueia-fase1.md).
+    criterios_aceptacion:
+      - "Existe evidencias/T2-modelo-negocio.md con secciones por bloque del Canvas (clientes, canales, relación, ingresos, recursos, actividades, socios, costos) y cada dato verificable con fuente y URL."
+      - "Incluye una tabla de costos de referencia en pesos colombianos con fuente para cada valor o marcado como supuesto."
+      - "Existe verificaciones/T2.md con el informe de verificador-datos."
+
+  - id: T3
+    titulo: "Informe Word de características e indicadores del sector"
+    tipo: docs
+    depende_de: [T1]
+    descripcion: >
+      Redactar el informe de características e indicadores del sector económico a
+      partir de evidencias/T1-sector.md: portada UCC, introducción, caracterización
+      del sector, tabla de indicadores, análisis, relación con AedesAlert Cali,
+      conclusiones y referencias APA 7. Español, Word académico en blanco y negro,
+      Times New Roman 12, interlineado 1,5, justificado.
+    criterios_aceptacion:
+      - "Existe entregables/Informe_Sector_Salud_HealthTech_Valle.docx y LibreOffice lo convierte a PDF sin errores."
+      - "El documento usa Times New Roman 12, interlineado 1,5 y solo texto negro."
+      - "Tiene una tabla de indicadores cuyas cifras coinciden con evidencias/T1-sector.md."
+      - "Existe verificaciones/T3.md con el informe de verificador-datos."
+
+  - id: T4
+    titulo: "Guía para construir el Canvas y escaleta de la presentación"
+    tipo: contenido
+    depende_de: [T1, T2]
+    descripcion: >
+      Diego construye él mismo el lienzo Canvas ("el canva lo hago yo, solo guíame").
+      Producir una guía bloque por bloque en el orden de la pauta (Propuesta de valor,
+      Segmentos, Canales, Relación, Ingresos, Recursos, Actividades, Socios, Costos):
+      qué pide el bloque, preguntas guía, datos con fuente que puede usar, errores
+      comunes y una propuesta de referencia que él puede adaptar (en español y en
+      inglés), con una versión corta por bloque que quepa en su plantilla
+      (insumos/modelo-canvas.png). Incluir la escaleta de la presentación de 10 minutos en inglés
+      (diapositivas, mensaje, contenido en pantalla, tiempos), basada en la propuesta
+      de referencia, para que el deck y el guion se hagan en paralelo.
+    criterios_aceptacion:
+      - "Existe guia-canvas.md con los 9 bloques en el orden de la pauta, cada uno con su número de bloque, preguntas guía, datos con fuente, errores comunes y propuesta de referencia en español y en inglés."
+      - "Toda cifra del archivo aparece en evidencias/ con su URL."
+      - "La escaleta en inglés suma entre 9:30 y 10:00 minutos."
+
+  - id: T5
+    titulo: "Guía del Canvas en Word"
+    tipo: docs
+    depende_de: [T4]
+    descripcion: >
+      Pasar guia-canvas.md (sin la escaleta) a un Word práctico para que Diego llene
+      su propia plantilla (insumos/modelo-canvas.png: plantilla de colores
+      "#MODELO DE NEGOCIO: NOMBRE DE LA EMPRESA" con los 9 recuadros "Escribe aquí").
+      Portada breve, cómo usar la guía con esa plantilla (orden de llenado de la pauta
+      y ubicación de cada bloque en la plantilla), una sección por bloque y, por bloque,
+      un texto corto listo para pegar que quepa en su recuadro. Español, blanco y negro,
+      Times New Roman.
+    criterios_aceptacion:
+      - "Existe entregables/Guia_Canvas_AedesAlert_Cali.docx y LibreOffice lo convierte a PDF sin errores."
+      - "Cada bloque trae un texto corto para pegar de máximo 45 palabras (60 en Socios clave y Segmentos de clientes, que son recuadros altos)."
+      - "El contenido por bloque coincide con guia-canvas.md."
+
+  - id: T6
+    titulo: "Presentación HTML de 10 minutos en inglés"
+    tipo: presentacion
+    depende_de: [T4]
+    descripcion: >
+      Construir con presentaciones-visuales el deck en inglés de 10 minutos siguiendo
+      la escaleta de guia-canvas.md: problema y sector, la idea y su relación
+      con DengueIA, el lienzo Canvas (propuesta de referencia; Diego
+      puede reemplazarlo por el suyo) en una diapositiva y los bloques explicados, y cierre. HTML autocontenido en
+      presentaciones/aedesalert-canvas-en.html, para proyector, exportable a PDF.
+    criterios_aceptacion:
+      - "Existe presentaciones/aedesalert-canvas-en.html autocontenido (sin recursos externos salvo Google Fonts con fallback)."
+      - "Navegación por teclado, contador de diapositivas y @media print con una diapositiva por página."
+      - "Todas las combinaciones texto/fondo pasan contraste.py."
+      - "Todo el texto visible está en inglés y las cifras coinciden con guia-canvas.md."
+      - "Existe verificaciones/T6.md con el informe de verificador-datos."
+    verificacion_manual:
+      - "Abrir el HTML en el PC del salón y pasar las diapositivas con las flechas."
+      - "Exportar a PDF con Ctrl+P como respaldo."
+
+  - id: T7
+    titulo: "Guion en inglés (documento aparte)"
+    tipo: contenido
+    depende_de: [T4]
+    descripcion: >
+      Escribir el guion hablado de la presentación de 10 minutos en inglés, como
+      documento aparte, siguiendo la escaleta de guia-canvas.md diapositiva
+      por diapositiva, en inglés claro y fácil de pronunciar para un hablante C1, con
+      tiempos, y una sección de posibles preguntas del docente con respuesta en
+      inglés.
+    criterios_aceptacion:
+      - "Existe entregables/Script_Presentation_AedesAlert_Cali_EN.docx en Times New Roman 12, blanco y negro."
+      - "Tiene un bloque por diapositiva con su rango de tiempo y suma entre 9:30 y 10:00 a unas 130 palabras por minuto (se reporta el conteo)."
+      - "Las cifras del guion coinciden con guia-canvas.md."
+    verificacion_manual:
+      - "Ensayar el guion en voz alta con cronómetro."

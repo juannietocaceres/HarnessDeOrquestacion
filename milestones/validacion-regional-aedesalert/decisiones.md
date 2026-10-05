@@ -43,3 +43,8 @@ Checklist de verificación manual (no bloquea):
 - T7: Exportar a PDF con Ctrl+P como respaldo por si el PC del salón no abre el HTML.
 - T8: Ensayar el guion en voz alta con cronómetro.
 - Cierre: abrir a mano la URL del CONPES 4144 en el DNP (403/timeout desde la sesión); si no abre, citar solo MinTIC (2025).
+
+## Ajuste posterior al cierre (2-oct-2026)
+
+Pedido de Diego: "no importa si se sube la presentación a 8 minutos, pero me gustaría argumentar más cosas en el guion". El guion (T8) pasó de 594 a 987 palabras: ~7:36 leído, ~8:03 diciendo las cifras en voz alta; escaleta del guion 0:00–7:40. Mismas 8 diapositivas: el deck no cambia. Todas las cifras siguen en matriz-consolidada.md (comprobado con script). La escaleta de 4:50 de matriz-consolidada.md §7 queda como versión corta.
+Segundo ajuste (mismo día): Diego pidió 10 minutos. Guion: 1.248 palabras, ~9:36 leído, ~10:04 con cifras en voz alta; escaleta del guion 0:00–10:00. Cifras verificadas contra matriz-consolidada.md con script (ninguna nueva).

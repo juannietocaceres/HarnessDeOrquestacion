@@ -1,0 +1,7 @@
+milestone: canvas-aedesalert
+manifest_sha256: a95dd1109c26e50758d96b4948c56a370c45d2ed7ee4f2fee52b17409efdeb37
+preflight: PASA (7 tareas, 3 waves)
+aislamiento: "sin worktree; espejo en la nube; commits por tarea a cargo de Diego"
+wave_actual: cerrado
+plan_waves: {1: [T1, T2], 2: [T3, T4], 3: [T5, T6, T7]}
+tareas: {T1: COMPLETADA, T2: COMPLETADA, T3: COMPLETADA, T4: COMPLETADA, T5: COMPLETADA, T6: COMPLETADA, T7: COMPLETADA}
