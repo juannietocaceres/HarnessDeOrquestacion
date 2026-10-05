@@ -4,7 +4,7 @@ recurso: "favoritos"
 proyecto: "app Expo con login y favoritos (prueba de backend-datos)"
 tarea: "prueba-expo"
 modelo_de_datos: "schema-favoritos.md"
-estilo: "operaciones sobre el proveedor (supabase-js), sin servidor propio — PROVISIONAL hasta §7.1"
+estilo: "operaciones sobre el proveedor (supabase-js), sin servidor propio"
 fecha: "2026-10-02"
 fuentes_consultadas:
   - {url: "https://docs.postgrest.org/en/stable/references/errors.html", fecha: "2026-10-02", para: "23505 -> 409; 42501 -> 403 autenticado / 401 anónimo"}

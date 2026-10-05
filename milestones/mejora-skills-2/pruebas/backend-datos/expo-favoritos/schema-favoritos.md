@@ -3,7 +3,7 @@ documento: modelo-datos
 recurso: "favoritos"
 proyecto: "app Expo con login y favoritos (prueba de backend-datos)"
 tarea: "prueba-expo"
-stack: "Supabase (Postgres + Supabase Auth) — PROVISIONAL hasta la decisión §7.1 del gate"
+stack: "Supabase (Postgres + Supabase Auth)"
 fecha: "2026-10-02"
 fuentes_consultadas:
   - {url: "https://supabase.com/docs/guides/database/postgres/row-level-security", fecha: "2026-10-02", para: "sintaxis de políticas RLS con (select auth.uid()) y to authenticated"}

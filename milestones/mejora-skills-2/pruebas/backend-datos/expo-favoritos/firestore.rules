@@ -1,4 +1,4 @@
-// ALTERNATIVA si el gate elige Firebase (§7.1). No se usa con Supabase.
+// ALTERNATIVA si se prefiere Firebase (el gate confirmó Supabase como opción por defecto). No se usa con Supabase.
 // Favoritos en usuarios/{uid}/favoritos/{itemId}: el id del documento es el
 // item_id, así la unicidad (usuario, elemento) no necesita índice único.
 // Nota: `keys().hasOnly` no se pudo confirmar en la doc consultada (2026-10-05,
