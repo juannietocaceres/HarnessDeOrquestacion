@@ -2,13 +2,18 @@ milestone: "Inscripción a taller universitario"
 origen: "N6 de mejora-skills-2 (PLAN-MEJORA-SKILLS-2.md §4 N6)"
 manifest_snapshot_sha256: 567fb7675f85cd6c04a454726eaed329c541a8d50b06b04aff7060fea9af93e2
 preflight: OK
-wave_actual: 2
+wave_actual: 3
 waves_cerradas:
   - wave: 1
     fecha: 2026-10-05
     merges: [838fd5c]   # T1
     gate: "sin decisiones"
     verificacion_manual_pendiente: [T1]
+  - wave: 2
+    fecha: 2026-10-05
+    merges: [ffbdb6c, 7a626a1]   # T2, T4
+    gate: "1 decisión (T2 getSession)"
+    verificacion_manual_pendiente: [T2, T4]
 waves_planificadas:
   - wave: 1
     tareas: [T1]
@@ -18,8 +23,8 @@ waves_planificadas:
     tareas: [T3]
 tareas:
   T1: { estado: COMPLETADA, rama: worktree-agent-a99af8671d35d81fb, commit: 87c3e4f }
-  T2: { estado: EN_CURSO, rama: null, commit: null }
-  T3: { estado: PENDIENTE, rama: null, commit: null }
-  T4: { estado: EN_CURSO, rama: null, commit: null }
+  T2: { estado: COMPLETADA, rama: worktree-agent-a8a807b843a5c79f9, commit: ee7b075 }
+  T3: { estado: EN_CURSO, rama: null, commit: null }
+  T4: { estado: COMPLETADA, rama: worktree-agent-a99e35b8c6b5215ea, commit: d072ebe, verificador_completa: "11 ok, 0 incorrectas, 0 inventadas" }
 decisiones_pendientes: []
 bloqueos_externos: []
