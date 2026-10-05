@@ -29,3 +29,10 @@ Checklist de verificación manual (informativo, no bloquea la wave 2):
 
 - **N2**: "Activar GitHub Pages en la configuración del repositorio si la publicación se aprueba" — por la decisión 4 la publicación **no** se aprobó: queda solo preparada.
 - **N3**: "Revisar que el esqueleto del anteproyecto tenga sentido para el tema y el programa" — `milestones/mejora-skills-2/pruebas/trabajo-academico/documento.md`.
+
+## Wave 2 — cierre (2026-10-05)
+
+N4 integrada a `main` (5a496b0). Gate sin decisiones. En `main`: 5 manifests
+pasan preflight; tests triage-proyecto y optimizador-tokens OK. Supuestos de
+N4 (sin gate): `devops` → `sonnet`/`ninguna` (`opus` si hay arquitectura);
+`academico` → `sonnet`/`completa`. Sin `verificacion_manual` en la wave.
