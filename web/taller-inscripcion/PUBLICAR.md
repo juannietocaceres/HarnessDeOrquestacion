@@ -49,7 +49,7 @@ Deshacer: Settings > Pages > Unpublish site (o volver a correr `pages-enigma-go.
 | 4.1 | Página 404 | OK | `404.html` en línea; enlace absoluto `/HarnessDeOrquestacion/` (uno relativo se rompe en rutas profundas) |
 | 4.2 | HTTPS | pendiente: después de publicar | activar "Enforce HTTPS" |
 | 5.1 | CORS | N/A | la API es Supabase; sin API propia |
-| 6.1 | `prefers-reduced-motion` | styles.css tiene la regla |
+| 6.1 | `prefers-reduced-motion` | OK | `styles.css` tiene la regla |
 | 7.1 | Límites y precios | N/A | no se afirma ninguno |
 | 7.2 | Versiones de acciones | OK | `checkout@v4`, `configure-pages@v5`, `upload-pages-artifact@v3`, `deploy-pages@v5`, como en enigma-go (consultadas 2026-10-02); no re-verificadas en línea |
 | 8.1 | Nada publica solo | OK | solo `workflow_dispatch` |
