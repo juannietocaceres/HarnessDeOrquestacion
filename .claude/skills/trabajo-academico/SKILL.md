@@ -133,13 +133,29 @@ inicio (`title`, `author`, `date`, `lang`, `bibliography`, `csl`).
 Export a Word con **pandoc** (gratis):
 
 ```
-pandoc documento.md --citeproc --bibliography referencias.bib --csl apa.csl -o documento.docx
+pandoc documento.md --citeproc --bibliography referencias.bib --csl .claude/skills/trabajo-academico/apa.csl --reference-doc .claude/skills/trabajo-academico/plantilla-apa7.docx -o documento.docx
 ```
 
-- `apa.csl` se descarga del repositorio oficial de estilos CSL:
-  `https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl`
-  (licencia CC BY-SA 3.0, anotada en el propio archivo). Se guarda junto
-  al documento.
+(Desde la carpeta del documento, con rutas absolutas o relativas a la
+skill. En PowerShell, `$skill = "<repo>\.claude\skills\trabajo-academico"`
+y `--csl "$skill\apa.csl" --reference-doc "$skill\plantilla-apa7.docx"`.)
+
+- **`plantilla-apa7.docx`** (en esta carpeta) trae los estilos APA 7:
+  Times New Roman 12, interlineado doble, sin espacio entre párrafos,
+  sangría de primera línea de 1,27 cm en el texto (`Body Text`,
+  `First Paragraph`), título y `Heading 1` en negrita centrados,
+  `Heading 2` en negrita a la izquierda, tablas (`Compact`) a espacio
+  sencillo sin sangría, márgenes de 1 in (2,54 cm) y papel carta. Pandoc
+  solo toma sus estilos, no su contenido. Sin `--reference-doc` el Word
+  sale con el estilo por defecto de pandoc (Aptos, títulos grandes): no
+  es APA.
+- **`apa.csl`** (en esta carpeta) formatea citas y referencias. Viene del
+  repositorio oficial de estilos CSL
+  (`https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl`,
+  licencia CC BY-SA 3.0, anotada en el propio archivo). No se descarga
+  por documento.
+- Sin `--citeproc` las citas quedan crudas (`[@clave]`) y no se arma la
+  lista de referencias.
 - **Si pandoc no está instalado**, entrega el Markdown igual y deja el
   comando de instalación. Según la página oficial
   (`https://pandoc.org/installing.html`):
@@ -155,8 +171,8 @@ pandoc documento.md --citeproc --bibliography referencias.bib --csl apa.csl -o d
   derivadas (decisión §7.4). Solo se enlazan como referencia externa:
   https://github.com/anthropics/skills/tree/main/skills/docx y
   https://github.com/anthropics/skills/tree/main/skills/pdf.
-- Para que Word use una plantilla de la institución (márgenes, fuente,
-  portada), pandoc acepta `--reference-doc plantilla.docx`.
+- Si la institución da su propia plantilla (o pide ICONTEC), se pasa esa
+  en `--reference-doc` en lugar de `plantilla-apa7.docx`.
 
 ## 7. Integridad académica
 
