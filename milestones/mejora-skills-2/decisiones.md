@@ -36,3 +36,11 @@ N4 integrada a `main` (5a496b0). Gate sin decisiones. En `main`: 5 manifests
 pasan preflight; tests triage-proyecto y optimizador-tokens OK. Supuestos de
 N4 (sin gate): `devops` → `sonnet`/`ninguna` (`opus` si hay arquitectura);
 `academico` → `sonnet`/`completa`. Sin `verificacion_manual` en la wave.
+
+## Wave 3 — cierre (2026-10-05)
+
+N5 integrada a `main` (5aaa7a7). Gate sin decisiones. Docs raíz (CLAUDE.md,
+README.md, RESUMEN-HARNESS.md, PROCESO.md) verificados dentro de N5
+(`verificador-datos` ligera, 0 incorrectas): el cierre del milestone no
+necesita repetirlo sobre ellos. Supuesto de N5: nodo de publicación del
+diagrama ("¿publicar algo?" → gate → `despliegue` o "solo preparada").

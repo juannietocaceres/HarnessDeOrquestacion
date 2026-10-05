@@ -1,7 +1,7 @@
 milestone: "Backend, despliegue y trabajo académico"
 manifest_snapshot_sha256: e36f21def60a7c9356ce635462909b009f62cc20e8cb74df60a65d08833c0d21   # re-preflight OK 2026-10-05 tras cambio de 5fe0fad (N3 verificacion: completa; N4/N5 descripción)
 preflight: OK   # ids únicos, deps internas resueltas, sin ciclos, campos requeridos presentes
-wave_actual: 3
+wave_actual: 4
 waves_cerradas:
   - wave: 1
     fecha: 2026-10-05
@@ -11,6 +11,10 @@ waves_cerradas:
   - wave: 2
     fecha: 2026-10-05
     merges: [5a496b0]   # N4
+    gate: "sin decisiones"
+  - wave: 3
+    fecha: 2026-10-05
+    merges: [5aaa7a7]   # N5
     gate: "sin decisiones"
 waves_planificadas:
   - wave: 1
@@ -26,8 +30,8 @@ tareas:
   N2: { estado: COMPLETADA, rama: worktree-agent-a4ce2ba0d7e863d78, commit: 94dae97, rama_wip: worktree-agent-a8a7ef11e4888d79e, worktree_wip: .claude/worktrees/agent-a8a7ef11e4888d79e, commit_wip: 7a15bac }
   N3: { estado: COMPLETADA, rama: worktree-agent-ad2f2d5dd8f79a0f7, commit: 4370787, verificador_completa: "17 ok, 3 a matizar, 0 incorrectas, 0 inventadas", rama_wip: worktree-agent-afefa586e23a0d53c, worktree_wip: .claude/worktrees/agent-afefa586e23a0d53c, commit_wip: 4612eb3 }
   N4: { estado: COMPLETADA, rama: worktree-agent-ae1ff4a878d8656c6, commit: 7b62886 }
-  N5: { estado: PENDIENTE, rama: null, commit: null }
-  N6: { estado: PENDIENTE, rama: null, commit: null }
+  N5: { estado: COMPLETADA, rama: worktree-agent-a5f2e885bd00e216b, commit: d598a29 }
+  N6: { estado: EN_CURSO, rama: null, commit: null }
 decisiones_pendientes: []
 bloqueos_externos: []
 reanudacion:
