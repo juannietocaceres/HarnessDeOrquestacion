@@ -57,4 +57,7 @@ Deshacer: Settings > Pages > Unpublish site (o volver a correr `pages-enigma-go.
 
 ## Registro de publicación
 
-Pendiente de aprobación en el gate.
+- Fecha: 2026-10-05.
+- Decisión del gate: no publicar ahora; queda preparado.
+- Motivos: el proyecto de Supabase aún no está creado; hay un solo sitio de Pages compartido con landing/enigma-go (el último workflow en correr reemplaza al otro).
+- El gate recibió el comando exacto (sección "Publicar"). No se hizo push ni se ejecutó el workflow.
