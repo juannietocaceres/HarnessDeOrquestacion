@@ -128,7 +128,10 @@ de `ESTRUCTURAS.md` y anotar el supuesto.
 ## 6. Formato de trabajo y exportación
 
 Se escribe en **Markdown** con citas `[@clave]` y un bloque YAML al
-inicio (`title`, `author`, `date`, `lang`, `bibliography`, `csl`).
+inicio (`title`, `author`, `date`, `lang`, `bibliography`). El estilo de
+citas **no** va en el YAML: el comando de abajo pasa siempre el `apa.csl`
+de la skill con `--csl` (un `csl:` en el YAML apuntaría a un archivo que no
+existe junto al documento).
 
 Export a Word con **pandoc** (gratis):
 

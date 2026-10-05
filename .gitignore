@@ -11,6 +11,9 @@ web-build/
 .env.*
 !.env.example
 
-# Worktrees de sub-agentes y cach� de Python
+# Worktrees de sub-agentes y caché de Python
 .claude/worktrees/
 __pycache__/
+
+# Temporales de Word / WPS mientras un documento está abierto
+~$*

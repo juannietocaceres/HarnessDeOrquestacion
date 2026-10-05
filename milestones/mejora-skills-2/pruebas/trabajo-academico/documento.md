@@ -4,7 +4,7 @@ author: "[POR COMPLETAR: estudiante]"
 date: "[POR COMPLETAR]"
 lang: es
 bibliography: referencias.bib
-csl: apa.csl
+
 ---
 
 > BORRADOR de prueba de la skill `trabajo-academico`. Estructura según
