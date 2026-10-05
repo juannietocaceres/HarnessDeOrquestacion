@@ -236,3 +236,11 @@ Ejemplo para GitHub Pages con workflow:
 - Suite de Emil (`animate`, `review-animations`): si la UI pasó por ellas,
   el punto de `prefers-reduced-motion` del checklist ya debería estar
   cubierto; igual se comprueba.
+
+## Fuentes (consultadas el 2026-10-05)
+
+- Workflow oficial de Pages para sitios estáticos (acciones y permisos):
+  https://github.com/actions/starter-workflows/blob/main/pages/static.yml
+- Publicar con GitHub Actions y página 404 personalizada de Pages:
+  https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+  y https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-custom-404-page-for-your-github-pages-site
