@@ -1,6 +1,8 @@
 // ALTERNATIVA si el gate elige Firebase (§7.1). No se usa con Supabase.
 // Favoritos en usuarios/{uid}/favoritos/{itemId}: el id del documento es el
 // item_id, así la unicidad (usuario, elemento) no necesita índice único.
+// Nota: `keys().hasOnly` no se pudo confirmar en la doc consultada (2026-10-05,
+// firebase.google.com/docs/firestore/security/rules-conditions); probar con el emulador.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
