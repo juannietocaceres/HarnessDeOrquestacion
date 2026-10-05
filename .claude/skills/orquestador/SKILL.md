@@ -37,7 +37,7 @@ cap_concurrencia: 3        # opcional, default 3
 tareas:
   - id: T1
     titulo: "Título corto"
-    tipo: backend           # backend | frontend | data | cli | mobile | docs | testing | presentacion | contenido | otro
+    tipo: backend           # backend | frontend | data | cli | mobile | docs | testing | presentacion | contenido | devops | academico | otro
     depende_de: []          # ids de otras tareas de ESTE manifest
     descripcion: >
       Qué hay que lograr, en lenguaje natural.
@@ -46,6 +46,7 @@ tareas:
       - "Condición verificable 2"
     fuera_de_alcance_si_depende_de: []   # ids/nombres de dependencias EXTERNAS al milestone (ver §4)
     modelo: sonnet          # opcional: alias (sonnet | opus | haiku | fable) o ID completo del modelo
+    norma_citacion: apa7    # opcional (apa7 | icontec): solo `tipo: academico`; por defecto apa7
     verificacion: ligera    # opcional: completa | ligera | ninguna (perfil de costo, abajo)
     verificacion_manual:    # opcional: lo que solo puede comprobar una persona
       - "Abre en Expo Go en un teléfono real"
@@ -54,6 +55,10 @@ tareas:
 - **`tipo: presentacion`**: el entregable es un deck o material para exponer
   (activa `presentaciones-visuales`, §8). **`tipo: contenido`**: textos para
   publicar (posts, artículos, guiones) cuyo valor está en lo que afirman.
+- **`tipo: devops`**: despliegue e infraestructura (activa `despliegue`).
+  **`tipo: academico`**: documentos universitarios (activa
+  `trabajo-academico`). **`norma_citacion`** (opcional, `apa7` | `icontec`)
+  fija la norma del documento; si falta se usa `apa7`.
 - **`modelo`** (opcional): el modelo con el que corre el sub-agente de esa
   tarea. Se pasa tal cual como parámetro `model` al tool `Agent` (§5), nunca
   como texto dentro del prompt. Si falta, se aplica el perfil de costo
@@ -83,6 +88,8 @@ trae el campo). Lo que diga la tarea en el manifest siempre manda.
 | `docs`, `contenido`, `presentacion` | `sonnet` (`haiku` si es un ajuste de texto acotado) | `ligera` |
 | `frontend`, `cli`, `data`, `testing` | `sonnet` | `ninguna` |
 | `backend`, `mobile`, `otro` | `sonnet`; `opus` si hay decisiones de arquitectura | `ninguna` |
+| `devops` | `sonnet`; `opus` si hay decisiones de arquitectura o de infraestructura | `ninguna` |
+| `academico` | `sonnet` (redacción acotada por una norma; sin razonamiento de arquitectura) | `completa` (hay referencias que verificar) |
 
 - **`opus` se pone explícito** y con un comentario YAML del motivo, solo
   en tareas de razonamiento difícil (arquitectura, decisiones con
@@ -335,10 +342,16 @@ momento:
 | Durante la implementación | `tipo: mobile` con React Native / Expo y motion | `animate-expo` |
 | Durante la implementación | Web pensada para uso en móvil | `mobile-native` |
 | Durante la implementación | `tipo: presentacion` | `presentaciones-visuales` (+ `frontend-design`) |
+| Antes de implementar | La tarea crea o cambia API, base de datos o login | `backend-datos` (modelo y contrato antes del código) |
+| Durante la implementación | `tipo: backend`, o una tarea `mobile`/`frontend` que necesita datos persistentes | `backend-datos` |
+| Durante la implementación | `tipo: devops`, o el milestone pide publicar | `despliegue` |
+| Antes de ejecutar una publicación | Siempre | Batched gate (`DECISION_NEEDED` con comando exacto) |
+| Durante la implementación | `tipo: academico` | `trabajo-academico` |
 | Durante la implementación | La tarea introduce lógica con comportamiento verificable | `testing` |
 | Antes de reportarse COMPLETADA | Siempre que hubo cambios de código | `revision-codigo` (autorrevisión) |
 | Antes de reportarse COMPLETADA | El diff toca transiciones / animaciones | `review-animations` (lectura directa del archivo), dentro de la autorrevisión |
 | Antes de reportarse COMPLETADA | `verificacion` de la tarea (o la del perfil de costo, §1) es `ligera` o `completa` | `verificador-datos`, en ese nivel |
+| Antes de reportarse COMPLETADA | `tipo: academico` | `verificador-datos` sobre todas las referencias |
 | Al cerrar la tarea/milestone | La tarea es la última de una funcionalidad visible, o el milestone completo cerró | `documentacion` |
 | Al cerrar cada wave | Siempre, salvo la última (la cubre el cierre del milestone) | `optimizador-tokens` (`empaquetar`) |
 | Al cerrar el milestone | Docs raíz tocados que ninguna tarea verificó | `verificador-datos` (`ligera`) |

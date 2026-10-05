@@ -36,7 +36,8 @@ from pathlib import Path
 
 NIVELES_VERIFICACION = {"completa", "ligera", "ninguna"}
 TIPOS_VIGENTES = {"backend", "frontend", "data", "cli", "mobile", "docs", "testing",
-                  "presentacion", "contenido", "otro"}
+                  "presentacion", "contenido", "devops", "academico", "otro"}
+NORMAS_CITACION = {"apa7", "icontec"}
 
 
 # --------------------------------------------------------------------------
@@ -296,6 +297,8 @@ def preflight(manifest) -> dict:
             vm = t["verificacion_manual"]
             if not isinstance(vm, list) or any(not isinstance(v, str) or not v.strip() for v in vm):
                 errores.append(f"tarea {etiqueta}: `verificacion_manual` debe ser una lista de textos no vacíos")
+        if "norma_citacion" in t and (not isinstance(t["norma_citacion"], str) or t["norma_citacion"] not in NORMAS_CITACION):
+            errores.append(f"tarea {etiqueta}: `norma_citacion` debe ser uno de {sorted(NORMAS_CITACION)} (vale {t['norma_citacion']!r})")
         if "modelo" in t and (not isinstance(t["modelo"], str) or not t["modelo"].strip()):
             errores.append(f"tarea {etiqueta}: `modelo` debe ser un texto no vacío (alias o ID completo)")
         if "verificacion" in t and (not isinstance(t["verificacion"], str) or t["verificacion"] not in NIVELES_VERIFICACION):

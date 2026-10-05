@@ -50,7 +50,7 @@
       "additionalProperties": false,
       "required": ["dominio", "complejidad", "alcance"],
       "properties": {
-        "dominio": { "enum": ["web", "backend", "mobile", "data", "cli", "devops", "contenido", "mixto"] },
+        "dominio": { "enum": ["web", "backend", "mobile", "data", "cli", "devops", "contenido", "academico", "mixto"] },
         "complejidad": { "enum": ["baja", "media", "alta"] },
         "alcance": { "type": "string", "minLength": 1 }
       }
@@ -82,7 +82,7 @@
       "type": "array",
       "uniqueItems": true,
       "items": {
-        "enum": ["backend", "frontend", "data", "cli", "mobile", "docs", "testing", "otro", "presentacion", "contenido"]
+        "enum": ["backend", "frontend", "data", "cli", "mobile", "docs", "testing", "otro", "presentacion", "contenido", "devops", "academico"]
       }
     },
     "skills_requeridas": {
