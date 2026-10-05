@@ -681,6 +681,32 @@ esquema).
   instalado en el equipo de la prueba, así que no se generó el `.docx`; el
   comando queda documentado en la skill.
 
-**Validación de punta a punta pendiente.** La tarea N6 del milestone (correr
-el flujo completo con las tres skills) aún no se ha ejecutado al escribir
-esta sección; sus resultados no se registran aquí.
+**Validación de punta a punta (N6).** Corrida real en la sesión principal
+sobre la idea de §4 N6 ("una web para que los estudiantes se inscriban a un
+taller..., publicada gratis, y un informe corto en APA"), documentada en
+`milestones/e2e-skills-2/`:
+
+- `triage-proyecto` clasificó la idea como `mixto` y preguntó 3 cosas en una
+  sola tanda (stack, quién ve los inscritos, lineamientos del informe). El
+  manifest salió con una tarea por tipo nuevo o existente: T1 `backend`,
+  T2 `frontend`, T3 `devops`, T4 `academico` (`norma_citacion: apa7`,
+  `verificacion: completa`), en 3 waves (T1 → T2 + T4 → T3).
+- T1 aplicó `backend-datos`: modelo y contrato antes del SQL, RLS por
+  `auth.uid()` en la misma migración, cupo con trigger `SECURITY DEFINER`
+  y `.env.example` con dos variables vacías. Ya no hizo falta `git add -f`:
+  la excepción `!.env.example` del gate de la wave 1 funcionó.
+- T2 construyó la web estática. La revisión del orquestador encontró que
+  detectaba la sesión con un sondeo a `rpc` porque el contrato no listaba
+  `auth.getSession()`; entró al batched gate de la wave 2 y se corrigió
+  ampliando el contrato. Es el caso que el gate está para atrapar: un
+  sub-agente que cumple el criterio literal con un atajo.
+- T4 aplicó `trabajo-academico`: informe APA 7 con 5 referencias de URL
+  comprobada; verificador completo con 0 incorrectas y 0 inventadas.
+- T3 aplicó `despliegue` y **paró en el gate** con el comando exacto
+  (`git push origin main` → `gh workflow run pages-taller-inscripcion.yml ...`).
+  Destapó un límite que ninguna prueba aislada mostraba: un repositorio
+  tiene un solo sitio de Pages, así que el taller y la landing de Enigma Go
+  se reemplazan entre sí. Respuesta: no publicar ahora.
+- Las acciones con cuenta (crear el proyecto de Supabase, activar Pages,
+  cargar las variables) quedaron en el checklist de `verificacion_manual`
+  de cada wave, sin bloquear ninguna.

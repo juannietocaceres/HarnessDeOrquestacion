@@ -44,3 +44,23 @@ README.md, RESUMEN-HARNESS.md, PROCESO.md) verificados dentro de N5
 (`verificador-datos` ligera, 0 incorrectas): el cierre del milestone no
 necesita repetirlo sobre ellos. Supuesto de N5: nodo de publicación del
 diagrama ("¿publicar algo?" → gate → `despliegue` o "solo preparada").
+
+## Wave 4 — N6 y cierre del milestone (2026-10-05)
+
+N6 corrió en la sesión principal: `milestones/e2e-skills-2/` (triage, manifest,
+estado, decisiones, contexto-compacto y artefactos en `web/taller-inscripcion/`).
+Criterios: las tres skills nuevas se usaron (T1 `backend-datos`, T3
+`despliegue`, T4 `trabajo-academico`); la publicación pasó por el batched gate
+con el comando exacto y se respondió "Don't publish now (Recommended)".
+Resumen en `PROCESO.md` §16 (escrito por el orquestador; verificado contra los
+reportes de las tareas y `milestones/e2e-skills-2/decisiones.md`).
+
+Cierre: los docs raíz del harness ya los verificó N5; la adición de N6 a
+`PROCESO.md` §16 se cotejó contra `milestones/e2e-skills-2/`. No se corre otra
+pasada de `verificador-datos` sobre ellos.
+
+Checklist acumulado de verificación manual (informativo):
+- **N2**: "Activar GitHub Pages en la configuración del repositorio si la publicación se aprueba" — no aprobado.
+- **N3**: "Revisar que el esqueleto del anteproyecto tenga sentido para el tema y el programa"
+- **N6**: "Abrir la web publicada (si se aprobó publicar) desde el celular y probar la inscripción" — no aplica mientras no se publique.
+- Más el checklist de `milestones/e2e-skills-2/decisiones.md` (Supabase, Pages, informe).

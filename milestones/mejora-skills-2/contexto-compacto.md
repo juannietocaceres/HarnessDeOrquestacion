@@ -1,14 +1,15 @@
 # Contexto compacto — mejora-skills-2
-Actualizado: 2026-10-05 · cierre de wave 3 · fuentes: estado.yaml, decisiones.md, bloqueos-externos.md
+Actualizado: 2026-10-05 · cierre del milestone · fuentes: estado.yaml, decisiones.md, bloqueos-externos.md
 
 ## Estado
-wave_actual: 4 | siguiente: 4 [N6] (sesión principal: triage + gate al usuario) | cap: 3
+wave_actual: 4 | milestone cerrado 2026-10-05 | sin waves pendientes | cap: 3
 manifest_snapshot_sha256: e36f21def60a7c9356ce635462909b009f62cc20e8cb74df60a65d08833c0d21 (re-preflight OK tras 5fe0fad)
 N1: COMPLETADA · commit 800eb89 · merge 8d07a9c · `.claude/skills/backend-datos/` + `milestones/mejora-skills-2/pruebas/backend-datos.md`
 N2: COMPLETADA · commit 94dae97 · merge 6fc17bc · `.claude/skills/despliegue/` + `.github/workflows/pages-enigma-go.yml` + `landing/enigma-go/404.html` + `milestones/mejora-skills-2/pruebas/despliegue.md`
 N3: COMPLETADA · commit 4370787 · merge be4e628 · `.claude/skills/trabajo-academico/` + `milestones/mejora-skills-2/pruebas/trabajo-academico.md`
 N4: COMPLETADA · commit 7b62886 · merge 5a496b0 · rama `worktree-agent-ae1ff4a878d8656c6` · tipos `devops`/`academico`, `norma_citacion` (`apa7`|`icontec`), filas §1/§8 en `.claude/skills/orquestador/SKILL.md`, `.claude/skills/triage-proyecto/` (preflight, schema, tests 29 OK; optimizador-tokens 21 OK; 5 manifests PASA)
 N5: COMPLETADA · commit d598a29 · merge 5aaa7a7 · rama `worktree-agent-a5f2e885bd00e216b` · CLAUDE.md, README.md, RESUMEN-HARNESS.md, PROCESO.md §16 (24 skills; verificador ligera 0 incorrectas)
+N6: COMPLETADA · rama main (sesión principal) · resultado `milestones/e2e-skills-2/` (T1–T4, artefactos en `web/taller-inscripcion/`; publicación de T3 no aprobada en el gate) · resumen en `PROCESO.md` §16
 Cierre wave 1: d8730a4 (`.gitignore` con `!.env.example`, estado, decisiones)
 Verificador: N1 ligera 5 ✅ / 1 no verificable (`keys().hasOnly` / `request.time`, nota de emulador); N2 ligera sin hallazgos; N3 completa 17 ✅ / 3 🟡 / 0 ❌ / 0 inventadas.
 
@@ -19,8 +20,9 @@ Verificador: N1 ligera 5 ✅ / 1 no verificable (`keys().hasOnly` / `request.tim
 - N2 (§7.5) — publicar landing de Enigma Go → **Solo preparada: nada se publica ni se hace push.**
 
 ## Pendiente
-- Wave 2 cerrada sin decisiones ni `verificacion_manual`; supuestos N4: `devops` → `sonnet`/`ninguna` (`opus` si hay arquitectura), `academico` → `sonnet`/`completa`. Wave 3 cerrada sin decisiones. Wave 4: N6 (PLAN-MEJORA-SKILLS-2.md §4 N6) → `milestones/e2e-skills-2/`; docs raíz ya verificados en N5.
+- Wave 2 cerrada sin decisiones ni `verificacion_manual`; supuestos N4: `devops` → `sonnet`/`ninguna` (`opus` si hay arquitectura), `academico` → `sonnet`/`completa`. Wave 3 cerrada sin decisiones. Wave 4 (N6, `PLAN-MEJORA-SKILLS-2.md` §4 N6) cerrada; docs raíz verificados en N5, sin pasada extra al cierre.
 - Verificación manual (informativa): N2 activar Pages solo si se aprueba publicar (no aprobado); N3 revisar sentido del esqueleto `milestones/mejora-skills-2/pruebas/trabajo-academico/documento.md`.
+- Checklist manual acumulado: N2 Pages (no aprobado), N3 esqueleto, N6 web en celular (no aplica sin publicar); más el de `milestones/e2e-skills-2/decisiones.md`.
 - Bloqueos externos: ninguno.
 - Ramas integradas (worktrees no borrados): N1 `worktree-agent-a57954e5a4943dfeb` (sobre WIP 9acb444, `.claude/worktrees/agent-ae78a04b9aaa48a43`); N2 `worktree-agent-a4ce2ba0d7e863d78` (sobre WIP 7a15bac, `.claude/worktrees/agent-a8a7ef11e4888d79e`); N3 `worktree-agent-ad2f2d5dd8f79a0f7` (sobre WIP 4612eb3, `.claude/worktrees/agent-afefa586e23a0d53c`). Todo ya en `main`.
 - Manifest mutado en 5fe0fad: N3 `verificacion: completa`; N1 se reabrió una vez por faltar `verificador-datos` ligera. `.gitignore` tenía `.env.*` (resuelto).
@@ -32,4 +34,5 @@ Verificador: N1 ligera 5 ✅ / 1 no verificable (`keys().hasOnly` / `request.tim
 
 
 
-<!-- metricas: tokens_original 1283, tokens_final 869, ahorro 32%, metodo estimado; entidades_preservadas true -->
+
+<!-- metricas: tokens_original 1619, tokens_final 961, ahorro 41%, metodo estimado; entidades_preservadas true -->

@@ -36,3 +36,22 @@ a `main`. Tests de T2 en `main`: 5 pass, 0 fail. T4: verificador completa,
 Checklist de verificación manual (informativo, no bloquea):
 - **T2**: "Abrir la web publicada (si se aprobó publicar) desde el celular y probar la inscripción"
 - **T4**: "Revisar que el informe tenga sentido para el curso"
+
+## Wave 3 — batched gate (2026-10-05)
+
+| # | Tarea | Pregunta | Respuesta |
+|---|---|---|---|
+| 1 | T3 | ¿Autorizas publicar el taller en GitHub Pages? Comando exacto: `git push origin main` → `gh workflow run pages-taller-inscripcion.yml --repo juannietocaceres/HarnessDeOrquestacion --ref main` → `gh run watch --repo juannietocaceres/HarnessDeOrquestacion`; prerrequisitos: Pages con Source "GitHub Actions" y `gh variable set` de `SUPABASE_URL` y `SUPABASE_ANON_KEY`. Un solo sitio de Pages: reemplaza la landing Enigma Go. | Don't publish now (Recommended): queda solo preparado; nada se publica ni se hace push. |
+
+### Cierre de wave 3 y del milestone (2026-10-05)
+
+T3 integrada a `main` (800a208; decisión registrada en `web/taller-inscripcion/PUBLICAR.md`, c4ae767). Nada se publicó ni se hizo push.
+
+Cierre del milestone: `verificador-datos` ligera sobre `web/taller-inscripcion/README.md` (único doc raíz del proyecto que ninguna tarea verificó): 7 afirmaciones (rutas, versión `2.117.2` con SRI, aviso "Falta la configuración") correctas contra el repo; 1 a matizar corregida ("ver tarea de despliegue" → "ver `PUBLICAR.md`").
+
+Checklist acumulado de verificación manual (informativo):
+- **T1**: "Crear el proyecto en Supabase, aplicar la migración y copiar la URL y la anon key"
+- **T2**: "Abrir la web publicada (si se aprobó publicar) desde el celular y probar la inscripción" — no aplica mientras no se publique.
+- **T3**: "Activar GitHub Pages (Source: GitHub Actions) y cargar las variables de Supabase en el repositorio, si se aprueba publicar" — no aprobado.
+- **T4**: "Revisar que el informe tenga sentido para el curso"
+- Pendiente técnico conocido: la web no se probó en un navegador real (consola sin config, sesión al recargar); SRI de supabase-js calculado pero no cargado en navegador.

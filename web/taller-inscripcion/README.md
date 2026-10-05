@@ -31,7 +31,7 @@ Prueba en el celular real (misma red, `http://<IP-del-PC>:8080`): el emulador no
 
 ## Publicar bajo un subpath (GitHub Pages)
 
-Todas las rutas son relativas, así que funciona en `https://usuario.github.io/repo/`. `config.js` no se commitea: en el despliegue debe generarse en el paso de publicación (ver tarea de despliegue). La clave anon es pública por diseño; la protegen las políticas RLS de `supabase/`.
+Todas las rutas son relativas, así que funciona en `https://usuario.github.io/repo/`. `config.js` no se commitea: en el despliegue se genera en el workflow de publicación a partir de las variables del repositorio (ver `PUBLICAR.md`). La clave anon es pública por diseño; la protegen las políticas RLS de `supabase/`.
 
 ## Pruebas
 

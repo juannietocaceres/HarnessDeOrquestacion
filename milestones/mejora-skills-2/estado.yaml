@@ -2,6 +2,7 @@ milestone: "Backend, despliegue y trabajo académico"
 manifest_snapshot_sha256: e36f21def60a7c9356ce635462909b009f62cc20e8cb74df60a65d08833c0d21   # re-preflight OK 2026-10-05 tras cambio de 5fe0fad (N3 verificacion: completa; N4/N5 descripción)
 preflight: OK   # ids únicos, deps internas resueltas, sin ciclos, campos requeridos presentes
 wave_actual: 4
+milestone_cerrado: 2026-10-05
 waves_cerradas:
   - wave: 1
     fecha: 2026-10-05
@@ -31,7 +32,7 @@ tareas:
   N3: { estado: COMPLETADA, rama: worktree-agent-ad2f2d5dd8f79a0f7, commit: 4370787, verificador_completa: "17 ok, 3 a matizar, 0 incorrectas, 0 inventadas", rama_wip: worktree-agent-afefa586e23a0d53c, worktree_wip: .claude/worktrees/agent-afefa586e23a0d53c, commit_wip: 4612eb3 }
   N4: { estado: COMPLETADA, rama: worktree-agent-ae1ff4a878d8656c6, commit: 7b62886 }
   N5: { estado: COMPLETADA, rama: worktree-agent-a5f2e885bd00e216b, commit: d598a29 }
-  N6: { estado: EN_CURSO, rama: null, commit: null }
+  N6: { estado: COMPLETADA, rama: main (sesión principal), resultado: milestones/e2e-skills-2/ }
 decisiones_pendientes: []
 bloqueos_externos: []
 reanudacion:
