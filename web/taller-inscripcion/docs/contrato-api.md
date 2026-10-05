@@ -6,7 +6,7 @@ tarea: "T1"
 modelo_de_datos: "docs/modelo-datos.md"
 estilo: "operaciones sobre el proveedor (supabase-js desde el navegador)"
 fecha: "2026-10-05"
-fuentes_consultadas: ["https://supabase.com/docs/reference/javascript (T2: nombres de métodos confirmados, sin cambios)"]
+fuentes_consultadas: ["https://supabase.com/docs/reference/javascript (T2: nombres de métodos confirmados, incluidos auth.getSession y auth.onAuthStateChange)", "https://supabase.com/docs/reference/javascript/auth-getsession"]
 ---
 
 # Contrato de API: talleres e inscripciones
@@ -33,11 +33,15 @@ Operaciones que usa el cliente (`supabase-js`, clave anon + sesión del usuario)
 | Registrarse | `auth.signUp({ email, password })` | No | usuario (sesión según confirmación de correo) | email inválido, contraseña corta, usuario ya existe |
 | Iniciar sesión | `auth.signInWithPassword({ email, password })` | No | sesión | credenciales inválidas |
 | Cerrar sesión | `auth.signOut()` | Sí | — | — |
+| Leer sesión | `auth.getSession()` | No | `{ data: { session } }`, `session` es `null` sin login | — |
+| Escuchar cambios de sesión | `auth.onAuthStateChange(callback)` | No | callback con `(evento, session)` en login, logout y refresco | — |
 | Listar talleres | `from('talleres').select('id,titulo,descripcion,inicia_en,cupo').order('inicia_en')` | Sí | arreglo (puede ser `[]`) | sin sesión: `[]` o `401` |
 | Cupos disponibles | `rpc('cupos_disponibles', { p_taller_id })` | Sí | entero (>= 0), `null` si el taller no existe | sin sesión: `42501` |
 | Mis inscripciones | `from('inscripciones').select('id,taller_id,nombre,creado_en')` | Sí | solo filas propias (`[]` si no hay) | sin sesión: `[]` o `401` |
 | Inscribirse | `from('inscripciones').insert({ taller_id, nombre })` | Sí | fila creada (con `.select()`) | `23505`, `23503`, `23514`, `P0001`, `42501` |
 | Cancelar | `from('inscripciones').delete().eq('id', id).select()` | Sí | arreglo con la fila borrada | ajena o inexistente: arreglo vacío, sin error |
+
+`getSession` y `onAuthStateChange` solo leen o escuchan la sesión local (guardada en el navegador): no llaman al servidor y no agregan reglas RLS. `42501` queda como error de operaciones reales sobre las tablas, nunca como sondeo de sesión.
 
 ## Inscribirse
 

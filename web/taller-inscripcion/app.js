@@ -5,7 +5,6 @@
 
   var L = window.Logica;
   var $ = function (id) { return document.getElementById(id); };
-  var NIL_UUID = "00000000-0000-0000-0000-000000000000";
 
   var db = null;
   var modo = "login"; // "login" | "registro"
@@ -81,7 +80,7 @@
         return;
       }
       $("password").value = "";
-      await entrarApp(res.data.user && res.data.user.email);
+      aplicarSesion(res.data.session);
     } catch (e) {
       mostrarError("error-auth", L.traducirError(e, modo));
     } finally {
@@ -95,7 +94,21 @@
       toast(L.traducirError(res.error, "logout"));
       return;
     }
-    mostrarVista("vista-auth");
+    aplicarSesion(null);
+  }
+
+  // Punto único de cambio de vista según la sesión. Idempotente por usuario:
+  // getSession, onAuthStateChange y el login pueden avisar del mismo estado.
+  var usuarioActual = null;
+  function aplicarSesion(sesion) {
+    var id = sesion && sesion.user ? sesion.user.id : null;
+    if (id === usuarioActual) return;
+    usuarioActual = id;
+    if (!id) {
+      mostrarVista("vista-auth");
+      return;
+    }
+    entrarApp(sesion.user.email);
   }
 
   // ---------- Talleres e inscripciones ----------
@@ -117,7 +130,7 @@
       var talleres = r[0], mias = r[1];
       if (talleres.error || mias.error) {
         var err = talleres.error || mias.error;
-        if (err.code === "42501" || err.status === 401) { mostrarVista("vista-auth"); return; }
+        if (err.code === "42501" || err.status === 401) { aplicarSesion(null); return; }
         estado.textContent = L.traducirError(err, "listar");
         return;
       }
@@ -203,7 +216,7 @@
       var res = await db.from("inscripciones").insert({ taller_id: tallerId, nombre: v.valor }).select();
       if (res.error) {
         toast(L.traducirError(res.error, "inscribir"));
-        if (res.error.code === "42501") { mostrarVista("vista-auth"); return; }
+        if (res.error.code === "42501") { aplicarSesion(null); return; }
       } else {
         toast("Inscripción confirmada.");
       }
@@ -243,20 +256,22 @@
     $("form-auth").addEventListener("submit", enviarAuth);
     $("btn-salir").addEventListener("click", salir);
 
-    // Sondeo de sesión con una operación del contrato: sin sesión, rpc devuelve 42501.
+    // Sesión local (sin llamada al servidor): cambios de login/logout y sesión restaurada.
+    // El callback no espera llamadas a supabase dentro de él (riesgo de bloqueo): se difiere.
+    db.auth.onAuthStateChange(function (_evento, sesion) {
+      setTimeout(function () { aplicarSesion(sesion); }, 0);
+    });
     try {
-      var sondeo = await db.rpc("cupos_disponibles", { p_taller_id: NIL_UUID });
-      if (sondeo.error && (sondeo.error.code === "42501" || sondeo.error.status === 401)) {
+      var r = await db.auth.getSession();
+      if (r.error) {
         mostrarVista("vista-auth");
-      } else if (sondeo.error) {
-        mostrarVista("vista-auth");
-        mostrarError("error-auth", L.traducirError(sondeo.error, "sondeo"));
+        mostrarError("error-auth", L.traducirError(r.error, "sesion"));
       } else {
-        await entrarApp(null);
+        aplicarSesion(r.data && r.data.session);
       }
     } catch (e) {
       mostrarVista("vista-auth");
-      mostrarError("error-auth", L.traducirError(e, "sondeo"));
+      mostrarError("error-auth", L.traducirError(e, "sesion"));
     }
   }
 

@@ -35,8 +35,8 @@ Dos niveles: **automáticas** (lógica pura de `logic.js`, `node --test tests/lo
 | M7 | Duplicado | Inscribirse dos veces (segunda pestaña ya abierta) | "Ya estás inscrito en este taller." y la lista se actualiza |
 | M8 | Cupo lleno | Taller con cupo 1 ocupado por otro usuario | Botón "Sin cupos" deshabilitado; si la carrera ocurre, "El taller ya no tiene cupos." |
 | M9 | Cancelar | "Cancelar inscripción" y aceptar | Toast; el boleto desaparece; el cupo se libera |
-| M10 | Sesión persistida | Recargar con sesión activa | Entra directo a la app |
-| M11 | Cerrar sesión | "Cerrar sesión" | Vuelve al formulario de acceso |
+| M10 | Sesión persistida | Recargar con sesión activa | Entra directo a la app (vía `getSession`, sin llamada de servidor para decidir) y el saludo muestra el correo |
+| M11 | Cerrar sesión | "Cerrar sesión" | Vuelve al formulario de acceso (también si cierras sesión en otra pestaña, vía `onAuthStateChange`) |
 | M12 | Sin conexión | Modo avión al inscribirse | "No hay conexión con el servidor..." |
 | M13 | Celular | Teclado, zona segura, toques | Sin zoom al enfocar campos, botones de 44px+, sin parpadeo gris al tocar |
 
