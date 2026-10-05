@@ -6,7 +6,7 @@ tarea: "T1"
 modelo_de_datos: "docs/modelo-datos.md"
 estilo: "operaciones sobre el proveedor (supabase-js desde el navegador)"
 fecha: "2026-10-05"
-fuentes_consultadas: []   # sin consulta externa; confirmar nombres de métodos de supabase-js en la doc oficial al implementar T2
+fuentes_consultadas: ["https://supabase.com/docs/reference/javascript (T2: nombres de métodos confirmados, sin cambios)"]
 ---
 
 # Contrato de API: talleres e inscripciones
