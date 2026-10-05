@@ -1,0 +1,75 @@
+# Publica web/taller-inscripcion/ en GitHub Pages.
+# Modelo: pages-enigma-go.yml (mismas versiones de acciones, consultadas el
+# 2026-10-02 en actions/starter-workflows pages/static.yml).
+#
+# Solo se dispara a mano (workflow_dispatch): publicar requiere aprobación
+# en el gate (skill despliegue). No agregar un trigger `push` sin esa decisión.
+# Requiere: Settings > Pages > Source "GitHub Actions" y las variables de
+# repositorio SUPABASE_URL y SUPABASE_ANON_KEY (ver web/taller-inscripcion/PUBLICAR.md).
+#
+# AVISO: un repositorio tiene UN solo sitio de Pages. Este workflow y
+# pages-enigma-go.yml publican al mismo sitio: el último que corre reemplaza al otro.
+name: Publicar taller de inscripción en GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Mismo grupo que pages-enigma-go.yml: nunca dos despliegues a Pages a la vez.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # La anon key es pública por diseño (la protege RLS), pero va como
+      # variable del repo, no en el código. Nunca usar service_role aquí.
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Verificar variables (sin imprimir valores)
+        run: |
+          for v in SUPABASE_URL SUPABASE_ANON_KEY; do
+            if [ -z "${!v}" ]; then
+              echo "::error::Falta la variable de repositorio $v (Settings > Secrets and variables > Actions > Variables)"
+              exit 1
+            fi
+          done
+      - name: Generar config.js desde las variables
+        working-directory: web/taller-inscripcion
+        run: |
+          printf 'SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n' "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > "$RUNNER_TEMP/.env"
+          node scripts/generar-config.js "$RUNNER_TEMP/.env"
+          rm -f "$RUNNER_TEMP/.env"
+      - name: Armar la carpeta del sitio (solo archivos servidos)
+        working-directory: web/taller-inscripcion
+        run: |
+          mkdir -p "$RUNNER_TEMP/_site"
+          cp index.html 404.html styles.css logic.js app.js config.js "$RUNNER_TEMP/_site/"
+          ls -la "$RUNNER_TEMP/_site"
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+      - name: Subir el sitio como artefacto
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Solo web/taller-inscripcion (filtrado), nunca el repo entero.
+          path: ${{ runner.temp }}/_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
