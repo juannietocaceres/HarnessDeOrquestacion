@@ -9,6 +9,7 @@ web-build/
 *.tsbuildinfo
 .env
 .env.*
+!.env.example
 
 # Worktrees de sub-agentes y caché de Python
 .claude/worktrees/
