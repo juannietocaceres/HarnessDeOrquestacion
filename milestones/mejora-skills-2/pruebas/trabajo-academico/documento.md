@@ -8,7 +8,7 @@ csl: apa.csl
 ---
 
 > BORRADOR de prueba de la skill `trabajo-academico`. Estructura según
-> `ESTRUCTURAS.md` (anteproyecto), norma APA 7 (provisional, decisión §7.3).
+> `ESTRUCTURAS.md` (anteproyecto), norma APA 7 (por defecto, decisión §7.3).
 > No hay `docs/academico/lineamientos.md`: el formato institucional es un
 > supuesto. Todo el contenido es borrador para revisión humana.
 

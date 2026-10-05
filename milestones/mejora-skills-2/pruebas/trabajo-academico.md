@@ -59,9 +59,13 @@ Fuentes: `https://raw.githubusercontent.com/anthropics/skills/main/skills/docx/L
 - El README del repo las describe como "source-available, not open source", incluidas "as a reference" (a diferencia de "many skills in this repo are open source (Apache 2.0)").
 - Conclusión para §7.4: NO se pueden vendorizar en este repo (copiar a `.claude/skills/` es retener copias fuera de los Servicios y redistribuir). Solo referenciarlas por nombre/URL. Alternativa gratuita: pandoc. (La interpretación jurídica final es del usuario.)
 
+## Decisión §7.4 (tomada en el gate)
+
+Las skills `docx` y `pdf` de anthropics/skills no se vendorizan porque su licencia lo prohíbe. `trabajo-academico` produce `.docx`/`.pdf` con pandoc y solo enlaza esas skills como referencia externa (consta en `SKILL.md` §6).
+
 ## Supuestos
 
-- Norma APA 7 provisional (decisión §7.3 pendiente); no hay `lineamientos.md`, por eso el esqueleto es de prueba y no un documento formal entregable.
+- Norma APA 7 por defecto (decisión §7.3 confirmada en el gate; cambiable por proyecto); no hay `lineamientos.md`, por eso el esqueleto es de prueba y no un documento formal entregable.
 - Se conserva el tema de Cali en el repo; es borrador sin datos personales.
 
 ## Verificación manual pendiente (informativa)

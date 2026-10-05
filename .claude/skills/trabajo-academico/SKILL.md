@@ -63,13 +63,9 @@ de `ESTRUCTURAS.md` y anotar el supuesto.
 
 ## 3. Norma de citación
 
-<!-- PROVISIONAL: decisión §7.3 de PLAN-MEJORA-SKILLS-2.md pendiente del
-     gate. Si se decide otra norma por defecto, cambia solo esta sección y
-     la fila "Norma por defecto" de abajo. -->
-
 | Campo | Valor |
 |---|---|
-| Norma por defecto | **APA 7** (provisional, decisión §7.3 pendiente) |
+| Norma por defecto | **APA 7** (decisión §7.3 confirmada; cambiable por proyecto) |
 | Alternativa | ICONTEC (NTC 1486 y normas asociadas) |
 | Dónde se fija | `norma_citacion:` en la tarea del manifest, o en `lineamientos.md` |
 
@@ -153,6 +149,12 @@ pandoc documento.md --citeproc --bibliography referencias.bib --csl apa.csl -o d
   - Linux: el paquete `pandoc` de la distribución.
   Los comandos de instalación cambian: confírmalos en esa página al
   usarlos y anota la fecha.
+- **`.docx` y `.pdf` se producen con pandoc.** Las skills `docx` y `pdf` de
+  `anthropics/skills` no se vendorizan: su licencia (propietaria, "All
+  rights reserved") prohíbe copiarlas, redistribuirlas y crear obras
+  derivadas (decisión §7.4). Solo se enlazan como referencia externa:
+  https://github.com/anthropics/skills/tree/main/skills/docx y
+  https://github.com/anthropics/skills/tree/main/skills/pdf.
 - Para que Word use una plantilla de la institución (márgenes, fuente,
   portada), pandoc acepta `--reference-doc plantilla.docx`.
 
