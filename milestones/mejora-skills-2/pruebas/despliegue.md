@@ -17,7 +17,7 @@ no tiene imágenes, scripts ni otros archivos propios.
 
 Caso "web estática" → **GitHub Pages**, porque el repo ya está en GitHub
 (`origin` = `https://github.com/juannietocaceres/HarnessDeOrquestacion`).
-Esta fila es **provisional**: depende de la decisión abierta §7.2 del plan.
+Decisión §7.2 confirmada en el gate: GitHub Pages para webs estáticas.
 
 - **URL esperada**: `https://juannietocaceres.github.io/HarnessDeOrquestacion/`
   (sitio de proyecto; la landing queda en la raíz del sitio).
@@ -130,9 +130,9 @@ Recomendación: ✅ publicable. 7 ✅, 2 🟡 (ya matizadas), 0 ❌.
 | Ningún límite de plan ni precio escrito como dato fijo | `grep` de la sección 8 |
 | Prueba en `milestones/mejora-skills-2/pruebas/despliegue.md` | Este archivo |
 
-## 10. Decisiones que quedan para el gate
+## 10. Decisiones del gate
 
-- **§7.2** (plataforma por defecto para webs estáticas): la skill usa la
-  propuesta del plan, marcada como provisional en su paso 2.
-- **§7.5** (publicar la landing o solo dejarla preparada): pendiente; hasta
-  la respuesta, queda preparada y sin publicar.
+- **§7.2**: confirmada. GitHub Pages para webs estáticas, Vercel para
+  frameworks con funciones de servidor.
+- **§7.5**: decisión "solo preparado". La landing queda lista; no se
+  publicó, no se hizo push y no se activó Pages.

@@ -52,10 +52,8 @@ salida.
 
 ### 2. Elegir plataforma
 
-> **Provisional.** La fila de "web estática" y la de "web con framework"
-> son la propuesta de `PLAN-MEJORA-SKILLS-2.md` §7.2, pendiente de
-> confirmar en el gate. Si se decide otra cosa, solo cambia esta tabla y la
-> sección de configuración de la plataforma afectada.
+> Decisión confirmada en el gate (§7.2 del plan): GitHub Pages para webs
+> estáticas y Vercel para frameworks con funciones de servidor.
 
 | Caso | Opción por defecto | Alternativa |
 |---|---|---|
