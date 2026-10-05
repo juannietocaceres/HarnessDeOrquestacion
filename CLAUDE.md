@@ -23,13 +23,13 @@ Las skills viven en `.claude/skills/<nombre>/SKILL.md` y se invocan con
 `/<nombre>` (o se disparan automáticamente cuando el contexto coincide con su
 `description`).
 
-Hay 21 carpetas de skills: 10 propias del harness, `frontend-design`
+Hay 24 carpetas de skills: 13 propias del harness, `frontend-design`
 (vendorizada de Anthropic) y 10 de la suite de Emil Kowalski (vendorizadas).
 
 | Skill | Cuándo se usa |
 |---|---|
 | `/triage-proyecto` | Puerta de entrada cuando el usuario trae una idea, un plan en prosa o un pedido sin manifest. Produce un `triage.json` y un `milestone.yaml` borrador que pasa el preflight, sin escribir código. |
-| `/orquestador` | Para correr un milestone completo: recibe un manifest de tareas y lo ejecuta en waves. Es el punto de entrada cuando ya hay manifest. |
+| `/orquestador` | Para correr un milestone completo: recibe un manifest de tareas y lo ejecuta en waves. Es el punto de entrada cuando ya hay manifest. Reconoce los tipos de tarea `devops` y `academico` (este último con `norma_citacion` opcional: `apa7` o `icontec`). |
 | `/especificacion` | Antes de implementar una tarea ambigua o sin criterios de aceptación claros. Convierte una idea en lenguaje natural en un documento de especificación técnica. |
 | `/optimizador-prompts` | Al escribir u ordenar una instrucción para una IA; el orquestador la usa para armar el prompt de cada sub-agente (`PLANTILLA-SUBAGENTE.md`). |
 | `/optimizador-tokens` | Cuando el contexto de referencia de un sub-agente supera ~4.000 tokens estimados (cápsula) y al cerrar cada wave (`contexto-compacto.md`). Mide el ahorro con scripts. |
@@ -38,6 +38,9 @@ Hay 21 carpetas de skills: 10 propias del harness, `frontend-design`
 | `/documentacion` | Al cerrar una tarea o milestone que necesita README, docs técnicas o comentarios. |
 | `/verificador-datos` | Antes de publicar o de cerrar una tarea `docs`, `presentacion` o `contenido` con afirmaciones verificables, y al cerrar un milestone. Clasifica cada afirmación y propone correcciones. |
 | `/presentaciones-visuales` | Al crear o mejorar un deck o material para exponer (`tipo: presentacion`). Genera un HTML autocontenido en `presentaciones/<slug>.html`. |
+| `/backend-datos` | Antes de escribir código de backend: en cualquier tarea que cree o cambie una API, una base de datos o un login. Deja stack, modelo de datos, contrato de API, reglas de acceso y `.env.example`. |
+| `/despliegue` | Cuando un milestone o una tarea (`tipo: devops`) debe terminar con algo publicado. Deja la configuración versionada y el checklist de publicación; nunca publica sin aprobación explícita en el gate. |
+| `/trabajo-academico` | En tareas `tipo: academico` o al escribir un documento universitario: estructura, objetivos medibles, norma de citación fija, solo referencias verificadas y exportación a Word con pandoc. |
 | `/frontend-design` | Al construir o rediseñar cualquier UI. Copiada tal cual del repo público de Anthropic (`plugins/frontend-design`). |
 | Suite Emil Kowalski (10 skills) | Pulido de UI, animación web y Expo, revisión de motion: `emil-design-eng`, `animate`, `animate-expo`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `mobile-native`, `pick-ui-library`, `prototype`, `animation-vocabulary`. `review-animations`, `pick-ui-library` y `prototype` no se disparan solas (`disable-model-invocation: true`). Vendorizadas sin cambios, en inglés; origen, hash y reglas de convivencia en [docs/vendor/emilkowalski-skills.md](docs/vendor/emilkowalski-skills.md). |
 
@@ -80,7 +83,7 @@ trabajo puntual.
 ## Estructura del repo
 
 ```
-.claude/skills/          # las 21 skills (10 propias + 11 vendorizadas)
+.claude/skills/          # las 24 skills (13 propias + 11 vendorizadas)
 docs/vendor/             # registro de las skills vendorizadas de Emil Kowalski
 milestones/<slug>/       # manifest + estado + decisiones por milestone
 presentaciones/          # decks HTML generados con presentaciones-visuales

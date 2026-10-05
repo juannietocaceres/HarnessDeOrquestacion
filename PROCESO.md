@@ -590,3 +590,97 @@ vuelve a buscar; al cierre del milestone, otra pasada).
 
 Las cifras de antes y después se comparan en el próximo milestone
 (`mejora-skills-2` ya corre con estas reglas desde su wave 1 reanudada).
+
+## 16. Backend, despliegue y académico
+
+**Por qué estas tres y no otras.** Con 21 skills el harness era fuerte en
+frontend (`frontend-design` y la suite de Emil, 11 skills) y débil en el
+resto, y el objetivo es servir para apps, webs y proyectos académicos. Había
+tres huecos concretos: en API, base de datos y login el sub-agente
+improvisaba el stack y el modelo de datos en cada proyecto
+(`backend-datos`); un milestone terminaba con el código en `main` y nadie lo
+ponía en internet (`despliegue`); y no había criterio para anteproyectos,
+normas de citación ni referencias (`trabajo-academico`). Quedan en 24
+skills. No se agregó nada más: seguridad avanzada, CI/CD o ciencia de datos
+se agregan cuando un proyecto real las pida.
+
+**Reglas transversales** (plan `PLAN-MEJORA-SKILLS-2.md` §3, aplicadas por
+las tres):
+
+- *Opciones gratis primero*: toda recomendación de servicio parte del plan
+  gratuito; si una necesidad solo se cubre pagando, es un `DECISION_NEEDED`,
+  nunca una elección silenciosa.
+- *Los datos que cambian se verifican, no se recuerdan*: límites de planes,
+  precios, versiones y comandos de CLI no se escriben como verdad fija; la
+  skill manda consultarlos en la documentación oficial al usarlos y anotar la
+  fecha de consulta.
+- *Secretos nunca en el repo*: una credencial real es `verificacion_manual`
+  o bloqueo externo, no algo que se inventa ni se pide en el chat.
+
+**El contrato `.env.example`.** `backend-datos` y `despliegue` corren en
+paralelo, así que no pueden depender el uno del otro por conversación. El
+punto de encuentro es un archivo: `backend-datos` deja en `.env.example`
+(raíz del proyecto) una variable por bloque, con descripción, ámbito
+(`cliente` o `servidor`), sensibilidad y dónde se obtiene, y siempre con el
+valor vacío. `despliegue` lo lee para saber qué configurar en la plataforma.
+Ninguna escribe en la carpeta de la otra. Una clave que salta las reglas de
+acceso es siempre de ámbito servidor y sensible, y nunca lleva prefijo
+público. Primer hallazgo del contrato: el `.gitignore` raíz ignoraba
+`.env.*` y por tanto el propio `.env.example`; el gate resolvió agregar
+`!.env.example` (ver decisiones).
+
+**Publicar nunca es automático.** Publicar un sitio, crear una base en la
+nube o enviar algo tiene efecto fuera del repo, así que `despliegue` deja
+todo versionado y listo (configuración, checklist y el comando exacto) y
+devuelve `DECISION_NEEDED`; solo ejecuta con aprobación explícita en el
+batched gate. Por eso en el diagrama de `RESUMEN-HARNESS.md` `despliegue`
+queda al final del flujo, detrás de una aprobación, y si no se aprueba el
+proyecto queda "solo preparado".
+
+**Referencias verificadas.** `trabajo-academico` fija una sola norma de
+citación por proyecto (`apa7` por defecto; `icontec` como alternativa, campo
+`norma_citacion` del manifest) y prohíbe inventar referencias: cada entrada
+de `referencias.bib` se contrasta con su fuente (DOI o URL consultada) y lo
+que no está respaldado queda como `[POR COMPLETAR]` o `[CITA PENDIENTE]`. Las
+tareas `tipo: academico` llevan por eso `verificacion: completa`; `devops`
+va con `ninguna` (`opus` solo si hay decisiones de arquitectura). Estos dos
+tipos de tarea, el campo `norma_citacion` y las filas de `orquestador` §8 se
+integraron en la tarea N4 (`orquestador`, `triage-proyecto`, preflight y
+esquema).
+
+**Decisiones del gate (wave 1, 2026-10-05).** Registro completo en
+`milestones/mejora-skills-2/decisiones.md`:
+
+| Decisión | Respuesta |
+|---|---|
+| `.gitignore` ignora `.env.example` | Sí: el orquestador agrega la excepción al integrar la wave |
+| Skills `docx`/`pdf` de `anthropics/skills` (licencia propietaria, sin redistribución ni obras derivadas) | No se vendorizan; `trabajo-academico` usa pandoc y solo las referencia |
+| Supabase por defecto; GitHub Pages para estáticas (Vercel si hay funciones de servidor); APA 7 por defecto, cambiable | Confirmadas las tres |
+| Publicar la landing de Enigma Go | Solo preparada: nada se publica ni se hace push |
+
+**Resultados de las pruebas** (en `milestones/mejora-skills-2/pruebas/`):
+
+- `backend-datos`: regresión contra `panel-tareas-demo` (T1 y T2): mismas
+  entidades, endpoints, códigos de error y formato de error que los
+  originales; el generado añade tabla de pruebas de contrato y supuestos.
+  Prueba nueva, app Expo con login y favoritos: modelo, contrato,
+  migración con RLS y semilla, alternativa Firebase (`firestore.rules`) y
+  `.env.example` solo con las dos variables públicas. Autenticación con
+  el proveedor, sin tabla de usuarios ni hashing propio. Crear la base
+  real en la nube quedó como `verificacion_manual`. Verificador ligero: 5
+  correctas y 1 no verificable (una nota sobre el emulador de reglas).
+- `despliegue`: preparación de `landing/enigma-go/` para GitHub Pages
+  (`.github/workflows/pages-enigma-go.yml` y `landing/enigma-go/404.html`),
+  sin publicar. Verificador ligero sin hallazgos; ningún límite de plan ni
+  precio quedó escrito como dato fijo. Activar Pages queda solo si se
+  aprueba publicar, y no se aprobó.
+- `trabajo-academico`: esqueleto de anteproyecto en APA 7 sobre un modelo
+  predictivo de dengue en Cali, con 1 objetivo general, 5 específicos y 6
+  referencias verificadas contra Crossref y las URL. Verificador completo:
+  17 correctas, 3 a matizar, 0 incorrectas, 0 inventadas. pandoc no está
+  instalado en el equipo de la prueba, así que no se generó el `.docx`; el
+  comando queda documentado en la skill.
+
+**Validación de punta a punta pendiente.** La tarea N6 del milestone (correr
+el flujo completo con las tres skills) aún no se ha ejecutado al escribir
+esta sección; sus resultados no se registran aquí.

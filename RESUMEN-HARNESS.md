@@ -6,9 +6,9 @@ está diseñada como está. Para el *por qué* de cada decisión de diseño, ver
 [PROCESO.md](PROCESO.md). Para un ejemplo real ejecutado con este mismo
 harness, ver la sección 6 más abajo.
 
-## 1. Las 21 skills, qué producen y cuándo se usan
+## 1. Las 24 skills, qué producen y cuándo se usan
 
-`.claude/skills/` tiene 21 carpetas: **10 propias** del harness (las 10
+`.claude/skills/` tiene 24 carpetas: **13 propias** del harness (las 13
 primeras filas de la tabla), **1 vendorizada de Anthropic**
 (`frontend-design`) y **10 vendorizadas de Emil Kowalski** (agrupadas en la
 última fila).
@@ -25,6 +25,9 @@ primeras filas de la tabla), **1 vendorizada de Anthropic**
 | [`documentacion`](.claude/skills/documentacion/SKILL.md) | README, docs técnicas de decisiones, o comentarios inline | Al cerrar una tarea con funcionalidad visible, o al cerrar el milestone |
 | [`verificador-datos`](.claude/skills/verificador-datos/SKILL.md) | Informe que clasifica cada afirmación (correcta, a matizar, no verificable, exagerada, incorrecta, opinión) con correcciones | Al cerrar tareas `docs`, `presentacion` o `contenido` con afirmaciones verificables, y al cerrar el milestone |
 | [`presentaciones-visuales`](.claude/skills/presentaciones-visuales/SKILL.md) | Deck HTML autocontenido en `presentaciones/<slug>.html`, navegable por teclado y exportable a PDF | Tareas `tipo: presentacion`, o suelta para crear o mejorar slides |
+| [`backend-datos`](.claude/skills/backend-datos/SKILL.md) | Stack, modelo de datos, contrato de API, autenticación con proveedor, reglas de acceso y `.env.example` (sin valores reales) | Antes de escribir código de backend: tareas que crean o cambian una API, una base de datos o un login |
+| [`despliegue`](.claude/skills/despliegue/SKILL.md) | Configuración de publicación versionada en el repo (por ejemplo un workflow de GitHub Pages) y checklist de publicación, a partir de `.env.example` | Tareas `tipo: devops`, o un milestone que termina con algo publicado. Nunca publica sin aprobación explícita en el gate |
+| [`trabajo-academico`](.claude/skills/trabajo-academico/SKILL.md) | Borrador de documento universitario (objetivos medibles, norma de citación fija, `referencias.bib` verificado) exportable a Word con pandoc | Tareas `tipo: academico`, o suelta al escribir un anteproyecto, informe, artículo o ensayo |
 | [`frontend-design`](.claude/skills/frontend-design/SKILL.md) | Dirección de diseño visual deliberada (paleta, tipografía, layout específicos del brief) | Al construir o rediseñar cualquier UI. Copiada sin modificar de `anthropics/claude-code` |
 | Suite Emil Kowalski (10): `emil-design-eng`, `animate`, `animate-expo`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `mobile-native`, `pick-ui-library`, `prototype`, `animation-vocabulary` | Pulido de UI, animación web y Expo, revisión y auditoría de motion | Tareas que tocan UI o animaciones: 5 tienen fila propia en `orquestador` §8; las otras 5 se nombran solo si la tarea pide ese trabajo. `review-animations`, `pick-ui-library` y `prototype` no se disparan solas. Copiadas sin cambios del commit `d16ebe6`; registro en [docs/vendor/emilkowalski-skills.md](docs/vendor/emilkowalski-skills.md) |
 
@@ -32,7 +35,10 @@ primeras filas de la tabla), **1 vendorizada de Anthropic**
 skill de apoyo — el mapeo completo por tipo de proyecto está en su propio
 SKILL.md, §8. Las demás skills también funcionan sueltas, fuera de una wave.
 El porqué de la ampliación de 6 a 21 skills (milestone `mejora-skills`) está
-en [PROCESO.md](PROCESO.md) §14.
+en [PROCESO.md](PROCESO.md) §14; el de las tres últimas (`backend-datos`,
+`despliegue`, `trabajo-academico`, milestone `mejora-skills-2`), en §16. El
+manifest reconoce además los tipos de tarea `devops` y `academico` (este
+último con `norma_citacion`, `apa7` o `icontec`).
 
 ## 2. Flujo completo: milestone → waves → batched gate
 
@@ -68,6 +74,11 @@ flowchart TD
     Q2 --> R{"¿Quedan waves<br/>por correr?"}
     R -->|Sí| E
     R -->|No| S(["Cierre del milestone: verificador-datos<br/>sobre los docs tocados + reporte final"])
+    S --> Z{"¿El milestone incluye<br/>publicar algo (tarea devops)?"}
+    Z -->|Sí| Z1["Gate: aprobar el comando exacto<br/>de publicación (nunca automático)"]
+    Z1 -->|Aprobado| Z2["despliegue: publicar y verificar<br/>con el checklist"]
+    Z1 -->|No aprobado| Z3(["Queda solo preparada:<br/>sin publicar ni push"])
+    Z -->|No| Z4(["Fin"])
 ```
 
 ## 3. La política de no-respuesta, y por qué existe
