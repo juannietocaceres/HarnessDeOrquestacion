@@ -1,0 +1,66 @@
+{
+  "proyecto": "Inscripción a taller universitario",
+  "slug": "e2e-skills-2",
+  "estado": "listo_para_orquestar",
+  "preguntas_pendientes": [],
+  "supuestos": [
+    "Norma de citación: apa7 (lo dice la idea)",
+    "Backend: Supabase (decisión §7.1 de mejora-skills-2)",
+    "Respuestas del triage: web estática + Supabase JS en GitHub Pages; cada estudiante ve solo su inscripción (la lista completa se consulta en el panel de Supabase); informe APA genérico de 3 a 5 páginas",
+    "Proyecto destino en web/taller-inscripcion/",
+    "Un solo taller de ejemplo en el seed; la gestión de talleres se hace en el panel de Supabase"
+  ],
+  "clasificacion": {
+    "dominio": "mixto",
+    "complejidad": "media",
+    "alcance": "Web de inscripción con login y base de datos, preparada para publicar gratis, más un informe APA corto."
+  },
+  "requisitos_tecnicos": {
+    "frontend": "HTML/CSS/JS estático sin build, supabase-js",
+    "backend": "Supabase: auth del proveedor + Postgres + RLS",
+    "datos": "talleres e inscripciones",
+    "otros": "GitHub Pages con workflow manual; informe APA 7 con pandoc"
+  },
+  "requisitos_no_funcionales": [
+    {
+      "requisito": "Coste cero (publicada gratis)",
+      "inferido": false
+    },
+    {
+      "requisito": "Protección de datos personales de estudiantes (RLS)",
+      "inferido": true
+    },
+    {
+      "requisito": "Uso desde el celular",
+      "inferido": true
+    }
+  ],
+  "tipos_requeridos": [
+    "backend",
+    "frontend",
+    "devops",
+    "academico"
+  ],
+  "skills_requeridas": [
+    "backend-datos",
+    "frontend-design",
+    "emil-design-eng",
+    "mobile-native",
+    "testing",
+    "revision-codigo",
+    "despliegue",
+    "trabajo-academico",
+    "verificador-datos"
+  ],
+  "fuera_de_alcance": [
+    "Rol organizador y pantalla de lista de inscritos en la web",
+    "Gestión de talleres desde la web",
+    "Publicación real sin aprobación en el gate"
+  ],
+  "riesgos": [
+    "Claves de Supabase expuestas si config.js se commitea",
+    "Políticas RLS mal escritas exponen datos de otros estudiantes",
+    "Referencias inventadas en el informe"
+  ],
+  "manifest": "milestones/e2e-skills-2/milestone.yaml"
+}

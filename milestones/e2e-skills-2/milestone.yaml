@@ -1,0 +1,92 @@
+# Validación de punta a punta N6 de mejora-skills-2 (PLAN-MEJORA-SKILLS-2.md §4 N6).
+# Generado por triage-proyecto; respuestas del triage: web estática + Supabase JS
+# (GitHub Pages), cada estudiante ve solo su inscripción, informe APA genérico.
+milestone: "Inscripción a taller universitario"
+cap_concurrencia: 3
+tareas:
+  - id: T1
+    titulo: "Modelo de datos, contrato y RLS de inscripciones"
+    tipo: backend
+    depende_de: []
+    modelo: sonnet
+    verificacion: ninguna
+    descripcion: >
+      Aplicar la skill backend-datos para la web de inscripción a un taller en
+      web/taller-inscripcion/: stack Supabase (auth con email y contraseña del
+      proveedor, Postgres), modelo de datos de talleres e inscripciones, contrato
+      de las operaciones que usa el cliente (supabase-js desde el navegador),
+      migración SQL en web/taller-inscripcion/supabase/migrations/ con RLS en la
+      misma migración (cada estudiante solo ve, crea y cancela su propia
+      inscripción; nadie lista inscripciones ajenas desde el cliente), seed con
+      un taller de ejemplo y .env.example según el contrato de backend-datos.
+      Sin auth hecha a mano. No escribir la interfaz (es T2).
+    criterios_aceptacion:
+      - "Existen web/taller-inscripcion/docs/modelo-datos.md y web/taller-inscripcion/docs/contrato-api.md según las plantillas de backend-datos"
+      - "La migración habilita RLS y define políticas por auth.uid() para select, insert y delete de inscripciones"
+      - "web/taller-inscripcion/.env.example lista solo la URL y la anon key de Supabase, con valores vacíos"
+      - "Ningún archivo contiene una clave real ni hashing de contraseñas propio"
+    verificacion_manual:
+      - "Crear el proyecto en Supabase, aplicar la migración y copiar la URL y la anon key"
+  - id: T2
+    titulo: "Web estática de inscripción"
+    tipo: frontend
+    depende_de: [T1]
+    modelo: sonnet
+    verificacion: ninguna
+    descripcion: >
+      Construir en web/taller-inscripcion/ la web estática (HTML, CSS y JS sin
+      build) que implementa el contrato de T1 con supabase-js: registro e inicio
+      de sesión, ver el taller, inscribirse, ver y cancelar la propia
+      inscripción, cerrar sesión. Pensada para usarse desde el celular. Las
+      claves públicas se leen de un config.js generado a partir de .env.example
+      (el mecanismo lo documenta el README de la carpeta); config.js real no se
+      commitea. Rutas relativas, para que funcione bajo el subpath de GitHub Pages.
+    criterios_aceptacion:
+      - "web/taller-inscripcion/index.html abre sin errores de consola con un config.js de ejemplo (sin backend: muestra un aviso de configuración faltante)"
+      - "El JS solo llama a las operaciones definidas en web/taller-inscripcion/docs/contrato-api.md"
+      - "Todas las rutas a recursos locales son relativas"
+      - "config.js está en .gitignore y existe config.example.js"
+    verificacion_manual:
+      - "Abrir la web publicada (si se aprobó publicar) desde el celular y probar la inscripción"
+  - id: T3
+    titulo: "Preparar publicación en GitHub Pages"
+    tipo: devops
+    depende_de: [T2]
+    modelo: sonnet
+    verificacion: ninguna
+    descripcion: >
+      Aplicar la skill despliegue para web/taller-inscripcion/: workflow de
+      GitHub Pages solo con disparo manual (publica solo esa carpeta), cómo se
+      genera config.js en el build a partir de secretos o variables del
+      repositorio, 404 y checklist de publicación. Publicar nunca es
+      automático: al terminar la preparación, la tarea se detiene y devuelve
+      DECISION_NEEDED pidiendo autorización con el comando exacto que
+      publicaría.
+    criterios_aceptacion:
+      - "Existe .github/workflows/pages-taller-inscripcion.yml solo con workflow_dispatch y path web/taller-inscripcion"
+      - "Existe web/taller-inscripcion/PUBLICAR.md con el checklist de despliegue completo"
+      - "La publicación pasó por el batched gate con el comando exacto"
+    verificacion_manual:
+      - "Activar GitHub Pages (Source: GitHub Actions) y cargar las variables de Supabase en el repositorio, si se aprueba publicar"
+  - id: T4
+    titulo: "Informe corto APA del proyecto"
+    tipo: academico
+    depende_de: [T1]
+    modelo: sonnet
+    verificacion: completa   # entregable académico con referencias (perfil de costo, orquestador §1)
+    norma_citacion: apa7
+    descripcion: >
+      Aplicar la skill trabajo-academico para escribir en
+      web/taller-inscripcion/informe/ un informe corto (3 a 5 páginas) en APA 7
+      que explique el proyecto: problema, objetivos medibles, solución
+      (arquitectura, modelo de datos y seguridad de T1), metodología y
+      conclusiones. Sin lineamientos del docente: estructura genérica de la
+      skill. Solo referencias verificadas; lo no respaldado va como
+      [CITA PENDIENTE]. Exportación a .docx con pandoc documentada (si pandoc no
+      está instalado, dejar el comando).
+    criterios_aceptacion:
+      - "Existe web/taller-inscripcion/informe/informe.md con objetivos medibles y referencias en APA 7"
+      - "Al menos 3 referencias con DOI o URL comprobada"
+      - "verificador-datos completa sobre el informe: 0 incorrectas, 0 inventadas"
+    verificacion_manual:
+      - "Revisar que el informe tenga sentido para el curso"
