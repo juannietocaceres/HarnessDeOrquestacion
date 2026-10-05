@@ -58,7 +58,7 @@ están cerrados (`.gitattributes` con LF para skills vendorizadas y
 | N2 | Skill `despliegue` | Skill nueva + checklist | 1 |
 | N3 | Skill `trabajo-academico` | Skill nueva + plantillas + export a Word | 1 |
 | N4 | Integración en `orquestador` y `triage-proyecto` | Cambios a skills existentes y scripts | 2 |
-| N5 | Documentación del harness | `CLAUDE.md`, `RESUMEN-HARNESS.md`, `README.md`, `PROCESO.md` §15 | 3 |
+| N5 | Documentación del harness | `CLAUDE.md`, `RESUMEN-HARNESS.md`, `README.md`, `PROCESO.md` §16 | 3 |
 | N6 | Validación de punta a punta | Corrida real con las 3 skills | 4 |
 
 ---
@@ -311,7 +311,7 @@ Depende de N1, N2 y N3.
 - `CLAUDE.md` y `README.md`: conteo a 24 skills y filas nuevas en la tabla.
 - `RESUMEN-HARNESS.md`: tabla de skills y diagrama con `despliegue` al
   final del flujo (publicación aprobada en el gate).
-- `PROCESO.md` **§15 Backend, despliegue y académico**: por qué estas tres
+- `PROCESO.md` **§16 Backend, despliegue y académico**: por qué estas tres
   y no otras, el contrato `.env.example`, la regla de "publicar nunca es
   automático", la regla de referencias verificadas, decisiones del gate y
   resultados de las pruebas.
@@ -339,7 +339,7 @@ tiene que poder preguntar y el gate tiene que llegar al usuario):
      con 0 referencias inventadas.
    - Las acciones que requieren cuenta (crear proyecto en Supabase, activar
      Pages) aparecen en el checklist manual de la wave.
-3. Resultado en `milestones/e2e-skills-2/` y resumen en `PROCESO.md` §15.
+3. Resultado en `milestones/e2e-skills-2/` y resumen en `PROCESO.md` §16.
 
 ---
 
@@ -456,7 +456,7 @@ tareas:
     depende_de: [N4]
     modelo: sonnet
     descripcion: >
-      Actualizar CLAUDE.md, README.md, RESUMEN-HARNESS.md y escribir PROCESO.md §15
+      Actualizar CLAUDE.md, README.md, RESUMEN-HARNESS.md y escribir PROCESO.md §16
       según §4 N5.
     criterios_aceptacion:
       - "Conteo de 24 skills correcto en los cuatro archivos"

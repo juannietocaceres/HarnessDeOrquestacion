@@ -46,6 +46,7 @@ tareas:
       - "Condición verificable 2"
     fuera_de_alcance_si_depende_de: []   # ids/nombres de dependencias EXTERNAS al milestone (ver §4)
     modelo: sonnet          # opcional: alias (sonnet | opus | haiku | fable) o ID completo del modelo
+    verificacion: ligera    # opcional: completa | ligera | ninguna (perfil de costo, abajo)
     verificacion_manual:    # opcional: lo que solo puede comprobar una persona
       - "Abre en Expo Go en un teléfono real"
 ```
@@ -55,9 +56,11 @@ tareas:
   publicar (posts, artículos, guiones) cuyo valor está en lo que afirman.
 - **`modelo`** (opcional): el modelo con el que corre el sub-agente de esa
   tarea. Se pasa tal cual como parámetro `model` al tool `Agent` (§5), nunca
-  como texto dentro del prompt. Si falta, el sub-agente hereda el modelo del
-  orquestador. Criterio de elección: `optimizador-tokens`, sección de
-  palancas nativas.
+  como texto dentro del prompt. Si falta, se aplica el perfil de costo
+  (abajo) según el `tipo`.
+- **`verificacion`** (opcional): cuánto trabajo hace `verificador-datos`
+  sobre el entregable de la tarea: `completa`, `ligera` o `ninguna` (ver
+  los niveles en su SKILL.md). Si falta, se aplica el perfil de costo.
 - **`verificacion_manual`** (opcional): lista de comprobaciones que un
   sub-agente no puede hacer (dispositivo real, cámara, mirar algo a ojo). Se
   copian **literales**, como los criterios. La tarea cierra con sus
@@ -65,9 +68,30 @@ tareas:
   al cierre de cada wave como checklist informativo que **no** bloquea la
   wave siguiente (§2, paso 3.6). No son un gate.
 
-Los tres agregados (`presentacion`/`contenido`, `modelo`,
+Los agregados (`presentacion`/`contenido`, `modelo`, `verificacion`,
 `verificacion_manual`) son opcionales: un manifest que no los usa es tan
 válido como antes.
+
+### Perfil de costo (valores por defecto según `tipo`)
+
+Fuente única para `triage-proyecto` (que escribe estos valores explícitos
+en el manifest) y para el orquestador (que los aplica cuando una tarea no
+trae el campo). Lo que diga la tarea en el manifest siempre manda.
+
+| `tipo` | `modelo` | `verificacion` |
+|---|---|---|
+| `docs`, `contenido`, `presentacion` | `sonnet` (`haiku` si es un ajuste de texto acotado) | `ligera` |
+| `frontend`, `cli`, `data`, `testing` | `sonnet` | `ninguna` |
+| `backend`, `mobile`, `otro` | `sonnet`; `opus` si hay decisiones de arquitectura | `ninguna` |
+
+- **`opus` se pone explícito** y con un comentario YAML del motivo, solo
+  en tareas de razonamiento difícil (arquitectura, decisiones con
+  trade-offs, alto riesgo de `DECISION_NEEDED`). Una tarea sin `modelo`
+  toma el de esta tabla, nunca hereda Opus en silencio.
+- **`verificacion: completa`** solo cuando el entregable es académico con
+  referencias, toca salud, finanzas o leyes, o el usuario lo pidió.
+- La orquestación (esta sesión) sigue en el modelo principal: es donde se
+  decide el plan y se integra.
 
 Un `id` de `depende_de` que no aparece en `tareas` se trata como dependencia
 **externa** (§4), no como error, salvo que tampoco esté listada en
@@ -85,7 +109,12 @@ Un `id` de `depende_de` que no aparece en `tareas` se trata como dependencia
 3. Para cada wave, en orden:
    1. Armar el prompt de cada tarea (§5) y partir las tareas listas de la
       wave en lotes de tamaño ≤ cap (§5); lanzar cada lote con el tool
-      `Agent`, aislado por worktree (§5).
+      `Agent`, aislado por worktree (§5). Al recibir cada resultado,
+      anotar en `estado.yaml` la rama y el worktree que devolvió (§9).
+      Trabaja con el **reporte corto** de cada sub-agente: no abras sus
+      entregables completos salvo para resolver un conflicto o una
+      decisión del gate (leerlos llena tu contexto, que se relee en cada
+      paso del resto del milestone).
    2. Cuando cada sub-agente retorna (terminó **o** quedó pausado pidiendo
       una decisión), liberar su slot del cap y lanzar el siguiente task en
       cola de esa wave, si queda alguno.
@@ -109,13 +138,17 @@ Un `id` de `depende_de` que no aparece en `tareas` se trata como dependencia
         informativo en el reporte de cierre de wave y en `decisiones.md`.
         No se espera respuesta: la wave siguiente arranca igual.
       - Correr `optimizador-tokens` modo `empaquetar`, que genera o
-        actualiza `milestones/<slug>/contexto-compacto.md` (§9).
+        actualiza `milestones/<slug>/contexto-compacto.md` (§9). En la
+        última wave no se corre aquí: lo hace el cierre del milestone
+        (paso 5), una sola vez.
 4. Repetir con la siguiente wave hasta que no queden tareas.
-5. **Cierre del milestone**: correr `verificador-datos` sobre el README y
-   los docs que el milestone tocó; correr `optimizador-tokens` modo
-   `empaquetar` una última vez; y entregar el reporte final (tareas
-   completadas, bloqueos externos pendientes, decisiones tomadas y el
-   checklist acumulado de `verificacion_manual`, si hay).
+5. **Cierre del milestone**: correr `verificador-datos` en nivel `ligera`
+   solo sobre los docs raíz (README y similares) que el milestone tocó y
+   que **ninguna tarea verificó ya**; si todos se verificaron dentro de
+   sus tareas, este paso no se corre (se anota en `decisiones.md`). Luego
+   `optimizador-tokens` modo `empaquetar` una última vez, y el reporte
+   final (tareas completadas, bloqueos externos pendientes, decisiones
+   tomadas y el checklist acumulado de `verificacion_manual`, si hay).
 
 ## 3. a) Descomposición en waves
 
@@ -183,8 +216,10 @@ campo) y espera a que el usuario corrija el manifest.
 ## 5. b) y c) Aislamiento de ejecución + cap de concurrencia
 
 - Cada tarea = una llamada al tool `Agent` con `isolation: "worktree"`.
-  - Si la tarea trae `modelo:`, pásalo como parámetro `model` de esa
-    llamada. Si no, omite el parámetro (el sub-agente hereda tu modelo).
+  - `model` de esa llamada: el `modelo:` de la tarea; si no lo trae, el
+    del perfil de costo (§1) según su `tipo`. Lo mismo con
+    `verificacion`: el de la tarea o, si falta, el del perfil; va en
+    `[SKILLS A APLICAR]` del prompt.
   - Usa `run_in_background: false` para las tareas de una wave: el
     orquestador no puede avanzar (ni cerrar la wave, ni abrir el gate) hasta
     que todo el lote responda, así que no hay nada útil que hacer mientras
@@ -303,10 +338,10 @@ momento:
 | Durante la implementación | La tarea introduce lógica con comportamiento verificable | `testing` |
 | Antes de reportarse COMPLETADA | Siempre que hubo cambios de código | `revision-codigo` (autorrevisión) |
 | Antes de reportarse COMPLETADA | El diff toca transiciones / animaciones | `review-animations` (lectura directa del archivo), dentro de la autorrevisión |
-| Antes de reportarse COMPLETADA | `tipo: docs`, `presentacion` o `contenido` con afirmaciones verificables | `verificador-datos` |
+| Antes de reportarse COMPLETADA | `verificacion` de la tarea (o la del perfil de costo, §1) es `ligera` o `completa` | `verificador-datos`, en ese nivel |
 | Al cerrar la tarea/milestone | La tarea es la última de una funcionalidad visible, o el milestone completo cerró | `documentacion` |
-| Al cerrar cada wave | Siempre | `optimizador-tokens` (`empaquetar`) |
-| Al cerrar el milestone | Siempre | `verificador-datos` sobre README / docs tocados |
+| Al cerrar cada wave | Siempre, salvo la última (la cubre el cierre del milestone) | `optimizador-tokens` (`empaquetar`) |
+| Al cerrar el milestone | Docs raíz tocados que ninguna tarea verificó | `verificador-datos` (`ligera`) |
 
 Las filas de "Antes de todo", "Al armar el prompt" y "Al cerrar" las
 ejecuta el orquestador; las de "Antes de implementar", "Durante la
@@ -360,6 +395,26 @@ rama/worktree de cada tarea en curso, y snapshot del manifest validado. Si la
 sesión se corta a mitad de una wave, una nueva invocación de `/orquestador`
 sobre el mismo milestone debe leer este archivo y **reanudar**, no reiniciar
 desde cero.
+
+**Reanudar con tareas `EN_CURSO` sin rama registrada.** Pasa si la sesión
+se cortó antes de que el sub-agente devolviera su resultado (le pasó a la
+wave 1 de `mejora-skills-2`). Antes de relanzar nada:
+
+1. `git worktree list` y, para cada worktree cuya rama parte del commit
+   del milestone, `git -C <worktree> status --short` y
+   `git log main..<rama> --oneline`.
+2. Identifica a qué tarea corresponde cada uno por los archivos que tocó
+   (las rutas de su `descripcion`).
+3. Si hay trabajo sin commit, commitéalo en su rama con
+   `<id> (WIP): ...` y anota rama y worktree en `estado.yaml`.
+4. Relanza la tarea **sobre ese trabajo**: el nuevo sub-agente arranca en
+   otro worktree, así que su `[PASO 0]` agrega, después de sincronizar con
+   `main`, `git merge <rama WIP>`; el prompt dice qué existe ya y qué
+   criterios faltan, en vez de empezar de cero.
+5. Nunca borres un worktree con trabajo sin integrar.
+
+Como el sub-agente hace commits de avance (plantilla, `[ENTREGA]`), un
+corte deja casi todo el trabajo en su rama y este paso es corto.
 
 Al cierre de cada wave y del milestone, `optimizador-tokens` modo
 `empaquetar` deja `milestones/<slug>/contexto-compacto.md`: el resumen de

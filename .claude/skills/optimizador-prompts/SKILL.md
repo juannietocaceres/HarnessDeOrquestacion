@@ -125,8 +125,9 @@ estos bloques en este orden:
 [CONTEXTO] cápsula de optimizador-tokens + rutas relevantes
 [SKILLS A APLICAR] según orquestador §8
 [RESTRICCIONES] worktree propio, puerto libre si levanta servidor, no tocar otras carpetas
+[EFICIENCIA] agrupar comandos, leer por secciones, registrar fuentes
 [PROTOCOLO DE DECISIÓN] bloque DECISION_NEEDED si hay ambigüedad real
-[ENTREGA] qué archivos, qué commit, autorrevisión antes de reportar
+[ENTREGA] commits de avance, autorrevisión, reporte de ~15 líneas
 ```
 
 Reglas específicas de este destino:
@@ -154,6 +155,8 @@ Reglas específicas de este destino:
   `tipo` de la tarea y lo que toca (p. ej. `revision-codigo` siempre que hay
   cambios de código; `frontend-design` si toca UI; `testing` si hay lógica
   verificable).
+- **`[EFICIENCIA]`** va siempre: cada llamada del sub-agente relee todo su
+  contexto, y las tareas largas son las que más gastan (`PROCESO.md` §15).
 - **`[PROTOCOLO DE DECISIÓN]`** va siempre, aunque la tarea parezca obvia:
   el sub-agente nunca le pregunta al usuario (`orquestador` §6).
 - No se agregan saludos, explicaciones sobre prompting ni disclaimers: el

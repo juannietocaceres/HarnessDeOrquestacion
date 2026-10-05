@@ -32,6 +32,7 @@ tareas:
     titulo: "Skill trabajo-academico"
     tipo: docs
     depende_de: []
+    verificacion: completa   # entregable académico con referencias (perfil de costo, orquestador §1)
     descripcion: >
       Crear .claude/skills/trabajo-academico/ con SKILL.md, ESTRUCTURAS.md y
       CHECKLIST-APA7.md según §4 N3. Revisar la licencia de las skills docx y pdf
@@ -50,8 +51,9 @@ tareas:
     depende_de: [N1, N2, N3]
     descripcion: >
       Aplicar §4 N4: tipos devops y academico, campo norma_citacion, filas nuevas
-      en orquestador §8, actualización de preflight_manifest.py, triage.schema.json,
-      triage-proyecto/SKILL.md y tests.
+      en orquestador §8, filas de devops y academico en la tabla de perfil de costo
+      de orquestador §1 (academico: verificacion completa), actualización de
+      preflight_manifest.py, triage.schema.json, triage-proyecto/SKILL.md y tests.
     criterios_aceptacion:
       - "Los 4 manifests existentes pasan preflight_manifest.py"
       - "test_scripts.py de triage-proyecto y optimizador-tokens pasan"
@@ -62,7 +64,7 @@ tareas:
     depende_de: [N4]
     modelo: sonnet
     descripcion: >
-      Actualizar CLAUDE.md, README.md, RESUMEN-HARNESS.md y escribir PROCESO.md §15
+      Actualizar CLAUDE.md, README.md, RESUMEN-HARNESS.md y escribir PROCESO.md §16
       según §4 N5.
     criterios_aceptacion:
       - "Conteo de 24 skills correcto en los cuatro archivos"

@@ -542,3 +542,51 @@ sacar los archivos para que el working tree pasara a LF (47/47
 día se commiteó la nota de pausa de `milestones/enigma-go/estado.yaml`, que
 cierra el hallazgo de arriba: T1 figura `COMPLETADA` (commit `e2c6dda`, sin
 mergear) y el milestone queda pausado.
+
+## 15. Economía de tokens
+
+**Qué se midió.** Con los registros de Claude Code de la sesión que corrió
+`mejora-skills` y `e2e-skills` (2-oct-2026, todo en Opus): los 13
+sub-agentes hicieron 413 llamadas al modelo y releyeron 40,5 M tokens de
+contexto (lectura de caché), contra 1,8 M escritos y 29 k de salida. Cada
+sub-agente arrancó con 34–38 k tokens antes de hacer nada (instrucciones de
+Claude Code, herramientas, `CLAUDE.md`, lista de skills); el prompt del
+orquestador pesaba ~1,5 k. Cuatro tareas concentraron el 73% del contexto
+releído: M8 (88 llamadas, contexto final 192 k), M6 (57, 191 k), M5 (52,
+179 k) y M1 (45, 154 k). De las llamadas a herramientas de los
+sub-agentes, 301 fueron `Bash`, muchas de un solo comando.
+
+**Conclusión.** El gasto no lo pone el tamaño de las skills sino
+*llamadas × contexto acumulado* en cada sub-agente, el modelo (todo heredó
+Opus porque el triage decía "ante la duda, no pongas `modelo`") y la doble
+investigación en tareas de contenido (la tarea busca y el verificador
+vuelve a buscar; al cierre del milestone, otra pasada).
+
+**Qué cambió, conectado de punta a punta.**
+
+- **Perfil de costo** en `orquestador` §1: una sola tabla por `tipo` con
+  `modelo` y el nuevo campo `verificacion` (`completa` | `ligera` |
+  `ninguna`). `triage-proyecto` los escribe explícitos en cada tarea (el
+  costo queda a la vista en el manifest antes de correr) y el orquestador
+  los aplica si un manifest a mano no los trae. Opus solo explícito y con
+  motivo. `preflight_manifest.py` valida el campo nuevo.
+- **Triage como filtro de tamaño**: menos tareas (paralelizar ahorra
+  tiempo, no tokens), investigaciones del mismo tema juntas, tareas de más
+  de ~40 llamadas partidas, y la `descripcion` cita secciones, no
+  documentos enteros.
+- **`[EFICIENCIA]` en la plantilla del sub-agente**: agrupar comandos,
+  leer por secciones, no releer, registrar la URL de cada dato al
+  escribirlo. Reporte final de ~15 líneas.
+- **`verificador-datos` por niveles**: `ligera` revisa solo cifras,
+  fechas, nombres, citas y datos del repo, abriendo la URL ya registrada en
+  vez de buscar de nuevo, con informe compacto. El cierre del milestone
+  solo verifica docs que ninguna tarea verificó.
+- **Recuperación ante cortes**: commits de avance en cada sub-agente y un
+  procedimiento en `orquestador` §9 para tareas `EN_CURSO` sin rama
+  registrada (lo que dejó la wave 1 de `mejora-skills-2`: tres skills sin
+  commit dentro de worktrees ignorados por git).
+- El orquestador trabaja con los reportes cortos, no con los entregables
+  completos, y no empaqueta dos veces la última wave.
+
+Las cifras de antes y después se comparan en el próximo milestone
+(`mejora-skills-2` ya corre con estas reglas desde su wave 1 reanudada).

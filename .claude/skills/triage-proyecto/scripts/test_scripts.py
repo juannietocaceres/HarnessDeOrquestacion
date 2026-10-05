@@ -94,6 +94,17 @@ class PruebasPreflight(unittest.TestCase):
                 r = pm.preflight(manifest(tarea("T1", modelo=valor)))
                 self.assertTrue(any("modelo" in e for e in r["errores"]), r["errores"])
 
+    def test_verificacion_valida(self):
+        r = pm.preflight(manifest(tarea("T1", verificacion="ligera"), tarea("T2", verificacion="completa"),
+                                  tarea("T3", verificacion="ninguna")))
+        self.assertEqual(r["errores"], [])
+
+    def test_verificacion_invalida_falla(self):
+        for valor in ("", "total", False, None, ["ligera"]):
+            with self.subTest(valor=valor):
+                r = pm.preflight(manifest(tarea("T1", verificacion=valor)))
+                self.assertTrue(any("verificacion" in e for e in r["errores"]), r["errores"])
+
     def test_lector_minimo_igual_a_pyyaml_en_manifests_reales(self):
         try:
             import yaml  # type: ignore

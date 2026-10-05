@@ -70,6 +70,10 @@ trabajo puntual.
   `git merge --ff-only main` (paso 0, ver `PROCESO.md` §14).
 - **Cap de concurrencia**: configurable por milestone (`cap_concurrencia` en
   el manifest), por defecto 3.
+- **Costo**: cada tarea lleva `modelo` y `verificacion` según el perfil de
+  costo del orquestador (§1): Sonnet por defecto, Opus solo explícito y con
+  motivo; verificación `ligera` en tareas con afirmaciones. Los sub-agentes
+  agrupan comandos y leen por secciones (`PROCESO.md` §15).
 - **Nada avanza sobre una decisión sin responder.** Ver la política de
   no-respuesta en el SKILL.md del orquestador y en RESUMEN-HARNESS.md.
 

@@ -12,8 +12,9 @@ Reglas (orquestador/SKILL.md §1 y §4):
     `fuera_de_alcance_si_depende_de` de esa tarea (dependencia externa).
   - El grafo de dependencias internas no tiene ciclos.
   - Campos opcionales por tarea: `verificacion_manual` (si está, lista de
-    textos no vacíos) y `modelo` (si está, texto no vacío: alias como
-    sonnet/opus/haiku/fable o un ID completo).
+    textos no vacíos), `modelo` (si está, texto no vacío: alias como
+    sonnet/opus/haiku/fable o un ID completo) y `verificacion` (si está,
+    `completa`, `ligera` o `ninguna`; perfil de costo de orquestador §1).
 Avisos (no fallan): `tipo` fuera de la lista vigente (que ya incluye
 `presentacion` y `contenido`), `criterios_aceptacion` vacío (disparará
 `especificacion`), tareas bloqueadas por una dependencia externa.
@@ -33,6 +34,7 @@ import re
 import sys
 from pathlib import Path
 
+NIVELES_VERIFICACION = {"completa", "ligera", "ninguna"}
 TIPOS_VIGENTES = {"backend", "frontend", "data", "cli", "mobile", "docs", "testing",
                   "presentacion", "contenido", "otro"}
 
@@ -296,6 +298,8 @@ def preflight(manifest) -> dict:
                 errores.append(f"tarea {etiqueta}: `verificacion_manual` debe ser una lista de textos no vacíos")
         if "modelo" in t and (not isinstance(t["modelo"], str) or not t["modelo"].strip()):
             errores.append(f"tarea {etiqueta}: `modelo` debe ser un texto no vacío (alias o ID completo)")
+        if "verificacion" in t and (not isinstance(t["verificacion"], str) or t["verificacion"] not in NIVELES_VERIFICACION):
+            errores.append(f"tarea {etiqueta}: `verificacion` debe ser uno de {sorted(NIVELES_VERIFICACION)} (vale {t['verificacion']!r})")
         crit = t.get("criterios_aceptacion")
         if crit is not None and not isinstance(crit, list):
             errores.append(f"tarea {etiqueta}: `criterios_aceptacion` debe ser una lista")

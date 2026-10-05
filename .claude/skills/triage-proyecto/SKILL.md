@@ -116,6 +116,19 @@ cierre de cada wave).
   `fuera_de_alcance_si_depende_de`, nunca se deja suelta.
 - **Tamaño**: una tarea es lo que un sub-agente cierra en una sesión con un
   commit. Si una tarea necesita más de ~5 criterios, probablemente son dos.
+- **Menos tareas es más barato.** Cada sub-agente arranca con ~35.000 tokens
+  de base (instrucciones de Claude Code, herramientas, `CLAUDE.md`, lista de
+  skills) y relee todo su contexto en cada llamada: paralelizar ahorra
+  tiempo, no tokens. Por eso:
+  - Investigaciones del mismo tema o de las mismas fuentes van en **una**
+    tarea, no en una por subtema. Sepáralas solo si cada una es grande y de
+    verdad no comparten fuentes.
+  - Una tarea que prevés larga (muchos archivos que leer o editar, varias
+    entregas distintas; como referencia, más de ~40 llamadas) se parte en
+    dos con dependencia entre sí.
+  - Medido en `mejora-skills`: las 4 tareas más largas (45–88 llamadas,
+    contexto final de 150–190k) sumaron el 73% del contexto releído por
+    sus 13 sub-agentes (`PROCESO.md` §15).
 - **`criterios_aceptacion`**: verificables por alguien que no escribió el
   manifest (un comando que pasa, un archivo que existe, un caso que se
   comporta así). Copia literal los criterios que el usuario ya dio. Si una
@@ -140,11 +153,22 @@ cierre de cada wave).
     probarlo a mano.
   - Copia el texto del plan lo más literal posible. No lo dupliques en la
     `descripcion`.
-- **`modelo`** (opcional: alias `sonnet` / `opus` / `haiku` / `fable` o un
-  ID completo): ponlo **solo si hay una razón clara**, y anota la razón como
-  comentario YAML. Por ejemplo: el usuario lo pidió, o la tarea es mecánica
-  y voluminosa (`haiku`), o exige razonamiento difícil (`opus`). Si falta,
-  la tarea hereda el modelo de la sesión. Ante la duda, no lo pongas.
+- **`modelo` y `verificacion`: aplica el perfil de costo** de `orquestador`
+  §1 (tabla por `tipo`). Escríbelos **explícitos en cada tarea**, para que
+  el costo quede a la vista en el manifest y el usuario lo pueda cambiar
+  antes de correr:
+  - `modelo`: el de la tabla. Si la tarea exige razonamiento difícil
+    (arquitectura, decisiones con trade-offs, alto riesgo de
+    `DECISION_NEEDED`), `modelo: opus` con el motivo como comentario YAML.
+    Si el usuario pidió un modelo, manda el usuario.
+  - `verificacion`: `ligera` por defecto en tareas con afirmaciones
+    (`docs`, `contenido`, `presentacion`); `completa` solo si el entregable
+    es académico con referencias, toca salud, finanzas o leyes, o el
+    usuario lo pidió (comentario con el motivo); `ninguna` si la tarea no
+    produce afirmaciones verificables.
+- **Contexto por secciones**: si la tarea se apoya en un documento largo
+  (un plan, `PROCESO.md`), la `descripcion` cita la sección exacta
+  (`PLAN.md §4 N1`), no el documento entero: el sub-agente lee solo eso.
 - `skills_requeridas`: lee la carpeta `.claude/skills/` (no uses una lista
   fija) y lista las que la tabla de `orquestador` §8 activará según los
   tipos y lo que tocan las tareas (p. ej. `especificacion` si hay tareas sin
@@ -276,6 +300,7 @@ múltiple), y se añaden `supuestos`, `ajuste_de_alcance` y
 Triage: <proyecto> (<slug>) — <estado>
 Clasificación: <dominio>, complejidad <complejidad>. <alcance>
 Tareas: <n> en <m> waves — wave 1: T1; wave 2: T2, T3; ...
+Costo: <modelo por tarea, p. ej. "T1–T3 sonnet, T4 opus">; verificación <ids ligera / completa / ninguna>
 Sin criterios (irán a especificacion): <ids o "ninguna">
 Supuestos: <lista corta o "ninguno">
 Ajuste de alcance / partición: <si aplica>

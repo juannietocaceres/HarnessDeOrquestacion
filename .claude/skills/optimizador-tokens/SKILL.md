@@ -224,7 +224,9 @@ Suelen ahorrar más que comprimir texto. Verificadas el 2026-10-01 contra
 - **Modelo por sub-agente: campo `modelo:` del manifest.** Cada tarea del
   manifest puede llevar un campo opcional `modelo:`. El orquestador lo pasa
   como parámetro `model` al tool `Agent` (`orquestador` §1, integrado en M7).
-  Si falta, el sub-agente hereda el modelo del orquestador. Valores: alias
+  Si falta, el orquestador aplica el **perfil de costo** de su §1 (modelo y
+  nivel de verificación por `tipo`; `triage-proyecto` los escribe
+  explícitos en el manifest). Valores: alias
   `sonnet`, `opus`, `haiku`, `fable` o un ID completo. Verificado: el `model`
   por invocación tiene precedencia sobre la definición del sub-agente y se
   mantiene si se reanuda el sub-agente. Cuándo usar uno más liviano:
@@ -238,6 +240,13 @@ Suelen ahorrar más que comprimir texto. Verificadas el 2026-10-01 contra
     `DECISION_NEEDED`.
   Si dos corridas se van a comparar (como en la prueba de retención), van
   con el mismo modelo.
+- **Pocas llamadas, contexto chico, en cada sub-agente.** Medido en
+  `mejora-skills` (`PROCESO.md` §15): cada sub-agente arranca con ~35k
+  tokens de base y relee todo su contexto en cada llamada, así que el
+  gasto crece con *llamadas × contexto*. Las reglas que lo bajan van en
+  el bloque `[EFICIENCIA]` de la plantilla del sub-agente (agrupar
+  comandos, leer por secciones, registrar fuentes) y en el tamaño de
+  tarea que fija `triage-proyecto`.
 - **Exploración amplia con sub-agentes de búsqueda.** El sub-agente `Explore`
   (solo lectura) deja los volcados de archivos en su propio contexto y
   devuelve un resumen; además no carga `CLAUDE.md`. Lo mismo para correr

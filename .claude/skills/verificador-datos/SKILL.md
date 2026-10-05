@@ -22,9 +22,38 @@ evidencia y cómo corregirlo.
   escalas con `DECISION_NEEDED` (ver "Qué hacer con cada categoría"). El
   informe va a archivo (ver "Dónde va el informe").
 
+## Niveles: `ligera` o `completa`
+
+Dentro de un milestone, el prompt trae el nivel (campo `verificacion` de la
+tarea, o el del perfil de costo de `orquestador` §1). Suelto, el nivel es
+`completa`, salvo que el usuario pida una revisión rápida.
+
+**`ligera`** (lo normal en tareas `docs`, `contenido` y `presentacion`):
+
+- **Qué se verifica**: solo lo que daña la credibilidad si está mal:
+  cifras, porcentajes, fechas, nombres propios, citas y referencias,
+  precios, y afirmaciones sobre el propio repo (conteos, rutas, enlaces).
+  Las frases generales y las opiniones no entran a la tabla.
+- **Cómo**: si el dato trae al lado la URL o referencia que registró la
+  tarea (plantilla del sub-agente, `[EFICIENCIA]`), ábrela y comprueba que
+  la fuente lo respalda; **no busques de nuevo**. Haz una búsqueda solo si
+  la URL no abre o no respalda el dato, y como máximo una por afirmación.
+  Lo del repo se comprueba con comandos, agrupados en un solo Bash.
+- **Informe compacto**: encabezado con conteo por categoría, tabla
+  **solo con lo que no es ✅** (más una línea con cuántas ✅ se
+  comprobaron) y recomendación final. Sin las secciones 3 y 4: las
+  correcciones con fuente clara se aplican directo en el archivo si está en
+  el alcance de la tarea. Las reglas de escalado de abajo no cambian.
+
+**`completa`**: el proceso obligatorio de abajo, entero. Para entregables
+académicos con referencias, salud, finanzas o leyes, o cuando el usuario
+lo pide.
+
+**`ninguna`**: la skill no se invoca.
+
 ---
 
-## Proceso obligatorio
+## Proceso obligatorio (nivel `completa`)
 
 Sigue estos pasos en orden:
 
@@ -240,13 +269,14 @@ estricto:
 
 El `orquestador` decide cuándo se invoca (su §8); como referencia:
 
-- **Antes de reportar COMPLETADA** una tarea `tipo: docs` o
-  `tipo: presentacion` (o `contenido`) cuyo entregable contiene
-  afirmaciones verificables. El informe va a
-  `milestones/<slug>/verificaciones/<id-tarea>.md`.
-- **Al cerrar el milestone**, sobre `README.md`, `RESUMEN-HARNESS.md` y los
-  demás docs raíz que el milestone tocó — en especial para detectar
-  conteos y tablas que quedaron desactualizados.
+- **Antes de reportar COMPLETADA** una tarea cuya `verificacion` (o la
+  del perfil de costo) sea `ligera` o `completa`, en ese nivel. El informe
+  va a `milestones/<slug>/verificaciones/<id-tarea>.md`.
+- **Al cerrar el milestone**, en nivel `ligera`, solo sobre los docs raíz
+  (`README.md`, `RESUMEN-HARNESS.md`, etc.) que el milestone tocó y que
+  ninguna de sus tareas verificó ya — en especial para detectar conteos y
+  tablas que quedaron desactualizados. Lo ya verificado no se verifica dos
+  veces.
 
 Fuera de una wave también se usa suelta: el usuario pega el texto o dice,
 por ejemplo, "pasa este README por el verificador", "¿hay algo incorrecto
