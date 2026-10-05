@@ -1,0 +1,40 @@
+# Publica landing/enigma-go/ en GitHub Pages.
+# Basado en el starter workflow oficial pages/static.yml de
+# actions/starter-workflows (versiones de acciones consultadas el 2026-10-02).
+#
+# Solo se dispara a mano (workflow_dispatch): publicar requiere aprobación
+# en el gate (skill despliegue). No agregar un trigger `push` sin esa
+# decisión. Requiere Settings → Pages → Source: "GitHub Actions".
+name: Publicar landing Enigma Go en GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+      - name: Subir la landing como artefacto
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Solo la carpeta de la landing, nunca el repo entero.
+          path: landing/enigma-go
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
