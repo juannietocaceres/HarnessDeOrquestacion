@@ -59,6 +59,11 @@ completo.
 
 - **Máximo 3 preguntas**, todas de **opción múltiple** (2–4 opciones cada
   una), con `AskUserQuestion` en una sola tanda.
+- Si la idea es un trabajo de la universidad (anteproyecto, informe,
+  ensayo, trabajo de grado), clasifícalo con dominio `academico` y
+  reserva dentro del máximo de 3 preguntas: la **norma de citación**
+  (`apa7` | `icontec`) y si hay **lineamientos del docente o del
+  programa** (plantilla, extensión, estructura).
 - Prioriza lo que más cambia la descomposición: plataforma > escala/alcance
   > stack. No preguntes por detalles que una tarea de `especificacion`
   resolverá después.
@@ -81,7 +86,7 @@ implica no exponer la API key en el cliente.
 ### 4. Clasifica
 
 - `dominio`: `web` | `backend` | `mobile` | `data` | `cli` | `devops` |
-  `contenido` | `mixto`.
+  `contenido` | `academico` | `mixto`.
 - `complejidad`:
   - `baja`: 1–3 tareas, 1–2 waves.
   - `media`: 4–10 tareas.
@@ -105,7 +110,10 @@ cierre de cada wave).
   mayor). Si el usuario ya trae ids, consérvalos.
 - **`tipo`**: el que más se parezca al trabajo, de la lista vigente de
   `orquestador` §1: `backend` | `frontend` | `data` | `cli` | `mobile` |
-  `docs` | `testing` | `presentacion` | `contenido` | `otro`. Usa
+  `docs` | `testing` | `presentacion` | `contenido` | `devops` | `academico` |
+  `otro`. Usa `devops` para despliegue e infraestructura y `academico` para
+  documentos universitarios (campo opcional `norma_citacion: apa7 | icontec`,
+  por defecto `apa7`). Usa
   `presentacion` cuando el entregable es un deck o material para exponer, y
   `contenido` para textos para publicar (posts, artículos, guiones) cuyo
   valor está en lo que afirman.
@@ -253,7 +261,7 @@ Forma general:
   ],
   "supuestos": ["opcional: lo que asumiste en vez de preguntar"],
   "clasificacion": {
-    "dominio": "web|backend|mobile|data|cli|devops|contenido|mixto",
+    "dominio": "web|backend|mobile|data|cli|devops|contenido|academico|mixto",
     "complejidad": "baja|media|alta",
     "alcance": "una frase"
   },

@@ -72,6 +72,25 @@ class PruebasPreflight(unittest.TestCase):
                 self.assertEqual(r["errores"], [])
                 self.assertFalse(any("tipo" in a for a in r["avisos"]), r["avisos"])
 
+    def test_tipos_devops_y_academico_son_vigentes(self):
+        for tipo in ("devops", "academico"):
+            with self.subTest(tipo=tipo):
+                r = pm.preflight(manifest(tarea("T1", tipo=tipo)))
+                self.assertEqual(r["errores"], [])
+                self.assertFalse(any("tipo" in a for a in r["avisos"]), r["avisos"])
+
+    def test_norma_citacion_opcional_y_validada(self):
+        for valor in ("apa7", "icontec"):
+            with self.subTest(valor=valor):
+                r = pm.preflight(manifest(tarea("T1", tipo="academico", norma_citacion=valor)))
+                self.assertEqual(r["errores"], [])
+        r = pm.preflight(manifest(tarea("T1", tipo="academico")))
+        self.assertEqual(r["errores"], [])
+        for valor in ("", "apa", 7, None, ["apa7"]):
+            with self.subTest(valor=valor):
+                r = pm.preflight(manifest(tarea("T1", tipo="academico", norma_citacion=valor)))
+                self.assertTrue(any("norma_citacion" in e for e in r["errores"]), r["errores"])
+
     def test_tipo_desconocido_es_aviso(self):
         r = pm.preflight(manifest(tarea("T1", tipo="inventado")))
         self.assertEqual(r["errores"], [])
@@ -171,6 +190,12 @@ class PruebasValidarTriage(unittest.TestCase):
         d = copy.deepcopy(TRIAGE_BASE)
         d["clasificacion"]["dominio"] = "videojuego"
         self.assertTrue(any("dominio" in e for e in self.errores(d)))
+
+    def test_dominio_y_tipos_academico_devops_en_esquema(self):
+        d = copy.deepcopy(TRIAGE_BASE)
+        d["clasificacion"]["dominio"] = "academico"
+        d["tipos_requeridos"] = ["academico", "devops"]
+        self.assertEqual(self.errores(d), [])
 
     def test_mas_de_tres_preguntas(self):
         d = copy.deepcopy(TRIAGE_BASE)
