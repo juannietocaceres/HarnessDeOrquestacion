@@ -27,12 +27,18 @@ escala).
 
 - **Título = la conclusión**, en una frase. Subtítulo = qué se mide y la
   unidad ("Ventas netas, millones de COP, ene–sep 2026").
-- **Color con intención**: gris (`#B0B0B0`) para el contexto y un color de
-  acento (`#C2410C`) para lo que el título menciona. Un segundo color solo
-  si hay un segundo actor en el mensaje. Nunca arcoíris por defecto.
-- **Paleta apta para daltonismo** cuando hay varias categorías necesarias:
-  `PALETA_CATEGORICA` del script (variante de Okabe–Ito). Nunca rojo/verde
-  como única diferencia.
+- **Color con intención, según el mensaje:**
+  - **Un solo mensaje** ("el Norte explica la caída"): gris (`#B0B0B0`)
+    para el contexto y un color de acento (`#C2410C`) para lo que el
+    título menciona. Un segundo color solo si hay un segundo actor en el
+    mensaje.
+  - **El mensaje es comparar varias series o modelos** (tres modelos de
+    pronóstico contra lo observado, cuatro regiones que importan por
+    igual): `PALETA_CATEGORICA` del script (variante de Okabe–Ito, apta
+    para daltonismo), un color por serie, **con etiquetas directas** al
+    final de cada línea en vez de leyenda. Más de 5–6 series → small
+    multiples.
+  - Nunca arcoíris por defecto, ni rojo/verde como única diferencia.
 - **Etiquetas directas**: el nombre de la serie al final de su línea, el
   valor al final de la barra. La leyenda solo si no cabe nada de lo
   anterior.

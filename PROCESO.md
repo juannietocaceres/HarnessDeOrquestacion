@@ -777,3 +777,36 @@ el punto es de miles), el título del gráfico se montaba sobre el
 subtítulo en figuras bajas (posiciones en pulgadas, no en fracción) y
 "IC 95 %" salía como cifra sin respaldo (los niveles de confianza y
 significancia se omiten).
+
+**Mejora (2026-10-27, misma fecha).** Cinco cambios sin tocar las tres
+reglas duras, `cifras.json` + `verificar_cifras.py`, la bitácora ni los
+modos exprés/completo:
+
+- *Bootstrap por bloques.* Con semanas o meses seguidos el bootstrap
+  simple subestima la incertidumbre por la autocorrelación. FASES.md §4
+  y TRAMPAS.md §5 piden bloques móviles (largo ≈ raíz cúbica de n o el
+  periodo estacional) y reportar el largo usado;
+  `scripts/estadistica.py` trae `bootstrap` y `bootstrap_bloques` solo
+  con `numpy`. La prueba con una serie AR(1) (φ = 0,8) confirma que el
+  intervalo por bloques sale más del 50 % más ancho que el simple.
+- *`PRONOSTICO.md`*, que se lee solo si la pregunta es "¿qué va a
+  pasar?": líneas base ingenua y estacional, origen móvil, rezagos ≥ h
+  en covariables, la prueba se evalúa una vez (lo posterior es análisis
+  de sensibilidad), MAE/RMSE y error relativo al ingenuo, CRPS o Winkler
+  y cobertura real, Diebold-Mariano (y agrupado para varias series),
+  predicción conforme por horizonte y métricas de alertas (sensibilidad,
+  especificidad, MCC, falsas alarmas por periodo, anticipación).
+- *SKILL.md como mapa.* Quedan propósito, reglas, modo de trabajo,
+  profundidades y una tabla de fases que dice qué leer; el detalle pasó
+  completo a `FASES.md`. De 2.617 a 875 palabras (−67 %), por debajo de
+  la meta del −40 %: es lo que se carga cada vez que la skill se activa.
+- *Datos de salud.* `perfilar.py` reconoce como personales fecha de
+  nacimiento, historia clínica, `num_ide`/`tip_ide`, identificación,
+  barrio, vereda y paciente, y avisa de cuasi-identificadores (edad o
+  nacimiento + sexo + ubicación fina) aunque no haya nombres. SKILL.md
+  cita la Ley 1581 de 2012: solo agregados y anonimizados. Las pruebas
+  nuevas destaparon una fuga: de una columna personal numérica o de
+  fecha el perfil mostraba mínimo y máximo (el documento o la fecha de
+  nacimiento de una persona); ahora se ocultan.
+- *Color.* "Gris + un acento" es para un solo mensaje; para comparar
+  varias series o modelos, `PALETA_CATEGORICA` con etiquetas directas.

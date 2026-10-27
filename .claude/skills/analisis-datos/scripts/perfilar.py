@@ -9,9 +9,13 @@ Por columna: tipo leído, tipo sugerido, nulos (incluye "", "NA", "N/A",
 por IQR si es numérica, números guardados como texto, fechas como texto,
 espacios sobrantes, variantes de escritura de una misma categoría
 ("Bogotá" / "bogota "), columna constante y posibles datos personales.
-De columnas con posibles datos personales NO se muestran valores.
+De columnas con posibles datos personales (incluye salud: fecha de
+nacimiento, historia clínica, num_ide/tip_ide, barrio, paciente) NO se
+muestran valores.
 
-Por dataset: filas, columnas, filas duplicadas exactas y llaves candidatas.
+Por dataset: filas, columnas, filas duplicadas exactas, llaves candidatas
+y aviso de cuasi-identificadores (edad o fecha de nacimiento + sexo +
+ubicación fina en el mismo archivo, aunque no haya nombres).
 
 Uso:
     python perfilar.py ARCHIVO [--salida perfil] [--hoja NOMBRE]
@@ -41,7 +45,15 @@ TOKENS_NULOS = {"", "na", "n/a", "nan", "null", "none", "-", "--", "?", "sin dat
 PII_NOMBRE = re.compile(
     r"(e-?mail|correo|tel[eé]fono|celular|m[oó]vil|phone|c[eé]dula|documento|"
     r"\bdni\b|\bnit\b|\bcc\b|pasaporte|direcci[oó]n|address|nombre|apellido|"
-    r"name|\bip\b|ssn|tarjeta|cuenta)", re.I)
+    r"name|\bip\b|ssn|tarjeta|cuenta|"
+    # salud y registros administrativos (SIVIGILA, RIPS, historias clínicas)
+    r"fec_?nac|nacimiento|historia_?cl[ií]nica|\bhc\b|num_?ide|tip_?ide|"
+    r"identificaci[oó]n|barrio|vereda|paciente)", re.I)
+# Cuasi-identificadores: juntos permiten reconocer a alguien aunque no haya nombres.
+CUASI_EDAD = re.compile(r"(?<![a-záéíóú])edad|\bage\b|fec_?nac|nacimiento|birth", re.I)
+CUASI_SEXO = re.compile(r"sexo|g[eé]nero|\bsex\b|gender", re.I)
+CUASI_LUGAR = re.compile(r"barrio|direcci[oó]n|address|vereda|manzana|corregimiento|"
+                         r"latitud|longitud|\blat\b|\blon\b|coordenad", re.I)
 PII_EMAIL = re.compile(r"^[\w.+-]+@[\w-]+\.[\w.-]+$")
 PII_TEL = re.compile(r"^\+?[\d\s().-]{7,}$")
 FECHA_TXT = re.compile(r"\d{1,4}[-/.]\d{1,2}[-/.]\d{1,4}")
@@ -220,6 +232,9 @@ def perfil_columna(nombre, serie, top):
     if pii:
         col["alertas"].insert(0, "posible dato personal: no mostrar ni exportar sin autorización")
         col["frecuentes"] = "[oculto: posible dato personal]"
+        # min/max de un documento o una fecha de nacimiento es el dato de una persona
+        for clave in ("estadisticos", "rango", "no_convertibles", "variantes"):
+            col.pop(clave, None)
     else:
         vc = validos.astype(str).value_counts().head(top)
         col["frecuentes"] = [[recortar(k), int(v)] for k, v in vc.items()]
@@ -241,10 +256,19 @@ def perfilar(df, top=5):
     sin_nombre = [c for c in df.columns if str(c).startswith("Unnamed") or str(c).strip() == ""]
     if sin_nombre:
         alertas_ds.append(f"{len(sin_nombre)} columnas sin nombre (índice exportado o encabezado corrido)")
+    nombres = [str(c) for c in df.columns]
+    cuasi = {clave: [c for c in nombres if patron.search(c)]
+             for clave, patron in (("edad", CUASI_EDAD), ("sexo", CUASI_SEXO), ("lugar", CUASI_LUGAR))}
+    if all(cuasi.values()):
+        alertas_ds.append(
+            "cuasi-identificadores juntos (" + ", ".join(sum(cuasi.values(), [])) + "): edad o fecha de "
+            "nacimiento + sexo + ubicación fina permiten reconocer personas aunque no haya nombres; "
+            "en informes y gráficos solo agregados y anonimizados (Ley 1581 de 2012)")
     return {
         "filas": int(len(df)), "columnas": int(df.shape[1]), "duplicados_exactos": dup,
         "llaves_candidatas": llaves, "alertas": alertas_ds, "detalle": columnas,
         "columnas_pii": [c["columna"] for c in columnas if c["pii"]],
+        "cuasi_identificadores": sum(cuasi.values(), []) if all(cuasi.values()) else [],
     }
 
 

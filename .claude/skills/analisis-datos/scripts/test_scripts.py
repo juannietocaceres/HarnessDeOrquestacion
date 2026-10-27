@@ -1,7 +1,8 @@
-"""Pruebas de perfilar.py, verificar_cifras.py y estilo_graficos.py.
+"""Pruebas de perfilar.py, verificar_cifras.py, estadistica.py y estilo_graficos.py.
 
-verificar_cifras.py solo usa la biblioteca estándar; perfilar.py necesita
-pandas y estilo_graficos.py matplotlib (sus pruebas se saltan si faltan).
+verificar_cifras.py solo usa la biblioteca estándar; estadistica.py numpy;
+perfilar.py pandas y estilo_graficos.py matplotlib (sus pruebas se saltan
+si faltan).
 
 Uso:
     python -m unittest discover -s .claude/skills/analisis-datos/scripts -v
@@ -19,6 +20,18 @@ PERFILAR = AQUI / "perfilar.py"
 VERIFICAR = AQUI / "verificar_cifras.py"
 HAY_PANDAS = importlib.util.find_spec("pandas") is not None
 HAY_MPL = importlib.util.find_spec("matplotlib") is not None
+HAY_NUMPY = importlib.util.find_spec("numpy") is not None
+
+CSV_SALUD = """num_ide,tip_ide,fec_nac,sexo,barrio,evento,semana
+1001,CC,1990-04-02,F,San Fernando,dengue,12
+1002,TI,2011-09-15,M,El Poblado,dengue,13
+1003,CC,1975-01-20,F,Aguablanca,dengue,13
+"""
+
+CSV_CUASI = """grupo_edad,sexo,direccion_residencia,casos
+20-29,F,Cra 5 # 10-20,1
+30-39,M,Cl 8 # 2-15,1
+"""
 
 CSV_SUCIO = """id,ciudad,fecha,precio,email,constante,edad
 1,Bogotá,03/02/2026,"$ 1.200",ana@x.com,a,34
@@ -139,6 +152,73 @@ class TestPerfilar(Base):
         self.assertNotIn("ana@x.com", (self.dir / "perfil.md").read_text(encoding="utf-8"))
         self.assertTrue(any("constante" in a for a in self.col["constante"]["alertas"]))
         self.assertTrue(any("negativos" in a for a in self.col["edad"]["alertas"]))
+
+
+@unittest.skipUnless(HAY_PANDAS, "requiere pandas")
+class TestPerfilarSalud(Base):
+    def perfil(self, csv):
+        ruta = self.escribir("datos.csv", csv)
+        codigo, _, err = correr(PERFILAR, ruta, "--salida", self.dir / "perfil")
+        self.assertEqual(codigo, 0, err)
+        return (json.loads((self.dir / "perfil.json").read_text(encoding="utf-8")),
+                (self.dir / "perfil.md").read_text(encoding="utf-8"))
+
+    def test_columnas_de_salud_son_pii_y_no_se_muestran(self):
+        p, md = self.perfil(CSV_SALUD)
+        for col in ("num_ide", "tip_ide", "fec_nac", "barrio"):
+            self.assertIn(col, p["columnas_pii"])
+        self.assertNotIn("sexo", p["columnas_pii"])
+        self.assertNotIn("San Fernando", md)
+        self.assertNotIn("1001", md)
+
+    def test_cuasi_identificadores_sin_nombres(self):
+        p, md = self.perfil(CSV_CUASI)
+        self.assertEqual(sorted(p["cuasi_identificadores"]),
+                         ["direccion_residencia", "grupo_edad", "sexo"])
+        self.assertIn("cuasi-identificadores", md)
+        self.assertIn("Ley 1581", md)
+
+    def test_sin_ubicacion_fina_no_avisa(self):
+        p, _ = self.perfil("edad,sexo,municipio,propiedad\n30,F,Cali,1\n41,M,Palmira,2\n")
+        self.assertEqual(p["cuasi_identificadores"], [])
+
+
+@unittest.skipUnless(HAY_NUMPY, "requiere numpy")
+class TestBootstrapBloques(unittest.TestCase):
+    def setUp(self):
+        sys.path.insert(0, str(AQUI))
+        import numpy as np
+        from estadistica import bootstrap, bootstrap_bloques, largo_bloque_sugerido
+        self.np, self.simple, self.bloques, self.sugerido = np, bootstrap, bootstrap_bloques, largo_bloque_sugerido
+        # AR(1) con autocorrelación fuerte (phi = 0,8): 200 semanas seguidas
+        rng = np.random.default_rng(42)
+        serie = np.zeros(200)
+        for t in range(1, 200):
+            serie[t] = 0.8 * serie[t - 1] + rng.normal()
+        self.serie = serie
+
+    def test_bloques_da_intervalo_mas_ancho_que_simple(self):
+        s = self.simple(self.serie, n=1000)
+        b = self.bloques(self.serie, largo_bloque=10, n=1000)
+        ancho_s = s["ic95"][1] - s["ic95"][0]
+        ancho_b = b["ic95"][1] - b["ic95"][0]
+        self.assertGreater(ancho_b, 1.5 * ancho_s)
+        self.assertAlmostEqual(b["valor"], float(self.serie.mean()))
+        self.assertLess(b["ic95"][0], b["valor"])
+        self.assertGreater(b["ic95"][1], b["valor"])
+
+    def test_largo_sugerido_reproducible_y_json(self):
+        self.assertEqual(self.sugerido(200), 6)
+        a = self.bloques(self.serie, self.np.median, n=300, semilla=7)
+        self.assertEqual(a, self.bloques(self.serie, self.np.median, n=300, semilla=7))
+        self.assertEqual(a["largo_bloque"], 6)
+        json.dumps(a)  # floats de Python, listo para cifras.json
+
+    def test_largo_invalido(self):
+        with self.assertRaises(ValueError):
+            self.bloques(self.serie[:5], largo_bloque=6)
+        with self.assertRaises(ValueError):
+            self.bloques(self.serie, largo_bloque=0)
 
 
 @unittest.skipUnless(HAY_MPL and HAY_PANDAS, "requiere matplotlib y pandas")

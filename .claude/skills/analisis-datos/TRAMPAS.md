@@ -66,6 +66,11 @@ Cada trampa trae la pregunta que la detecta y qué hacer.
 - **Cambios de definición.** Un salto que coincide con un cambio de
   sistema, de formulario o de regla de negocio. → Pregunta antes de
   explicarlo.
+- **Autocorrelación en el intervalo.** Semanas o meses seguidos no son
+  observaciones independientes: el bootstrap simple subestima la
+  incertidumbre. → Bootstrap por bloques móviles (largo ≈ raíz cúbica de
+  n, o el periodo estacional), con `bootstrap_bloques` de
+  `scripts/estadistica.py`, y se reporta el largo de bloque usado.
 - **Elegir el punto de inicio.** Un crecimiento "desde el mínimo" exagera.
   → Usa una base justificada y muéstrala.
 
