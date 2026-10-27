@@ -710,3 +710,70 @@ taller..., publicada gratis, y un informe corto en APA"), documentada en
 - Las acciones con cuenta (crear el proyecto de Supabase, activar Pages,
   cargar las variables) quedaron en el checklist de `verificacion_manual`
   de cada wave, sin bloquear ninguna.
+
+## 17. Análisis de datos
+
+**Por qué ahora.** §16 dejó la ciencia de datos para "cuando un proyecto
+real la pida". El harness ya tenía el `tipo: data` en el manifest, pero
+ninguna skill decía cómo pasar de un archivo a una conclusión: cada
+sub-agente improvisaba la limpieza, elegía gráficos por costumbre y
+escribía cifras que nadie podía rastrear. Se agregó `analisis-datos`
+(25 skills, 14 propias).
+
+**El diseño, en tres reglas duras:**
+
+- *No leer el dataset en el contexto.* `scripts/perfilar.py` resume
+  tipos, nulos (incluye "NA", "-", "" escritos como texto), números y
+  fechas guardados como texto, variantes de una misma categoría,
+  duplicados, outliers por IQR, llaves candidatas y posibles datos
+  personales (de esas columnas no muestra valores). El agente lee el
+  resumen, no el archivo: es lo que hace la skill eficiente en tokens con
+  datos de cualquier tamaño.
+- *Ninguna cifra sin código.* El análisis escribe cada número que se va a
+  afirmar en `cifras.json`, y `scripts/verificar_cifras.py` comprueba que
+  todo número del informe salga de ahí (acepta redondeo, valor absoluto,
+  ×100 y escalas "mil"/"millones"; omite años, niveles de confianza y
+  conteos de prosa). Es el equivalente, para datos, de la regla de
+  `trabajo-academico` contra referencias inventadas.
+- *Crudos de solo lectura.* Toda transformación es código en `src/` con
+  una fila en `bitacora-limpieza.md` (filas antes → después), y el
+  pipeline se re-ejecuta de cero antes de entregar.
+
+**Lo que hace que el resultado sea bueno y no solo correcto:** el
+encargo de 5 líneas antes de abrir los datos (pregunta, decisión,
+audiencia, métrica, alcance); método según el tipo de pregunta con
+tamaño del efecto e intervalo (bootstrap con `numpy`, sin depender de
+`scipy`); la lista de `TRAMPAS.md` (Simpson, efecto mezcla, denominador
+oculto, comparaciones múltiples, leakage, estacionalidad) antes de dar un
+hallazgo por bueno; gráficos de un solo mensaje con el título como
+conclusión, gris más un color de acento y etiquetas directas
+(`GRAFICOS.md` y `scripts/estilo_graficos.py`); e informe en pirámide
+(respuesta primero, títulos que afirman, tres hallazgos, cada conclusión
+con evidencia, confianza y limitación, y lo que los datos no permiten
+afirmar). Dos profundidades: *exprés* (3 hallazgos en una página) por
+defecto, *completo* cuando el encargo lo justifica.
+
+**Encaje con el resto.** Fila nueva en `orquestador` §8 para `tipo: data`
+con análisis; esas tareas pasan a `verificacion: ligera`, porque
+`verificador-datos` solo tiene que mirar lo que no sale de los datos
+(contexto, cifras externas, explicaciones de causa). Para exponer, la
+historia pasa a `presentaciones-visuales`; para Word, pandoc como en
+`trabajo-academico`. `DECISION_NEEDED` cuando la métrica admite dos
+definiciones, la limpieza quitaría más del 5 % de las filas, hay datos
+personales sin permiso de uso, o piden causalidad con datos
+observacionales.
+
+**Prueba (2026-10-27).** 10 pruebas unitarias en
+`scripts/test_scripts.py` (en verde; las de gráficos necesitan
+`matplotlib`, que no está en el entorno base y se probó instalándolo
+aparte). Corrida de punta a punta con un CSV sintético de ventas sucio
+(2.425 filas): el perfil detectó los 25 duplicados, "Norte"/"norte ",
+los montos como texto con punto de miles, el outlier de 98 millones y el
+correo como dato personal; el informe de prueba con una cifra inventada
+a propósito ("el margen bruto bajó 8 %") falló en `verificar_cifras.py`
+solo por esa cifra. La corrida destapó tres defectos que se corrigieron
+antes de cerrar: "1.200" se leía como 1,2 (ahora se decide por columna si
+el punto es de miles), el título del gráfico se montaba sobre el
+subtítulo en figuras bajas (posiciones en pulgadas, no en fracción) y
+"IC 95 %" salía como cifra sin respaldo (los niveles de confianza y
+significancia se omiten).

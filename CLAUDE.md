@@ -23,7 +23,7 @@ Las skills viven en `.claude/skills/<nombre>/SKILL.md` y se invocan con
 `/<nombre>` (o se disparan automáticamente cuando el contexto coincide con su
 `description`).
 
-Hay 24 carpetas de skills: 13 propias del harness, `frontend-design`
+Hay 25 carpetas de skills: 14 propias del harness, `frontend-design`
 (vendorizada de Anthropic) y 10 de la suite de Emil Kowalski (vendorizadas).
 
 | Skill | Cuándo se usa |
@@ -41,6 +41,7 @@ Hay 24 carpetas de skills: 13 propias del harness, `frontend-design`
 | `/backend-datos` | Antes de escribir código de backend: en cualquier tarea que cree o cambie una API, una base de datos o un login. Deja stack, modelo de datos, contrato de API, reglas de acceso y `.env.example`. |
 | `/despliegue` | Cuando un milestone o una tarea (`tipo: devops`) debe terminar con algo publicado. Deja la configuración versionada y el checklist de publicación; nunca publica sin aprobación explícita en el gate. |
 | `/trabajo-academico` | En tareas `tipo: academico` o al escribir un documento universitario: estructura, objetivos medibles, norma de citación fija, solo referencias verificadas y exportación a Word con pandoc. |
+| `/analisis-datos` | Al explorar, limpiar, analizar o graficar datos y sacar conclusiones (tareas `tipo: data` con informe). Perfila sin leer el dataset entero, limpia con bitácora, reporta incertidumbre, grafica un mensaje por gráfico y cuenta la historia; cada cifra del informe se verifica contra `cifras.json` con un script. |
 | `/frontend-design` | Al construir o rediseñar cualquier UI. Copiada tal cual del repo público de Anthropic (`plugins/frontend-design`). |
 | Suite Emil Kowalski (10 skills) | Pulido de UI, animación web y Expo, revisión de motion: `emil-design-eng`, `animate`, `animate-expo`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `mobile-native`, `pick-ui-library`, `prototype`, `animation-vocabulary`. `review-animations`, `pick-ui-library` y `prototype` no se disparan solas (`disable-model-invocation: true`). Vendorizadas sin cambios, en inglés; origen, hash y reglas de convivencia en [docs/vendor/emilkowalski-skills.md](docs/vendor/emilkowalski-skills.md). |
 
@@ -83,7 +84,7 @@ trabajo puntual.
 ## Estructura del repo
 
 ```
-.claude/skills/          # las 24 skills (13 propias + 11 vendorizadas)
+.claude/skills/          # las 25 skills (14 propias + 11 vendorizadas)
 docs/vendor/             # registro de las skills vendorizadas de Emil Kowalski
 milestones/<slug>/       # manifest + estado + decisiones por milestone
 presentaciones/          # decks HTML generados con presentaciones-visuales

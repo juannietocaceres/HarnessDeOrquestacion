@@ -12,7 +12,7 @@ Hecho para la Electiva de desarrollo asistido por IA, Septiembre 2026.
 
 | Documento | Qué encuentras ahí |
 |---|---|
-| **[RESUMEN-HARNESS.md](RESUMEN-HARNESS.md)** | El entregable final: mapa de las 24 skills (13 propias y 11 vendorizadas), el diagrama de flujo completo, y la política de no-respuesta explicada |
+| **[RESUMEN-HARNESS.md](RESUMEN-HARNESS.md)** | El entregable final: mapa de las 25 skills (14 propias y 11 vendorizadas), el diagrama de flujo completo, y la política de no-respuesta explicada |
 | **[PROCESO.md](PROCESO.md)** | La bitácora completa: cada decisión de diseño no trivial, con el porqué |
 | **[CLAUDE.md](CLAUDE.md)** | Instrucciones para Claude Code: cómo se invoca cada skill y las convenciones del proyecto |
 
@@ -74,7 +74,7 @@ sub-agente frente a la versión anterior. Detalle y cifras en
 ## Estructura del repo
 
 ```
-.claude/skills/          # 24 skills: 13 propias (orquestador, triage-proyecto y 11 de apoyo)
+.claude/skills/          # 25 skills: 14 propias (orquestador, triage-proyecto y 12 de apoyo)
                          # + frontend-design (Anthropic) + 10 de Emil Kowalski
 docs/vendor/             # origen y hash de las skills vendorizadas de Emil Kowalski
 milestones/<slug>/       # manifest, estado y decisiones de cada milestone corrido

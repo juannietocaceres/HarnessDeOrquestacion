@@ -95,6 +95,10 @@ trae el campo). Lo que diga la tarea en el manifest siempre manda.
   en tareas de razonamiento difícil (arquitectura, decisiones con
   trade-offs, alto riesgo de `DECISION_NEEDED`). Una tarea sin `modelo`
   toma el de esta tabla, nunca hereda Opus en silencio.
+- **`tipo: data` que entrega un informe o conclusiones** lleva
+  `verificacion: ligera` (sobre lo que no sale de los datos: contexto y
+  cifras externas); las cifras propias ya las verifica `analisis-datos`
+  con `verificar_cifras.py`. Un pipeline sin informe sigue en `ninguna`.
 - **`verificacion: completa`** solo cuando el entregable es académico con
   referencias, toca salud, finanzas o leyes, o el usuario lo pidió.
 - La orquestación (esta sesión) sigue en el modelo principal: es donde se
@@ -347,6 +351,7 @@ momento:
 | Durante la implementación | `tipo: devops`, o el milestone pide publicar | `despliegue` |
 | Antes de ejecutar una publicación | Siempre | Batched gate (`DECISION_NEEDED` con comando exacto) |
 | Durante la implementación | `tipo: academico` | `trabajo-academico` |
+| Durante la implementación | `tipo: data` que explora, limpia, analiza o grafica datos, o entrega conclusiones | `analisis-datos` |
 | Durante la implementación | La tarea introduce lógica con comportamiento verificable | `testing` |
 | Antes de reportarse COMPLETADA | Siempre que hubo cambios de código | `revision-codigo` (autorrevisión) |
 | Antes de reportarse COMPLETADA | El diff toca transiciones / animaciones | `review-animations` (lectura directa del archivo), dentro de la autorrevisión |

@@ -6,9 +6,9 @@ está diseñada como está. Para el *por qué* de cada decisión de diseño, ver
 [PROCESO.md](PROCESO.md). Para un ejemplo real ejecutado con este mismo
 harness, ver la sección 6 más abajo.
 
-## 1. Las 24 skills, qué producen y cuándo se usan
+## 1. Las 25 skills, qué producen y cuándo se usan
 
-`.claude/skills/` tiene 24 carpetas: **13 propias** del harness (las 13
+`.claude/skills/` tiene 25 carpetas: **14 propias** del harness (las 14
 primeras filas de la tabla), **1 vendorizada de Anthropic**
 (`frontend-design`) y **10 vendorizadas de Emil Kowalski** (agrupadas en la
 última fila).
@@ -28,6 +28,7 @@ primeras filas de la tabla), **1 vendorizada de Anthropic**
 | [`backend-datos`](.claude/skills/backend-datos/SKILL.md) | Stack, modelo de datos, contrato de API, autenticación con proveedor, reglas de acceso y `.env.example` (sin valores reales) | Antes de escribir código de backend: tareas que crean o cambian una API, una base de datos o un login |
 | [`despliegue`](.claude/skills/despliegue/SKILL.md) | Configuración de publicación versionada en el repo (por ejemplo un workflow de GitHub Pages) y checklist de publicación, a partir de `.env.example` | Tareas `tipo: devops`, o un milestone que termina con algo publicado. Nunca publica sin aprobación explícita en el gate |
 | [`trabajo-academico`](.claude/skills/trabajo-academico/SKILL.md) | Borrador de documento universitario (objetivos medibles, norma de citación fija, `referencias.bib` verificado) exportable a Word con pandoc | Tareas `tipo: academico`, o suelta al escribir un anteproyecto, informe, artículo o ensayo |
+| [`analisis-datos`](.claude/skills/analisis-datos/SKILL.md) | Encargo, perfil de calidad, limpieza con bitácora, análisis con incertidumbre, gráficos de un mensaje, `cifras.json` e informe en forma de historia (o 3 hallazgos en modo exprés) | Tareas `tipo: data` que terminan en conclusiones, o suelta para explorar, limpiar, analizar o graficar datos |
 | [`frontend-design`](.claude/skills/frontend-design/SKILL.md) | Dirección de diseño visual deliberada (paleta, tipografía, layout específicos del brief) | Al construir o rediseñar cualquier UI. Copiada sin modificar de `anthropics/claude-code` |
 | Suite Emil Kowalski (10): `emil-design-eng`, `animate`, `animate-expo`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `mobile-native`, `pick-ui-library`, `prototype`, `animation-vocabulary` | Pulido de UI, animación web y Expo, revisión y auditoría de motion | Tareas que tocan UI o animaciones: 5 tienen fila propia en `orquestador` §8; las otras 5 se nombran solo si la tarea pide ese trabajo. `review-animations`, `pick-ui-library` y `prototype` no se disparan solas. Copiadas sin cambios del commit `d16ebe6`; registro en [docs/vendor/emilkowalski-skills.md](docs/vendor/emilkowalski-skills.md) |
 
@@ -36,7 +37,7 @@ skill de apoyo — el mapeo completo por tipo de proyecto está en su propio
 SKILL.md, §8. Las demás skills también funcionan sueltas, fuera de una wave.
 El porqué de la ampliación de 6 a 21 skills (milestone `mejora-skills`) está
 en [PROCESO.md](PROCESO.md) §14; el de las tres últimas (`backend-datos`,
-`despliegue`, `trabajo-academico`, milestone `mejora-skills-2`), en §16. El
+`despliegue`, `trabajo-academico`, milestone `mejora-skills-2`), en §16; el de `analisis-datos`, en §17. El
 manifest reconoce además los tipos de tarea `devops` y `academico` (este
 último con `norma_citacion`, `apa7` o `icontec`).
 
